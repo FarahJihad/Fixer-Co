@@ -3,6 +3,8 @@
 // POST /api/register
 // ========================================
 
+
+// Create JSON response
 function jsonResponse(data, status = 200) {
   return new Response(
     JSON.stringify(data),
@@ -16,9 +18,11 @@ function jsonResponse(data, status = 200) {
 }
 
 
-// Convert ArrayBuffer to hexadecimal text
-function bufferToHex(buffer) {
+// ========================================
+// CONVERT BUFFER TO HEX
+// ========================================
 
+function bufferToHex(buffer) {
   return Array.from(
     new Uint8Array(buffer)
   )
@@ -29,68 +33,56 @@ function bufferToHex(buffer) {
           .padStart(2, "0")
     )
     .join("");
-
 }
 
 
-// Hash password using PBKDF2
+// ========================================
+// HASH PASSWORD WITH PBKDF2
+// ========================================
+
 async function hashPassword(password) {
 
   const encoder =
     new TextEncoder();
 
 
-  // Create random salt
+  // Random salt
   const salt =
     crypto.getRandomValues(
       new Uint8Array(16)
     );
 
 
-  // Convert password into CryptoKey
+  // Import password
   const passwordKey =
     await crypto.subtle.importKey(
-
       "raw",
-
       encoder.encode(password),
-
       {
         name: "PBKDF2"
       },
-
       false,
-
       [
         "deriveBits"
       ]
-
     );
 
 
-  // Generate password hash
+  // Create hash
   const hashBuffer =
     await crypto.subtle.deriveBits(
-
       {
         name: "PBKDF2",
-
         salt: salt,
-
         iterations: 210000,
-
         hash: "SHA-256"
       },
-
       passwordKey,
-
       256
-
     );
 
 
   return {
-
     salt:
       bufferToHex(
         salt.buffer
@@ -100,14 +92,12 @@ async function hashPassword(password) {
       bufferToHex(
         hashBuffer
       )
-
   };
-
 }
 
 
 // ========================================
-// POST REQUEST
+// POST /api/register
 // ========================================
 
 export async function onRequestPost(context) {
@@ -120,7 +110,10 @@ export async function onRequestPost(context) {
     } = context;
 
 
-    // Make sure database binding exists
+    // ========================================
+    // DATABASE CHECK
+    // ========================================
+
     if (!env.DB) {
 
       return jsonResponse(
@@ -135,7 +128,10 @@ export async function onRequestPost(context) {
     }
 
 
-    // Read JSON body
+    // ========================================
+    // READ REQUEST BODY
+    // ========================================
+
     let body;
 
     try {
@@ -143,7 +139,7 @@ export async function onRequestPost(context) {
       body =
         await request.json();
 
-    } catch {
+    } catch (error) {
 
       return jsonResponse(
         {
@@ -157,7 +153,10 @@ export async function onRequestPost(context) {
     }
 
 
-    // Get form values
+    // ========================================
+    // USER DATA
+    // ========================================
+
     const name =
       body.name?.trim();
 
@@ -221,7 +220,6 @@ export async function onRequestPost(context) {
 
     // ========================================
     // PHONE VALIDATION
-    // Saudi mobile number
     // ========================================
 
     if (phone) {
@@ -289,7 +287,7 @@ export async function onRequestPost(context) {
 
 
     // ========================================
-    // CHECK IF EMAIL ALREADY EXISTS
+    // CHECK EXISTING USER
     // ========================================
 
     const existingUser =
@@ -324,22 +322,18 @@ export async function onRequestPost(context) {
     // HASH PASSWORD
     // ========================================
 
-    const {
-      salt,
-      hash
-    } =
+    const passwordData =
       await hashPassword(
         password
       );
 
 
-    // Store salt + hash together
     const storedPassword =
-      `pbkdf2$210000$${salt}$${hash}`;
+      `pbkdf2$210000$${passwordData.salt}$${passwordData.hash}`;
 
 
     // ========================================
-    // CREATE USER
+    // INSERT USER
     // ========================================
 
     const result =
@@ -365,6 +359,10 @@ export async function onRequestPost(context) {
         .run();
 
 
+    // ========================================
+    // SUCCESS
+    // ========================================
+
     return jsonResponse(
       {
         success: true,
@@ -374,7 +372,7 @@ export async function onRequestPost(context) {
 
         user: {
           id:
-            result.meta.last_row_id,
+            result.meta?.last_row_id,
 
           name:
             name,
@@ -398,45 +396,22 @@ export async function onRequestPost(context) {
     );
 
 
+    // Temporary debugging error
     return jsonResponse(
       {
         success: false,
+
         message:
-          "Something went wrong while creating your account."
+          "Something went wrong while creating your account.",
+
+        error:
+          error instanceof Error
+            ? error.message
+            : String(error)
       },
       500
     );
 
   }
-
-}
-
-
-// ========================================
-// BLOCK OTHER METHODS
-// ========================================
-
-export async function onRequest(context) {
-
-  if (
-    context.request.method === "POST"
-  ) {
-
-    return onRequestPost(context);
-
-  }
-
-
- return jsonResponse(
-  {
-    success: false,
-    message:
-      "Something went wrong while creating your account.",
-
-    error:
-      error.message
-  },
-  500
-);
 
 }
