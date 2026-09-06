@@ -676,12 +676,6 @@
         </div>
 
 
-        <!--
-          Keep this button.
-          Later we will require login
-          before opening request.html.
-        -->
-
         <a
           href="request.html"
           class="cta-button"
@@ -762,53 +756,7 @@
   </footer>
 
 
-  <script>
-    // Sync the Home navbar with the secure server session.
-    // This does not trust localStorage for authentication.
-    async function syncHomeAuth() {
-      try {
-        const response = await fetch("/api/me", {
-          method: "GET",
-          credentials: "same-origin"
-        });
-
-        if (!response.ok) return;
-
-        const data = await response.json();
-
-        if (!data.authenticated || !data.user) return;
-
-        // Do not replay the intro for an already logged-in user.
-        const siteIntro = document.getElementById("siteIntro");
-        if (siteIntro) {
-          siteIntro.style.display = "none";
-        }
-
-        // Replace Log In with the user's first name.
-        const loginButton = document.getElementById("navLoginButton");
-
-        if (loginButton) {
-          const firstName =
-            (data.user.name || data.user.username || "Account")
-              .trim()
-              .split(/\s+/)[0];
-
-          loginButton.href = "#";
-          loginButton.className = "login-nav-button logged-in-user";
-          loginButton.innerHTML = `
-            <i class="fa-regular fa-circle-user"></i>
-            ${firstName}
-          `;
-          loginButton.removeAttribute("id");
-        }
-      } catch (error) {
-        console.error("Unable to sync authentication state:", error);
-      }
-    }
-
-    syncHomeAuth();
-  </script>
-
+  <!-- Main JavaScript -->
   <script src="script.js"></script>
 
 

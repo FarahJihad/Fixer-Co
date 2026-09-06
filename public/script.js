@@ -5155,6 +5155,69 @@ async function updateNavbarAuth() {
     );
 
   }
+  
+// ========================================
+// LOG OUT
+// ========================================
+
+const logoutButton =
+  document.getElementById(
+    "logoutButton"
+  );
+
+
+if (logoutButton) {
+
+  logoutButton.addEventListener(
+    "click",
+    async () => {
+
+      try {
+
+        logoutButton.disabled =
+          true;
+
+
+        const response =
+          await fetch(
+            "/api/logout",
+            {
+              method: "POST",
+              credentials: "same-origin"
+            }
+          );
+
+
+        if (!response.ok) {
+
+          throw new Error(
+            "Logout failed"
+          );
+
+        }
+
+
+        window.location.href =
+          "index.html";
+
+
+      } catch (error) {
+
+        console.error(
+          "Logout error:",
+          error
+        );
+
+
+        logoutButton.disabled =
+          false;
+
+      }
+
+    }
+  );
+
+}
 
 }
 
