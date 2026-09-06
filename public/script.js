@@ -6863,6 +6863,8 @@ function renderTrackService(request) {
       status
     );
 
+    /* Update the new Track Service interface */
+updateNewTrackUI(request);
 
   /* ========================================
      SERVICE
