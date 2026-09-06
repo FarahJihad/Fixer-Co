@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>Contact Us | Fixer.Co</title>
+
+
+  <!-- Font Awesome -->
+
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+  >
+
+
+  <link
+    rel="stylesheet"
+    href="style.css"
+  >
+
+</head>
+
+
+<body>
+
+
+  <!-- =========================
+       NAVBAR
+  ========================== -->
+
+  <header class="navbar">
+
+    <div class="container nav-content">
+
+
+      <a
+        href="index.html"
+        class="logo"
+      >
+        Fixer<span>.Co</span>
+      </a>
+
+
+      <nav class="nav-links">
+
+        <a href="index.html">
+          Home
+        </a>
+
+        <a href="services.html">
+          Services
+        </a>
+
+        <a href="technicians.html">
+          Find a Fixer
+        </a>
+
+        <a href="about.html">
+          About Us
+        </a>
+
+        <a
+          href="contact.html"
+          class="active"
+        >
+          Contact Us
+        </a>
+
+      </nav>
+
+
+      <div class="nav-actions">
+
+        <a
+          href="become-fixer.html"
+          class="become-fixer-nav"
+        >
+
+          <i class="fa-solid fa-screwdriver-wrench"></i>
+
+          Become a Fixer
+
+        </a>
+
+
+        <a
+          href="request.html"
+          class="nav-button"
+        >
+          Request Service
+        </a>
+
+      </div>
+
+
+    </div>
+
+  </header>
+
+
+  <main>
+
+
+    <!-- =========================
+         CONTACT PAGE
+    ========================== -->
+
+    <section class="contact-page">
+
+      <div class="container contact-wrapper">
+
+
+        <!-- =========================
+             LEFT SIDE
+        ========================== -->
+
+        <div class="contact-info">
+
+
+          <p class="section-label">
+            CONTACT US
+          </p>
+
+
+          <!-- Animated Contact Title -->
+
+          <h1 class="contact-title-animated">
+
+            <span class="contact-word contact-love">
+              We'd love to
+            </span>
+
+            <span class="contact-word contact-hear">
+              hear
+            </span>
+
+            <span class="contact-word contact-you">
+              from you<span class="contact-dot">.</span>
+            </span>
+
+          </h1>
+
+
+          <p class="contact-intro">
+
+            Have a question, suggestion,
+            or need help with fixer.co?
+            Send us a message and we'll
+            be happy to help.
+
+          </p>
+
+
+          <div class="contact-details">
+
+
+            <!-- EMAIL -->
+
+            <div class="contact-detail">
+
+              <div class="contact-detail-icon">
+
+                <i class="fa-solid fa-envelope"></i>
+
+              </div>
+
+
+              <div>
+
+                <p>
+                  EMAIL
+                </p>
+
+                <h3>
+                  hello@fixer.co
+                </h3>
+
+              </div>
+
+            </div>
+
+
+            <!-- PHONE -->
+
+            <div class="contact-detail">
+
+              <div class="contact-detail-icon">
+
+                <i class="fa-solid fa-phone"></i>
+
+              </div>
+
+
+              <div>
+
+                <p>
+                  PHONE
+                </p>
+
+                <h3>
+                  +966 590873032
+                </h3>
+
+              </div>
+
+            </div>
+
+
+            <!-- LOCATION -->
+
+            <div class="contact-detail">
+
+              <div class="contact-detail-icon">
+
+                <i class="fa-solid fa-location-dot"></i>
+
+              </div>
+
+
+              <div>
+
+                <p>
+                  LOCATION
+                </p>
+
+                <h3>
+                  Jeddah, Saudi Arabia
+                </h3>
+
+              </div>
+
+            </div>
+
+
+          </div>
+
+
+        </div>
+
+
+        <!-- =========================
+             CONTACT FORM
+        ========================== -->
+
+        <div class="contact-form-card">
+
+
+          <div class="contact-form-heading">
+
+            <p class="section-label">
+              SEND A MESSAGE
+            </p>
+
+
+            <h2>
+              How can we help?
+            </h2>
+
+
+            <p>
+              Fill in the form and send
+              your message to the fixer.co team.
+            </p>
+
+          </div>
+
+
+          <form id="contactForm">
+
+
+            <!-- NAME -->
+
+            <div class="form-group">
+
+              <label for="contactName">
+                Your Name
+              </label>
+
+
+              <input
+                type="text"
+                id="contactName"
+                placeholder="Enter your name"
+                required
+              >
+
+            </div>
+
+
+            <!-- EMAIL -->
+
+            <div class="form-group">
+
+              <label for="contactEmail">
+                Email Address
+              </label>
+
+
+              <input
+                type="email"
+                id="contactEmail"
+                placeholder="name@example.com"
+                required
+              >
+
+            </div>
+
+
+            <!-- SUBJECT -->
+
+            <div class="form-group">
+
+              <label for="contactSubject">
+                Subject
+              </label>
+
+
+              <input
+                type="text"
+                id="contactSubject"
+                placeholder="What is your message about?"
+              >
+
+            </div>
+
+
+            <!-- MESSAGE -->
+
+            <div class="form-group">
+
+              <label for="contactMessage">
+                Message
+              </label>
+
+
+              <textarea
+                id="contactMessage"
+                rows="6"
+                placeholder="Write your message here..."
+                required
+              ></textarea>
+
+            </div>
+
+
+            <!-- BUTTON -->
+
+            <button
+              type="submit"
+              class="submit-button"
+            >
+
+              Send Message
+
+              <i class="fa-solid fa-paper-plane"></i>
+
+            </button>
+
+
+            <!-- RESULT MESSAGE -->
+
+            <p
+              id="contactFormMessage"
+              class="form-message"
+            ></p>
+
+
+          </form>
+
+
+        </div>
+
+
+      </div>
+
+    </section>
+
+
+  </main>
+
+
+  <!-- =========================
+       FOOTER
+  ========================== -->
+
+  <footer class="footer">
+
+    <div class="container footer-content">
+
+
+      <div>
+
+        <a
+          href="index.html"
+          class="logo footer-logo"
+        >
+          Fixer<span>.Co</span>
+        </a>
+
+
+        <p>
+          The right fix. Right around you.
+        </p>
+
+      </div>
+
+
+      <div class="footer-links">
+
+        <a href="services.html">
+          Services
+        </a>
+
+        <a href="technicians.html">
+          Find a Fixer
+        </a>
+
+        <a href="about.html">
+          About Us
+        </a>
+
+        <a href="contact.html">
+          Contact Us
+        </a>
+
+        <a href="become-fixer.html">
+          Become a Fixer
+        </a>
+
+      </div>
+
+
+      <p>
+        © 2026 Fixer.Co
+      </p>
+
+
+    </div>
+
+  </footer>
+
+
+  <script src="script.js"></script>
+
+
+</body>
+
+</html>

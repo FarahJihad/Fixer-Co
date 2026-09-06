@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  />
+
+  <title>Request Service | fixer.co</title>
+
+  <!-- Font Awesome -->
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+  />
+
+  <link
+    rel="stylesheet"
+    href="style.css"
+  />
+</head>
+
+<body>
+
+  <!-- =========================
+       NAVBAR
+  ========================== -->
+
+  <header class="navbar">
+
+    <div class="container nav-content">
+
+      <a
+        href="index.html"
+        class="logo"
+      >
+        Fixer<span>.Co</span>
+      </a>
+
+      <nav class="nav-links">
+
+        <a href="index.html">
+          Home
+        </a>
+
+        <a href="services.html">
+          Services
+        </a>
+
+        <a href="technicians.html">
+          Find a Fixer
+        </a>
+
+        <a href="about.html">
+          About Us
+        </a>
+
+        <a href="contact.html">
+          Contact Us
+        </a>
+
+      </nav>
+
+
+      <div class="nav-actions">
+
+        <a
+          href="become-fixer.html"
+          class="become-fixer-nav"
+        >
+          <i class="fa-solid fa-screwdriver-wrench"></i>
+          Become a Fixer
+        </a>
+
+        <a
+          href="request.html"
+          class="nav-button active"
+        >
+          Request Service
+        </a>
+
+      </div>
+
+    </div>
+
+  </header>
+
+
+  <main>
+
+    <!-- =========================
+         PAGE INTRO
+    ========================== -->
+
+    <section class="request-page">
+
+      <div class="container request-page-wrapper">
+
+
+        <!-- LEFT SIDE -->
+
+        <div class="request-page-info">
+
+          <p class="section-label">
+            REQUEST A SERVICE
+          </p>
+
+          <h1>
+            Tell us what needs fixing.
+          </h1>
+
+          <p class="request-intro">
+            Share a few details about your problem
+            and we'll connect your request with the
+            right fixer.
+          </p>
+
+
+          <!-- Small information list -->
+
+          <div class="request-benefits">
+
+            <div class="request-benefit">
+
+              <span class="request-benefit-icon">
+                <i class="fa-solid fa-screwdriver-wrench"></i>
+              </span>
+
+              <div>
+
+                <h3>
+                  Choose your service
+                </h3>
+
+                <p>
+                  Select the type of home service you need.
+                </p>
+
+              </div>
+
+            </div>
+
+
+            <div class="request-benefit">
+
+              <span class="request-benefit-icon">
+                <i class="fa-solid fa-user-check"></i>
+              </span>
+
+              <div>
+
+                <h3>
+                  Select a fixer
+                </h3>
+
+                <p>
+                  Choose a trusted professional for your request.
+                </p>
+
+              </div>
+
+            </div>
+
+
+            <div class="request-benefit">
+
+              <span class="request-benefit-icon">
+                <i class="fa-solid fa-circle-check"></i>
+              </span>
+
+              <div>
+
+                <h3>
+                  Send your request
+                </h3>
+
+                <p>
+                  Your request will be saved and ready for review.
+                </p>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <!-- =========================
+             RIGHT SIDE / FORM
+        ========================== -->
+
+        <div class="request-form-card">
+
+          <div class="request-form-heading">
+
+            <p class="section-label">
+              SERVICE DETAILS
+            </p>
+
+            <h2>
+              Request a Fixer
+            </h2>
+
+            <p>
+              Fill in the information below to submit
+              your service request.
+            </p>
+
+          </div>
+
+
+          <form id="requestForm">
+
+
+            <!-- NAME + PHONE -->
+
+            <div class="form-row">
+
+              <div class="form-group">
+
+                <label for="customerName">
+                  Your Name
+                </label>
+
+                <input
+                  type="text"
+                  id="customerName"
+                  placeholder="Enter your name"
+                  required
+                />
+
+              </div>
+
+
+              <div class="form-group">
+
+                <label for="phone">
+                  Phone Number
+                </label>
+
+                <input
+                  type="tel"
+                  id="phone"
+                  placeholder="05XXXXXXXX"
+                  required
+                />
+
+              </div>
+
+            </div>
+
+
+            <!-- SERVICE -->
+
+            <div class="form-group">
+
+              <label for="serviceSelect">
+                Service
+              </label>
+
+              <select
+                id="serviceSelect"
+                required
+              >
+
+                <option value="">
+                  Select a service
+                </option>
+
+              </select>
+
+            </div>
+
+
+            <!-- TECHNICIAN -->
+
+            <div class="form-group">
+
+              <label for="technicianSelect">
+                Fixer
+              </label>
+
+              <select id="technicianSelect">
+
+                <option value="">
+                  Select a fixer
+                </option>
+
+              </select>
+
+            </div>
+
+
+            <!-- PROBLEM -->
+
+            <div class="form-group">
+
+              <label for="problemDescription">
+                Describe the Problem
+              </label>
+
+              <textarea
+                id="problemDescription"
+                rows="5"
+                placeholder="Tell us what is wrong..."
+                required
+              ></textarea>
+
+            </div>
+
+
+            <!-- SUBMIT -->
+
+            <button
+              type="submit"
+              class="submit-button"
+            >
+
+              Send Service Request
+
+              <i class="fa-solid fa-arrow-right"></i>
+
+            </button>
+
+
+            <!-- SUCCESS / ERROR MESSAGE -->
+
+            <p
+              id="formMessage"
+              class="form-message"
+            ></p>
+
+
+          </form>
+
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+
+  <!-- =========================
+       FOOTER
+  ========================== -->
+
+  <footer class="footer">
+
+    <div class="container footer-content">
+
+      <div>
+
+        <a
+          href="index.html"
+          class="logo footer-logo"
+        >
+          Fixer<span>.Co</span>
+        </a>
+
+        <p>
+          The right fix. Right around you.
+        </p>
+
+      </div>
+
+
+      <div class="footer-links">
+
+        <a href="services.html">
+          Services
+        </a>
+
+        <a href="technicians.html">
+          Find a Fixer
+        </a>
+
+        <a href="about.html">
+          About Us
+        </a>
+
+        <a href="contact.html">
+          Contact Us
+        </a>
+
+        <a href="become-fixer.html">
+          Become a Fixer
+        </a>
+
+      </div>
+
+
+      <p>
+        © 2026 Fixer.Co
+      </p>
+
+    </div>
+
+  </footer>
+
+
+  <script src="script.js"></script>
+
+</body>
+
+</html>

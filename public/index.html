@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  />
+
+  <title>Fixer.Co</title>
+
+  <!-- Font Awesome Icons -->
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+  />
+
+  <!-- Main CSS -->
+  <link
+    rel="stylesheet"
+    href="style.css"
+  />
+
+</head>
+
+
+<body>
+
+
+  <!-- =========================
+       WEBSITE INTRO
+  ========================== -->
+
+  <div
+    id="siteIntro"
+    class="site-intro"
+  >
+
+  <div class="intro-content">
+
+  <div class="intro-brand">
+    <span id="introText"></span>
+    <span class="intro-cursor"></span>
+  </div>
+
+  <p id="introTagline" class="intro-tagline">
+    The right fix. Right around you.
+  </p>
+
+</div>
+
+
+      <p
+        id="introTagline"
+        class="intro-tagline"
+      >
+        The right fix. Right around you.
+      </p>
+
+    </div>
+
+  </div>
+
+
+  <!-- =========================
+       NAVBAR
+  ========================== -->
+
+  <header class="navbar">
+
+    <div class="container nav-content">
+
+
+      <a
+        href="index.html"
+        class="logo"
+      >
+        Fixer<span>.Co</span>
+      </a>
+
+
+      <nav class="nav-links">
+
+        <a
+          href="index.html"
+          class="active"
+        >
+          Home
+        </a>
+
+        <a href="services.html">
+          Services
+        </a>
+
+        <a href="technicians.html">
+          Find a Fixer
+        </a>
+
+        <a href="about.html">
+          About Us
+        </a>
+
+        <a href="contact.html">
+          Contact Us
+        </a>
+
+      </nav>
+
+
+      <div class="nav-actions">
+
+        <a
+          href="become-fixer.html"
+          class="become-fixer-nav"
+        >
+
+          <i class="fa-solid fa-screwdriver-wrench"></i>
+
+          Become a Fixer
+
+        </a>
+
+
+        <a
+          href="request.html"
+          class="nav-button"
+        >
+          Request Service
+        </a>
+
+      </div>
+
+
+    </div>
+
+  </header>
+
+
+  <main>
+
+
+    <!-- =========================
+         HERO SECTION
+    ========================== -->
+
+    <section class="hero">
+
+      <div class="container hero-content">
+
+
+        <div class="hero-text">
+
+
+          <p class="hero-label">
+            Trusted local home services
+          </p>
+
+
+          <h1>
+
+            What needs fixing?
+
+            <span>
+              We’ll help you find the right fixer.
+            </span>
+
+          </h1>
+
+
+          <p class="hero-description">
+
+            Describe your problem or choose a service
+            to discover trusted technicians near you.
+
+          </p>
+
+
+          <!-- Problem Search -->
+
+          <form
+            id="problemForm"
+            class="problem-search"
+          >
+
+            <input
+              type="text"
+              id="problemInput"
+              placeholder="e.g. My AC is running but not cooling..."
+              required
+            />
+
+
+            <button type="submit">
+              Find a Fixer
+            </button>
+
+          </form>
+
+
+          <!-- =========================
+               QUICK SERVICE CATEGORIES
+          ========================== -->
+
+          <div class="search-categories">
+
+            <p class="categories-label">
+              Or choose a category
+            </p>
+
+
+            <div class="search-categories-list">
+
+
+              <!-- AC & COOLING -->
+
+              <button
+                type="button"
+                class="search-category quick-search"
+                data-service="1"
+              >
+
+                <span class="search-category-icon">
+
+                  <i class="fa-solid fa-snowflake"></i>
+
+                </span>
+
+                <span>
+                  AC & Cooling
+                </span>
+
+              </button>
+
+
+              <!-- PLUMBING -->
+
+              <button
+                type="button"
+                class="search-category quick-search"
+                data-service="2"
+              >
+
+                <span class="search-category-icon">
+
+                  <i class="fa-solid fa-droplet"></i>
+
+                </span>
+
+                <span>
+                  Plumbing
+                </span>
+
+              </button>
+
+
+              <!-- ELECTRICAL -->
+
+              <button
+                type="button"
+                class="search-category quick-search"
+                data-service="3"
+              >
+
+                <span class="search-category-icon">
+
+                  <i class="fa-solid fa-bolt"></i>
+
+                </span>
+
+                <span>
+                  Electrical
+                </span>
+
+              </button>
+
+
+              <!-- APPLIANCES -->
+
+              <button
+                type="button"
+                class="search-category quick-search"
+                data-service="4"
+              >
+
+                <span class="search-category-icon">
+
+                  <i class="fa-solid fa-tv"></i>
+
+                </span>
+
+                <span>
+                  Appliances
+                </span>
+
+              </button>
+
+
+              <!-- FURNITURE -->
+
+              <button
+                type="button"
+                class="search-category quick-search"
+                data-service="5"
+              >
+
+                <span class="search-category-icon">
+
+                  <i class="fa-solid fa-couch"></i>
+
+                </span>
+
+                <span>
+                  Furniture
+                </span>
+
+              </button>
+
+
+              <!-- GENERAL MAINTENANCE -->
+
+              <button
+                type="button"
+                class="search-category quick-search"
+                data-service="6"
+              >
+
+                <span class="search-category-icon">
+
+                  <i class="fa-solid fa-house"></i>
+
+                </span>
+
+                <span>
+                  General
+                </span>
+
+              </button>
+
+
+            </div>
+
+          </div>
+
+
+        </div>
+
+
+        <!-- =========================
+             EMERGENCY CARD
+        ========================== -->
+
+        <div class="hero-side-card">
+
+
+          <div class="emergency-card-icon">
+
+            <i class="fa-solid fa-bolt"></i>
+
+          </div>
+
+
+          <p class="card-label">
+            NEED HELP NOW?
+          </p>
+
+
+          <h2>
+            Urgent problem?
+          </h2>
+
+
+          <p>
+            Find fixers who are currently
+            available near you.
+          </p>
+
+
+          <a
+            href="technicians.html?available=true"
+            class="card-button"
+          >
+
+            Find Available Fixers
+
+            <i class="fa-solid fa-arrow-right"></i>
+
+          </a>
+
+
+        </div>
+
+
+      </div>
+
+    </section>
+
+
+    <!-- =========================
+         SERVICES PREVIEW
+    ========================== -->
+
+<section
+      class="services-section reveal"
+      id="services"
+    >
+
+      <div class="container">
+
+
+        <div class="section-heading">
+
+
+          <div>
+
+            <p class="section-label">
+              OUR SERVICES
+            </p>
+
+            <h2>
+              What can we help you with?
+            </h2>
+
+          </div>
+
+
+          <a
+            href="services.html"
+            class="text-link"
+          >
+
+            View all services
+
+            <i class="fa-solid fa-arrow-right"></i>
+
+          </a>
+
+
+        </div>
+
+
+        <!-- Services loaded from database -->
+
+        <div
+          id="servicesContainer"
+          class="services-grid"
+        >
+
+          <p class="loading">
+            Loading services...
+          </p>
+
+        </div>
+
+
+      </div>
+
+    </section>
+
+
+
+
+    <!-- =========================
+         TOP FIXERS
+    ========================== -->
+
+    <section class="technicians-section reveal">
+
+      <div class="container">
+
+
+        <div class="section-heading">
+
+
+          <div>
+
+            <p class="section-label">
+              TRUSTED PROFESSIONALS
+            </p>
+
+            <h2>
+              Top rated fixers
+            </h2>
+
+          </div>
+
+
+          <a
+            href="technicians.html"
+            class="text-link"
+          >
+
+            View all fixers
+
+            <i class="fa-solid fa-arrow-right"></i>
+
+          </a>
+
+
+        </div>
+
+
+        <!-- Fixers loaded from database -->
+
+        <div
+          id="techniciansContainer"
+          class="technicians-grid"
+        >
+
+          <p class="loading">
+            Loading fixers...
+          </p>
+
+        </div>
+
+
+      </div>
+
+    </section>
+
+
+    <!-- =========================
+         HOW IT WORKS
+    ========================== -->
+
+    <section class="how-section reveal">
+      <div class="container">
+
+
+        <div class="center-heading">
+
+          <p class="section-label">
+            SIMPLE & FAST
+          </p>
+
+          <h2>
+            How Fixer.Co works
+          </h2>
+
+        </div>
+
+
+        <div class="steps">
+
+
+          <!-- Step 1 -->
+
+          <article class="step">
+
+            <div class="step-icon">
+
+              <i class="fa-regular fa-message"></i>
+
+            </div>
+
+            <span>
+              01
+            </span>
+
+            <h3>
+              Describe it
+            </h3>
+
+            <p>
+              Tell us what is wrong
+              in your own words.
+            </p>
+
+          </article>
+
+
+          <!-- Step 2 -->
+
+          <article class="step">
+
+            <div class="step-icon">
+
+              <i class="fa-solid fa-magnifying-glass"></i>
+
+            </div>
+
+            <span>
+              02
+            </span>
+
+            <h3>
+              Compare
+            </h3>
+
+            <p>
+              Browse technicians,
+              ratings and availability.
+            </p>
+
+          </article>
+
+
+          <!-- Step 3 -->
+
+          <article class="step">
+
+            <div class="step-icon">
+
+              <i class="fa-solid fa-screwdriver-wrench"></i>
+
+            </div>
+
+            <span>
+              03
+            </span>
+
+            <h3>
+              Fix it
+            </h3>
+
+            <p>
+              Choose your fixer and
+              send a service request.
+            </p>
+
+          </article>
+
+
+        </div>
+
+
+      </div>
+
+    </section>
+    <!-- =========================
+         CALL TO ACTION
+    ========================== -->
+
+    <section class="home-cta reveal">
+
+      <div class="container home-cta-content">
+
+
+        <div>
+
+          <p class="section-label">
+            READY TO GET STARTED?
+          </p>
+
+     <h2>
+  Stop searching around.
+  <br>
+  Find the right help in one place.
+</h2>
+
+        </div>
+
+
+        <a
+          href="request.html"
+          class="cta-button"
+        >
+
+          Request a Service
+
+          <i class="fa-solid fa-arrow-right"></i>
+
+        </a>
+
+
+      </div>
+
+    </section>
+
+
+  </main>
+
+
+  <!-- =========================
+       FOOTER
+  ========================== -->
+
+  <footer class="footer">
+
+    <div class="container footer-content">
+
+
+      <div>
+
+        <a
+          href="index.html"
+          class="logo footer-logo"
+        >
+          Fixer<span>.Co</span>
+        </a>
+
+        <p>
+          The right fix. Right around you.
+        </p>
+
+      </div>
+
+
+      <div class="footer-links">
+
+        <a href="services.html">
+          Services
+        </a>
+
+        <a href="technicians.html">
+          Find a Fixer
+        </a>
+
+        <a href="about.html">
+          About Us
+        </a>
+
+        <a href="contact.html">
+          Contact Us
+        </a>
+
+        <a href="become-fixer.html">
+          Become a Fixer
+        </a>
+
+      </div>
+
+
+      <p>
+        © 2026 Fixer.Co
+      </p>
+
+
+    </div>
+
+  </footer>
+
+
+  <script src="script.js"></script>
+
+
+</body>
+
+</html>

@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  />
+
+  <title>Find a Fixer | Fixer.Co</title>
+
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+  />
+
+  <link
+    rel="stylesheet"
+    href="style.css"
+  />
+</head>
+
+<body>
+
+  <header class="navbar">
+    <div class="container nav-content">
+
+      <a href="index.html" class="logo">
+        Fixer<span>.Co</span>
+      </a>
+
+      <nav class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="services.html">Services</a>
+        <a href="technicians.html" class="active">Find a Fixer</a>
+        <a href="about.html">About Us</a>
+        <a href="contact.html">Contact Us</a>
+      </nav>
+
+      <div class="nav-actions">
+
+        <a
+          href="become-fixer.html"
+          class="become-fixer-nav"
+        >
+          <i class="fa-solid fa-screwdriver-wrench"></i>
+          Become a Fixer
+        </a>
+
+        <a
+          href="request.html"
+          class="nav-button"
+        >
+          Request Service
+        </a>
+
+      </div>
+
+    </div>
+  </header>
+
+  <main>
+
+    <section class="page-hero">
+      <div class="container">
+
+        <p class="section-label">
+          FIND A FIXER
+        </p>
+
+        <h1>
+          Compare trusted professionals.
+        </h1>
+
+        <p>
+          Browse Fixers by service, rating, distance, availability and price.
+        </p>
+
+      </div>
+    </section>
+
+    <section class="fixers-page-section">
+      <div class="container">
+
+        <div class="fixer-filters">
+
+          <div class="filter-group">
+            <label for="filterService">
+              Service
+            </label>
+
+            <select id="filterService">
+              <option value="">
+                All Services
+              </option>
+            </select>
+          </div>
+
+          <div class="filter-group">
+            <label for="filterAvailability">
+              Availability
+            </label>
+
+            <select id="filterAvailability">
+              <option value="">
+                All Fixers
+              </option>
+
+              <option value="available">
+                Available Now
+              </option>
+            </select>
+          </div>
+
+          <div class="filter-group">
+            <label for="filterSort">
+              Sort By
+            </label>
+
+            <select id="filterSort">
+              <option value="recommended">
+                Recommended
+              </option>
+
+              <option value="nearest">
+                Nearest
+              </option>
+
+              <option value="rating">
+                Highest Rated
+              </option>
+
+              <option value="price">
+                Lowest Price
+              </option>
+            </select>
+          </div>
+
+          <button
+            type="button"
+            id="useLocationButton"
+            class="location-filter-button"
+          >
+            <i class="fa-solid fa-location-crosshairs"></i>
+            Use My Location
+          </button>
+
+          <button
+            type="button"
+            id="clearFilters"
+            class="clear-filter-button"
+          >
+            <i class="fa-solid fa-rotate-left"></i>
+            Clear Filters
+          </button>
+
+        </div>
+
+        <p
+          id="locationStatus"
+          class="location-status"
+          aria-live="polite"
+        ></p>
+
+        <div class="results-header">
+
+          <div>
+            <p class="section-label">
+              AVAILABLE PROFESSIONALS
+            </p>
+
+            <h2 id="fixerResultsTitle">
+              All Fixers
+            </h2>
+          </div>
+
+          <p id="fixerCount">
+            Loading...
+          </p>
+
+        </div>
+
+        <div
+          id="allTechniciansContainer"
+          class="technicians-grid"
+        >
+          <p class="loading">
+            Loading Fixers...
+          </p>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+
+    <div class="container footer-content">
+
+      <div>
+        <a
+          href="index.html"
+          class="logo footer-logo"
+        >
+          Fixer<span>.Co</span>
+        </a>
+
+        <p>
+          The right fix. Right around you.
+        </p>
+      </div>
+
+      <div class="footer-links">
+        <a href="services.html">Services</a>
+        <a href="technicians.html">Find a Fixer</a>
+        <a href="about.html">About Us</a>
+        <a href="contact.html">Contact Us</a>
+        <a href="become-fixer.html">Become a Fixer</a>
+      </div>
+
+      <p>
+        © 2026 Fixer.Co
+      </p>
+
+    </div>
+
+  </footer>
+
+  <script src="script.js"></script>
+
+</body>
+
+</html>
