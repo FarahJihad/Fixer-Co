@@ -10352,94 +10352,70 @@ body.track-map-open {
 }
 
 /* ========================================
-   INTRO SOFT MOVING GLOW
+   INTRO COLOR REVEAL
 ======================================== */
 
 .site-intro {
-  position: fixed;
-  inset: 0;
   overflow: hidden;
 }
-
 
 .intro-content {
   position: relative;
   z-index: 2;
 }
 
-
-.intro-glow {
+.intro-color-reveal {
   position: absolute;
+
+  width: 120px;
+  height: 120px;
+
+  left: 50%;
+  top: 50%;
 
   border-radius: 50%;
 
-  filter: blur(90px);
+  background: rgba(34, 160, 107, 0.13);
+
+  filter: blur(18px);
+
+  transform:
+    translate(-50%, -50%)
+    scale(0);
+
+  opacity: 0;
 
   pointer-events: none;
 
-  opacity: 0.28;
-
   z-index: 1;
-}
-
-
-.intro-glow-one {
-  width: 420px;
-  height: 420px;
-
-  background: rgba(34, 160, 107, 0.42);
-
-  top: -120px;
-  left: -100px;
 
   animation:
-    introGlowOne 5s ease-in-out infinite alternate;
+    introColorReveal 2.4s
+    cubic-bezier(0.22, 1, 0.36, 1)
+    0.4s
+    forwards;
 }
 
 
-.intro-glow-two {
-  width: 360px;
-  height: 360px;
+@keyframes introColorReveal {
 
-  background: rgba(34, 160, 107, 0.26);
-
-  right: -100px;
-  bottom: -120px;
-
-  animation:
-    introGlowTwo 5.5s ease-in-out infinite alternate;
-}
-
-
-@keyframes introGlowOne {
-
-  from {
+  0% {
+    opacity: 0;
     transform:
-      translate(0, 0)
-      scale(1);
+      translate(-50%, -50%)
+      scale(0);
   }
 
-  to {
-    transform:
-      translate(160px, 90px)
-      scale(1.15);
+  15% {
+    opacity: 0.65;
   }
 
-}
+  100% {
+    opacity: 1;
 
-
-@keyframes introGlowTwo {
-
-  from {
     transform:
-      translate(0, 0)
-      scale(1);
-  }
-
-  to {
-    transform:
-      translate(-140px, -80px)
-      scale(1.12);
+      translate(-50%, -50%)
+      scale(14);
   }
 
 }
@@ -10447,8 +10423,9 @@ body.track-map-open {
 
 @media (prefers-reduced-motion: reduce) {
 
-  .intro-glow {
+  .intro-color-reveal {
     animation: none;
+    opacity: 0;
   }
 
 }
