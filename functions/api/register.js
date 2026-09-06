@@ -334,6 +334,9 @@ export async function onRequestPost(context) {
 
     // ========================================
     // INSERT USER
+    // IMPORTANT:
+    // Save the hashed password
+    // inside the existing "password" column
     // ========================================
 
     const result =
@@ -345,7 +348,7 @@ export async function onRequestPost(context) {
             name,
             email,
             phone,
-            password_hash
+            password
           )
           VALUES (?, ?, ?, ?)
           `
@@ -396,7 +399,7 @@ export async function onRequestPost(context) {
     );
 
 
-    // Temporary debugging error
+    // Temporary debugging response
     return jsonResponse(
       {
         success: false,
