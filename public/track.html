@@ -7,24 +7,29 @@
 
   <title>Track Service | Fixer.Co</title>
 
+  <!-- Font Awesome -->
   <link
     rel="stylesheet"
     href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
   >
 
+  <!-- Leaflet -->
   <link
     rel="stylesheet"
     href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
     crossorigin=""
   >
 
+  <!-- Main CSS -->
   <link rel="stylesheet" href="style.css">
 </head>
 
 
 <body>
 
-  <!-- ================= NAVBAR ================= -->
+  <!-- ========================================
+       NAVBAR
+  ========================================= -->
 
   <nav class="navbar">
 
@@ -34,13 +39,31 @@
         Fixer<span>.Co</span>
       </a>
 
+
       <div class="nav-links">
-        <a href="index.html">Home</a>
-        <a href="services.html">Services</a>
-        <a href="technicians.html">Find a Fixer</a>
-        <a href="about.html">About Us</a>
-        <a href="contact.html">Contact Us</a>
+
+        <a href="index.html">
+          Home
+        </a>
+
+        <a href="services.html">
+          Services
+        </a>
+
+        <a href="technicians.html">
+          Find a Fixer
+        </a>
+
+        <a href="about.html">
+          About Us
+        </a>
+
+        <a href="contact.html">
+          Contact Us
+        </a>
+
       </div>
+
 
       <div class="nav-actions">
 
@@ -51,6 +74,7 @@
           <i class="fa-solid fa-screwdriver-wrench"></i>
           Become a Fixer
         </a>
+
 
         <a
           href="login.html"
@@ -67,16 +91,22 @@
   </nav>
 
 
-  <!-- ================= TRACK PAGE ================= -->
+
+  <!-- ========================================
+       TRACK SERVICE PAGE
+  ========================================= -->
 
   <main class="track-page">
 
 
-    <!-- ================= HERO ================= -->
+    <!-- ========================================
+         TOP / INTRO
+    ========================================= -->
 
-    <section class="track-hero">
+    <section class="track-new-hero">
 
       <div class="container">
+
 
         <a
           href="my-requests.html"
@@ -85,50 +115,6 @@
           <i class="fa-solid fa-arrow-left"></i>
           Back to My Requests
         </a>
-
-
-        <div class="track-hero-row">
-
-          <div>
-
-            <p class="section-label">
-              SERVICE TRACKING
-            </p>
-
-            <h1>
-              Follow your service
-              <br>
-              <span>as it happens.</span>
-            </h1>
-
-            <p class="track-hero-copy">
-              See your latest request status, fixer details,
-              and saved location in one place.
-            </p>
-
-          </div>
-
-
-          <div
-            class="track-live-pill"
-            id="trackLivePill"
-          >
-            <span></span>
-            Auto-refreshing
-          </div>
-
-        </div>
-
-      </div>
-
-    </section>
-
-
-    <!-- ================= CONTENT ================= -->
-
-    <section class="track-content">
-
-      <div class="container">
 
 
         <!-- LOADING -->
@@ -141,14 +127,15 @@
           <div class="track-loader-ring"></div>
 
           <strong>
-            Loading your service journey...
+            Loading your service...
           </strong>
 
           <span>
-            Getting the latest request details.
+            Getting the latest update.
           </span>
 
         </div>
+
 
 
         <!-- ERROR -->
@@ -179,22 +166,73 @@
         </div>
 
 
-        <!-- DASHBOARD -->
+
+        <!-- ========================================
+             DASHBOARD
+        ========================================= -->
 
         <div
           id="trackDashboard"
-          class="track-dashboard"
+          class="track-dashboard track-new-dashboard"
           hidden
         >
 
 
-          <!-- ================= STATUS CARD ================= -->
+          <!-- ========================================
+               LIVE HERO
+          ========================================= -->
 
-          <section class="track-status-card track-reveal">
+          <section class="track-live-hero">
 
-            <div class="track-status-top">
 
-              <div class="track-service-heading">
+            <div class="track-live-top">
+
+
+              <div>
+
+                <p class="track-eyebrow">
+                  SERVICE TRACKING
+                </p>
+
+
+                <h1>
+                  <span id="trackNowTitle">
+                    Request received
+                  </span>
+                </h1>
+
+
+                <p
+                  class="track-live-description"
+                  id="trackNowDescription"
+                >
+                  Your service request has been received.
+                </p>
+
+              </div>
+
+
+
+              <div
+                class="track-live-pill"
+                id="trackLivePill"
+              >
+                <span></span>
+                Auto-refreshing
+              </div>
+
+
+            </div>
+
+
+
+            <!-- SERVICE SUMMARY -->
+
+            <div class="track-hero-service-row">
+
+
+              <div class="track-hero-service">
+
 
                 <div
                   class="track-service-icon"
@@ -207,16 +245,54 @@
                 <div>
 
                   <span>
-                    CURRENT SERVICE
+                    SERVICE
                   </span>
 
-                  <h2 id="trackServiceName">
+                  <strong id="trackServiceName">
                     Service Request
-                  </h2>
+                  </strong>
 
                 </div>
 
+
               </div>
+
+
+
+              <div class="track-hero-divider"></div>
+
+
+
+              <div class="track-hero-fixer">
+
+
+                <div
+                  class="track-mini-avatar"
+                  id="trackHeroFixerAvatar"
+                >
+                  FX
+                </div>
+
+
+                <div>
+
+                  <span>
+                    YOUR FIXER
+                  </span>
+
+                  <strong id="trackHeroFixerName">
+                    Fixer
+                  </strong>
+
+                </div>
+
+
+              </div>
+
+
+
+              <div class="track-hero-divider"></div>
+
 
 
               <div
@@ -232,145 +308,159 @@
 
               </div>
 
+
             </div>
 
 
-            <!-- CURRENT STATUS -->
 
-            <div class="track-now-panel">
+            <!-- REFRESH -->
 
-              <div
-                class="track-now-icon"
-                id="trackNowIcon"
-              >
-                <i class="fa-solid fa-paper-plane"></i>
-              </div>
+            <button
+              type="button"
+              id="trackRefreshButton"
+              class="track-hero-refresh"
+              aria-label="Refresh status"
+              title="Refresh status"
+            >
+              <i class="fa-solid fa-rotate"></i>
+            </button>
 
+
+
+            <!-- SCROLL CTA -->
+
+            <button
+              type="button"
+              class="track-scroll-button"
+              id="trackExploreButton"
+            >
+
+              <span>
+                See your service journey
+              </span>
+
+              <i class="fa-solid fa-arrow-down"></i>
+
+            </button>
+
+
+          </section>
+
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+
+    <!-- ========================================
+         DASHBOARD CONTENT
+    ========================================= -->
+
+    <section class="track-new-content">
+
+      <div class="container">
+
+
+        <div
+          id="trackJourneyContent"
+          class="track-journey-content"
+        >
+
+
+          <!-- ========================================
+               WHAT'S NEXT
+          ========================================= -->
+
+          <section
+            class="track-next-card track-scroll-reveal"
+            id="trackNextCard"
+          >
+
+
+            <div class="track-next-icon">
+
+              <i
+                class="fa-solid fa-arrow-right"
+                id="trackNextIcon"
+              ></i>
+
+            </div>
+
+
+
+            <div class="track-next-content">
+
+              <span>
+                WHAT'S NEXT?
+              </span>
+
+              <h2 id="trackNextTitle">
+                Waiting for your Fixer
+              </h2>
+
+              <p id="trackNextDescription">
+                Your Fixer needs to accept your request first.
+              </p>
+
+            </div>
+
+
+
+            <div class="track-next-stage">
+
+              <span>
+                NEXT STAGE
+              </span>
+
+              <strong id="trackNextStage">
+                Accepted
+              </strong>
+
+            </div>
+
+
+          </section>
+
+
+
+          <!-- ========================================
+               JOURNEY
+          ========================================= -->
+
+          <section
+            class="track-journey-card track-scroll-reveal"
+            id="trackJourneySection"
+          >
+
+
+            <div class="track-section-heading">
 
               <div>
 
                 <span>
-                  RIGHT NOW
+                  YOUR SERVICE JOURNEY
                 </span>
 
-                <h3 id="trackNowTitle">
-                  Request received
-                </h3>
-
-                <p id="trackNowDescription">
-                  Your request has been created successfully.
-                </p>
+                <h2>
+                  From request to completion.
+                </h2>
 
               </div>
 
 
-              <button
-                type="button"
-                id="trackRefreshButton"
-                class="track-icon-btn"
-                title="Refresh status"
-                aria-label="Refresh status"
-              >
-                <i class="fa-solid fa-rotate"></i>
-              </button>
+              <p>
+                Follow every stage of your service.
+              </p>
 
             </div>
 
-            <!-- ================= WHAT'S NEXT ================= -->
 
-<div
-  class="track-next-card track-scroll-reveal"
-  id="trackNextCard"
->
-
-  <div class="track-next-icon">
-    <i
-      class="fa-solid fa-arrow-right"
-      id="trackNextIcon"
-    ></i>
-  </div>
-
-  <div class="track-next-content">
-
-    <span>
-      WHAT'S NEXT?
-    </span>
-
-    <h3 id="trackNextTitle">
-      Waiting for your Fixer
-    </h3>
-
-    <p id="trackNextDescription">
-      Your Fixer needs to accept your request first.
-    </p>
-
-  </div>
-
-  <div class="track-next-stage">
-
-    <span>
-      NEXT STAGE
-    </span>
-
-    <strong id="trackNextStage">
-      Accepted
-    </strong>
-
-  </div>
-
-</div>
-<!-- ================= WHAT'S NEXT ================= -->
-
-<div
-  class="track-next-card track-scroll-reveal"
-  id="trackNextCard"
->
-
-  <div class="track-next-icon">
-
-    <i
-      class="fa-solid fa-arrow-right"
-      id="trackNextIcon"
-    ></i>
-
-  </div>
-
-
-  <div class="track-next-content">
-
-    <span>
-      WHAT'S NEXT?
-    </span>
-
-    <h3 id="trackNextTitle">
-      Waiting for your Fixer
-    </h3>
-
-    <p id="trackNextDescription">
-      Your Fixer needs to accept your request first.
-    </p>
-
-  </div>
-
-
-  <div class="track-next-stage">
-
-    <span>
-      NEXT STAGE
-    </span>
-
-    <strong id="trackNextStage">
-      Accepted
-    </strong>
-
-  </div>
-
-</div>
-
-            <!-- ================= TIMELINE ================= -->
 
             <div
-              class="track-timeline"
+              class="track-timeline track-vertical-timeline"
               id="trackTimeline"
             >
 
@@ -384,18 +474,32 @@
               >
 
                 <span class="track-step-marker">
-                  <i class="fa-solid fa-circle"></i>
+
+                  <span class="track-step-dot">
+                    <i class="fa-solid fa-paper-plane"></i>
+                  </span>
+
                 </span>
 
-                <strong>
-                  Requested
-                </strong>
 
-                <small>
-                  Sent
-                </small>
+                <span class="track-step-content">
+
+                  <small>
+                    STEP 01
+                  </small>
+
+                  <strong>
+                    Request sent
+                  </strong>
+
+                  <span>
+                    Your service request was sent to the Fixer.
+                  </span>
+
+                </span>
 
               </button>
+
 
 
               <!-- ACCEPTED -->
@@ -407,18 +511,32 @@
               >
 
                 <span class="track-step-marker">
-                  <i class="fa-solid fa-circle"></i>
+
+                  <span class="track-step-dot">
+                    <i class="fa-solid fa-check"></i>
+                  </span>
+
                 </span>
 
-                <strong>
-                  Accepted
-                </strong>
 
-                <small>
-                  Confirmed
-                </small>
+                <span class="track-step-content">
+
+                  <small>
+                    STEP 02
+                  </small>
+
+                  <strong>
+                    Fixer accepts
+                  </strong>
+
+                  <span>
+                    Your Fixer confirms the service request.
+                  </span>
+
+                </span>
 
               </button>
+
 
 
               <!-- ON THE WAY -->
@@ -430,18 +548,32 @@
               >
 
                 <span class="track-step-marker">
-                  <i class="fa-solid fa-circle"></i>
+
+                  <span class="track-step-dot">
+                    <i class="fa-solid fa-car-side"></i>
+                  </span>
+
                 </span>
 
-                <strong>
-                  On the way
-                </strong>
 
-                <small>
-                  Traveling
-                </small>
+                <span class="track-step-content">
+
+                  <small>
+                    STEP 03
+                  </small>
+
+                  <strong>
+                    On the way
+                  </strong>
+
+                  <span>
+                    Your Fixer is heading toward the service location.
+                  </span>
+
+                </span>
 
               </button>
+
 
 
               <!-- IN PROGRESS -->
@@ -453,18 +585,32 @@
               >
 
                 <span class="track-step-marker">
-                  <i class="fa-solid fa-circle"></i>
+
+                  <span class="track-step-dot">
+                    <i class="fa-solid fa-screwdriver-wrench"></i>
+                  </span>
+
                 </span>
 
-                <strong>
-                  In progress
-                </strong>
 
-                <small>
-                  Working
-                </small>
+                <span class="track-step-content">
+
+                  <small>
+                    STEP 04
+                  </small>
+
+                  <strong>
+                    Service in progress
+                  </strong>
+
+                  <span>
+                    Your Fixer is currently working on your service.
+                  </span>
+
+                </span>
 
               </button>
+
 
 
               <!-- COMPLETED -->
@@ -476,18 +622,32 @@
               >
 
                 <span class="track-step-marker">
-                  <i class="fa-solid fa-circle"></i>
+
+                  <span class="track-step-dot">
+                    <i class="fa-solid fa-flag-checkered"></i>
+                  </span>
+
                 </span>
 
-                <strong>
-                  Completed
-                </strong>
 
-                <small>
-                  Finished
-                </small>
+                <span class="track-step-content">
+
+                  <small>
+                    STEP 05
+                  </small>
+
+                  <strong>
+                    Completed
+                  </strong>
+
+                  <span>
+                    Service finished. Your review becomes available.
+                  </span>
+
+                </span>
 
               </button>
+
 
             </div>
 
@@ -496,62 +656,70 @@
 
               <i class="fa-regular fa-hand-pointer"></i>
 
-              Click any stage to see what it means.
+              Select any stage to learn more.
 
             </p>
+
 
           </section>
 
 
-          <!-- ================= MAIN GRID ================= -->
 
-          <div class="track-main-grid">
+          <!-- ========================================
+               LOCATION
+          ========================================= -->
 
-
-            <!-- ================= MAP ================= -->
-
-            <section
-              class="track-map-card track-reveal"
-              id="trackMapCard"
-            >
-
-              <div class="track-card-heading">
-
-                <div>
-
-                  <span>
-                    FIXER LOCATION
-                  </span>
-
-                  <h2>
-                    Location map
-                  </h2>
-
-                </div>
+          <section
+            class="track-location-section track-scroll-reveal"
+          >
 
 
-                <div class="track-map-actions">
+            <div class="track-section-heading">
 
-                  <button
-                    type="button"
-                    id="trackCenterMap"
-                  >
-                    <i class="fa-solid fa-location-crosshairs"></i>
-                    Center
-                  </button>
+              <div>
 
+                <span>
+                  FIXER LOCATION
+                </span>
 
-                  <button
-                    type="button"
-                    id="trackExpandMap"
-                    aria-label="Expand map"
-                  >
-                    <i class="fa-solid fa-expand"></i>
-                  </button>
-
-                </div>
+                <h2>
+                  Know where your Fixer is.
+                </h2>
 
               </div>
+
+
+              <div class="track-map-actions">
+
+
+                <button
+                  type="button"
+                  id="trackCenterMap"
+                >
+                  <i class="fa-solid fa-location-crosshairs"></i>
+                  Center
+                </button>
+
+
+                <button
+                  type="button"
+                  id="trackExpandMap"
+                  aria-label="Expand map"
+                >
+                  <i class="fa-solid fa-expand"></i>
+                </button>
+
+
+              </div>
+
+            </div>
+
+
+
+            <div
+              class="track-map-card"
+              id="trackMapCard"
+            >
 
 
               <div class="track-map-wrap">
@@ -559,7 +727,11 @@
                 <div id="trackMap"></div>
 
 
-                <div class="track-map-floating">
+
+                <!-- FLOATING FIXER CARD -->
+
+                <div class="track-map-floating track-map-profile">
+
 
                   <div
                     class="track-mini-avatar"
@@ -569,7 +741,7 @@
                   </div>
 
 
-                  <div>
+                  <div class="track-map-profile-info">
 
                     <span>
                       YOUR FIXER
@@ -585,12 +757,26 @@
 
                   </div>
 
+
+                  <a
+                    href="#"
+                    id="trackMapProfileButton"
+                    class="track-map-profile-arrow"
+                    aria-label="View Fixer profile"
+                  >
+                    <i class="fa-solid fa-arrow-right"></i>
+                  </a>
+
+
                 </div>
+
 
               </div>
 
 
+
               <div class="track-map-footer">
+
 
                 <span>
 
@@ -605,174 +791,256 @@
                   Updated just now
                 </span>
 
+
               </div>
+
+
+            </div>
+
+
+          </section>
+
+
+
+          <!-- ========================================
+               DETAILS GRID
+          ========================================= -->
+
+          <div class="track-details-grid">
+
+
+            <!-- FIXER -->
+
+            <section
+              class="track-fixer-card track-scroll-reveal"
+            >
+
+
+              <span class="track-card-label">
+                YOUR FIXER
+              </span>
+
+
+
+              <div class="track-fixer-head">
+
+
+                <div
+                  class="track-fixer-avatar"
+                  id="trackFixerAvatar"
+                >
+                  FX
+                </div>
+
+
+                <div>
+
+                  <h2 id="trackFixerName">
+                    Fixer
+                  </h2>
+
+                  <p>
+                    <i class="fa-solid fa-circle-check"></i>
+                    Verified professional
+                  </p>
+
+                </div>
+
+
+              </div>
+
+
+
+              <div class="track-fixer-stats">
+
+
+                <div>
+
+                  <span>
+                    RATING
+                  </span>
+
+                  <strong>
+
+                    <i class="fa-solid fa-star"></i>
+
+                    <span id="trackFixerRating">
+                      —
+                    </span>
+
+                  </strong>
+
+                </div>
+
+
+
+                <div>
+
+                  <span>
+                    STARTING FROM
+                  </span>
+
+                  <strong id="trackFixerPrice">
+                    —
+                  </strong>
+
+                </div>
+
+
+              </div>
+
+
+
+              <div class="track-fixer-location">
+
+                <i class="fa-solid fa-location-dot"></i>
+
+                <span id="trackFixerLocation">
+                  Location unavailable
+                </span>
+
+              </div>
+
+
+
+              <a
+                id="trackViewFixerButton"
+                href="#"
+                class="track-secondary-btn"
+              >
+                View Fixer Profile
+
+                <i class="fa-solid fa-arrow-right"></i>
+              </a>
+
 
             </section>
 
 
-            <!-- ================= SIDE COLUMN ================= -->
 
-            <aside class="track-side-column">
+            <!-- REQUEST DETAILS -->
+
+            <section
+              class="track-problem-card track-scroll-reveal"
+            >
 
 
-              <!-- FIXER CARD -->
+              <button
+                type="button"
+                class="track-collapse-head"
+                id="trackProblemToggle"
+                aria-expanded="true"
+              >
 
-              <section class="track-fixer-card track-reveal">
+                <span>
 
-                <span class="track-card-label">
-                  YOUR FIXER
+                  <i class="fa-regular fa-message"></i>
+
+                  Request details
+
                 </span>
 
 
-                <div class="track-fixer-head">
+                <i class="fa-solid fa-chevron-up"></i>
 
-                  <div
-                    class="track-fixer-avatar"
-                    id="trackFixerAvatar"
-                  >
-                    FX
-                  </div>
+              </button>
 
 
-                  <div>
 
-                    <h2 id="trackFixerName">
-                      Fixer
-                    </h2>
-
-                    <p>
-                      <i class="fa-solid fa-circle-check"></i>
-                      Verified professional
-                    </p>
-
-                  </div>
-
-                </div>
+              <div
+                class="track-collapse-body"
+                id="trackProblemBody"
+              >
 
 
-                <div class="track-fixer-stats">
-
-                  <div>
-
-                    <span>
-                      RATING
-                    </span>
-
-                    <strong>
-
-                      <i class="fa-solid fa-star"></i>
-
-                      <span id="trackFixerRating">
-                        —
-                      </span>
-
-                    </strong>
-
-                  </div>
+                <p id="trackProblemText">
+                  —
+                </p>
 
 
-                  <div>
 
-                    <span>
-                      STARTING FROM
-                    </span>
-
-                    <strong id="trackFixerPrice">
-                      —
-                    </strong>
-
-                  </div>
-
-                </div>
-
-
-                <div class="track-fixer-location">
-
-                  <i class="fa-solid fa-location-dot"></i>
-
-                  <span id="trackFixerLocation">
-                    Location unavailable
-                  </span>
-
-                </div>
-
-
-                <a
-                  id="trackViewFixerButton"
-                  href="#"
-                  class="track-secondary-btn"
-                >
-                  <i class="fa-regular fa-user"></i>
-                  View Fixer Profile
-                </a>
-
-
-             <button
-  type="button"
-  id="trackReviewButton"
-  class="track-primary-btn"
-  hidden
->
-  <i class="fa-solid fa-star"></i>
-  Leave a Review
-</button>
-
-              </section>
-
-
-              <!-- REQUEST DETAILS -->
-
-              <section class="track-problem-card track-reveal">
-
-                <button
-                  type="button"
-                  class="track-collapse-head"
-                  id="trackProblemToggle"
-                  aria-expanded="true"
-                >
+                <div class="track-request-date">
 
                   <span>
-
-                    <i class="fa-regular fa-message"></i>
-
-                    Request details
-
+                    REQUESTED
                   </span>
 
-                  <i class="fa-solid fa-chevron-up"></i>
-
-                </button>
-
-
-                <div
-                  class="track-collapse-body"
-                  id="trackProblemBody"
-                >
-
-                  <p id="trackProblemText">
+                  <strong id="trackRequestDate">
                     —
-                  </p>
-
-
-                  <div class="track-request-date">
-
-                    <span>
-                      REQUESTED
-                    </span>
-
-                    <strong id="trackRequestDate">
-                      —
-                    </strong>
-
-                  </div>
+                  </strong>
 
                 </div>
 
-              </section>
 
-            </aside>
+              </div>
+
+
+            </section>
+
 
           </div>
+
+
+
+          <!-- ========================================
+               REVIEW
+               Hidden until completed
+          ========================================= -->
+
+          <section
+            class="track-review-section track-scroll-reveal"
+            id="trackReviewSection"
+            hidden
+          >
+
+
+            <div class="track-review-icon">
+
+              <i class="fa-solid fa-star"></i>
+
+            </div>
+
+
+            <span>
+              SERVICE COMPLETED
+            </span>
+
+
+            <h2>
+              How was your service?
+            </h2>
+
+
+            <p>
+              Share your experience and help others choose
+              the right Fixer.
+            </p>
+
+
+            <div class="track-review-stars">
+
+              <i class="fa-regular fa-star"></i>
+              <i class="fa-regular fa-star"></i>
+              <i class="fa-regular fa-star"></i>
+              <i class="fa-regular fa-star"></i>
+              <i class="fa-regular fa-star"></i>
+
+            </div>
+
+
+            <button
+              type="button"
+              id="trackReviewButton"
+              class="track-primary-btn"
+              hidden
+            >
+              <i class="fa-solid fa-star"></i>
+              Leave a Review
+            </button>
+
+
+          </section>
+
 
         </div>
 
@@ -780,10 +1048,14 @@
 
     </section>
 
+
   </main>
 
 
-  <!-- ================= STAGE MODAL ================= -->
+
+  <!-- ========================================
+       STAGE MODAL
+  ========================================= -->
 
   <div
     class="track-stage-modal"
@@ -791,12 +1063,14 @@
     hidden
   >
 
+
     <div
       class="track-stage-dialog"
       role="dialog"
       aria-modal="true"
       aria-labelledby="trackModalTitle"
     >
+
 
       <button
         class="track-modal-close"
@@ -806,6 +1080,7 @@
       >
         <i class="fa-solid fa-xmark"></i>
       </button>
+
 
 
       <div
@@ -830,16 +1105,21 @@
         Your service request has been sent.
       </p>
 
+
     </div>
 
   </div>
 
 
-  <!-- ================= FOOTER ================= -->
+
+  <!-- ========================================
+       FOOTER
+  ========================================= -->
 
   <footer class="footer">
 
     <div class="container footer-content">
+
 
       <div>
 
@@ -855,6 +1135,7 @@
         </p>
 
       </div>
+
 
 
       <div class="footer-links">
@@ -877,19 +1158,22 @@
 
       </div>
 
+
     </div>
 
   </footer>
 
 
-  <!-- ================= SCRIPTS ================= -->
+
+  <!-- ========================================
+       SCRIPTS
+  ========================================= -->
 
   <script
     src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
     crossorigin=""
   ></script>
 
-  <!-- All JavaScript is inside script.js -->
   <script src="script.js"></script>
 
 </body>

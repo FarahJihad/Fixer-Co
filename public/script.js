@@ -5064,11 +5064,11 @@ async function updateNavbarAuth() {
         My Requests
       </a>
 
-      <a href="track.html">
-        <i class="fa-solid fa-location-dot"></i>
-        Track Service
-      </a>
-
+    
+<a href="#" id="navbarTrackService">
+  <i class="fa-solid fa-location-dot"></i>
+  Track Service
+</a>
       <button
         type="button"
         id="logoutButton"
@@ -5153,7 +5153,47 @@ async function updateNavbarAuth() {
     );
 
   }
-  
+  const navbarTrackService =
+  document.getElementById("navbarTrackService");
+
+if (navbarTrackService) {
+  navbarTrackService.addEventListener("click", async (event) => {
+    event.preventDefault();
+
+    try {
+      const response = await fetch("/api/my-requests", {
+        credentials: "same-origin"
+      });
+
+      const data = await response.json();
+
+      if (!response.ok || !data.success) {
+        throw new Error(
+          data.error || "Could not load your requests."
+        );
+      }
+
+      if (!data.requests || data.requests.length === 0) {
+        window.location.href = "my-requests.html";
+        return;
+      }
+
+      // The API returns the newest requests first.
+      const latestRequest = data.requests[0];
+
+      window.location.href =
+        `track.html?request=${latestRequest.id}`;
+
+    } catch (error) {
+      console.error(
+        "Track Service navigation error:",
+        error
+      );
+
+      window.location.href = "my-requests.html";
+    }
+  });
+}
 // ========================================
 // LOG OUT
 // ========================================
@@ -8453,3 +8493,545 @@ window.addEventListener(
 ======================================== */
 
 loadTrackServicePage();
+/* =========================================================
+   TRACK SERVICE - NEW UI INTERACTIONS
+   ========================================================= */
+
+
+/* ========================================
+   UPDATE NEW TRACK UI
+======================================== */
+
+function updateNewTrackUI(request) {
+
+  if (!request) {
+    return;
+  }
+
+
+  const status =
+    normalizeTrackStatus(
+      request.status
+    );
+
+
+  const fixerName =
+    request.technician_name ||
+    "Your Fixer";
+
+
+  const fixerFirstName =
+    fixerName
+      .trim()
+      .split(/\s+/)[0];
+
+
+  /* ========================================
+     HERO FIXER
+  ======================================== */
+
+  setTrackText(
+    "trackHeroFixerName",
+    fixerName
+  );
+
+
+  const heroAvatar =
+    document.getElementById(
+      "trackHeroFixerAvatar"
+    );
+
+
+  if (heroAvatar) {
+
+    heroAvatar.textContent =
+      getTrackInitials(
+        fixerName
+      );
+
+  }
+
+
+  /* ========================================
+     MAP PROFILE BUTTON
+  ======================================== */
+
+  const mapProfileButton =
+    document.getElementById(
+      "trackMapProfileButton"
+    );
+
+
+  if (
+    mapProfileButton &&
+    request.technician_id
+  ) {
+
+    mapProfileButton.href =
+      `profile.html?id=${request.technician_id}`;
+
+  }
+
+
+  /* ========================================
+     STATUS-SPECIFIC CONTENT
+  ======================================== */
+
+  const states = {
+
+
+    requested: {
+
+      heroTitle:
+        "Request received",
+
+      heroDescription:
+        `Waiting for ${fixerFirstName} to accept your request.`,
+
+      nextTitle:
+        `Waiting for ${fixerFirstName} to accept`,
+
+      nextDescription:
+        `Once ${fixerFirstName} accepts your request, we'll move you to the next stage.`,
+
+      nextStage:
+        "Accepted",
+
+      nextIcon:
+        "fa-solid fa-user-check"
+
+    },
+
+
+    accepted: {
+
+      heroTitle:
+        "Your Fixer accepted",
+
+      heroDescription:
+        `${fixerFirstName} accepted your request and is preparing for your service.`,
+
+      nextTitle:
+        `${fixerFirstName} is getting ready`,
+
+      nextDescription:
+        `Your next update will appear when ${fixerFirstName} starts heading your way.`,
+
+      nextStage:
+        "On the way",
+
+      nextIcon:
+        "fa-solid fa-route"
+
+    },
+
+
+    on_the_way: {
+
+      heroTitle:
+        "Your Fixer is on the way",
+
+      heroDescription:
+        `${fixerFirstName} is heading toward your service location.`,
+
+      nextTitle:
+        `${fixerFirstName} is heading your way`,
+
+      nextDescription:
+        "The next stage begins when your service work starts.",
+
+      nextStage:
+        "In progress",
+
+      nextIcon:
+        "fa-solid fa-car-side"
+
+    },
+
+
+    in_progress: {
+
+      heroTitle:
+        "Your service is in progress",
+
+      heroDescription:
+        `${fixerFirstName} is currently working on your service.`,
+
+      nextTitle:
+        "Almost there",
+
+      nextDescription:
+        "Once the work is finished, your review will become available.",
+
+      nextStage:
+        "Completed",
+
+      nextIcon:
+        "fa-solid fa-screwdriver-wrench"
+
+    },
+
+
+    completed: {
+
+      heroTitle:
+        "Service completed",
+
+      heroDescription:
+        `${fixerFirstName} finished your service. We hope everything went smoothly.`,
+
+      nextTitle:
+        "Your service is complete",
+
+      nextDescription:
+        `Tell us how your experience with ${fixerFirstName} went.`,
+
+      nextStage:
+        "Leave a review",
+
+      nextIcon:
+        "fa-solid fa-star"
+
+    }
+
+  };
+
+
+  const state =
+    states[status] ||
+    states.requested;
+
+
+  /* HERO */
+
+  setTrackText(
+    "trackNowTitle",
+    state.heroTitle
+  );
+
+
+  setTrackText(
+    "trackNowDescription",
+    state.heroDescription
+  );
+
+
+  /* WHAT'S NEXT */
+
+  setTrackText(
+    "trackNextTitle",
+    state.nextTitle
+  );
+
+
+  setTrackText(
+    "trackNextDescription",
+    state.nextDescription
+  );
+
+
+  setTrackText(
+    "trackNextStage",
+    state.nextStage
+  );
+
+
+  const nextIcon =
+    document.getElementById(
+      "trackNextIcon"
+    );
+
+
+  if (nextIcon) {
+
+    nextIcon.className =
+      state.nextIcon;
+
+  }
+
+
+  /* ========================================
+     REVIEW SECTION
+  ======================================== */
+
+  const reviewSection =
+    document.getElementById(
+      "trackReviewSection"
+    );
+
+
+  const reviewButton =
+    document.getElementById(
+      "trackReviewButton"
+    );
+
+
+  if (
+    reviewSection &&
+    reviewButton
+  ) {
+
+    if (status === "completed") {
+
+      reviewSection.hidden = false;
+      reviewButton.hidden = false;
+
+
+      reviewButton.onclick =
+        () => {
+
+          if (
+            request.technician_id
+          ) {
+
+            window.location.href =
+              `profile.html?id=${request.technician_id}#reviews`;
+
+          }
+
+        };
+
+
+      requestAnimationFrame(
+        () => {
+
+          reviewSection.classList.add(
+            "visible"
+          );
+
+        }
+      );
+
+    } else {
+
+      reviewSection.hidden = true;
+      reviewButton.hidden = true;
+      reviewButton.onclick = null;
+
+    }
+
+  }
+
+}
+
+
+
+/* ========================================
+   JOURNEY SCROLL BUTTON
+======================================== */
+
+function setupNewTrackExploreButton() {
+
+  const exploreButton =
+    document.getElementById(
+      "trackExploreButton"
+    );
+
+
+  const journey =
+    document.getElementById(
+      "trackJourneyContent"
+    );
+
+
+  if (
+    !exploreButton ||
+    !journey ||
+    exploreButton.dataset.ready === "true"
+  ) {
+    return;
+  }
+
+
+  exploreButton.dataset.ready =
+    "true";
+
+
+  exploreButton.addEventListener(
+    "click",
+    () => {
+
+      journey.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+      });
+
+    }
+  );
+
+}
+
+
+
+/* ========================================
+   CONNECT NEW UI TO EXISTING RENDER
+======================================== */
+
+function connectNewTrackUI() {
+
+  const dashboard =
+    document.getElementById(
+      "trackDashboard"
+    );
+
+
+  if (!dashboard) {
+    return;
+  }
+
+
+  setupNewTrackExploreButton();
+
+
+  /*
+    The existing Track Service code stores
+    the request data through renderTrackService().
+    We watch the dashboard until the request
+    has been rendered.
+  */
+
+  const observer =
+    new MutationObserver(
+      () => {
+
+        const serviceName =
+          document.getElementById(
+            "trackServiceName"
+          );
+
+
+        if (
+          serviceName &&
+          !dashboard.hidden
+        ) {
+
+          setupNewTrackExploreButton();
+
+        }
+
+      }
+    );
+
+
+  observer.observe(
+    dashboard,
+    {
+      attributes: true,
+      childList: true,
+      subtree: true
+    }
+  );
+
+}
+
+
+
+/* ========================================
+   NEW SCROLL REVEAL
+======================================== */
+
+function setupNewTrackReveal() {
+
+  const elements =
+    document.querySelectorAll(
+      ".track-scroll-reveal"
+    );
+
+
+  if (!elements.length) {
+    return;
+  }
+
+
+  if (
+    !("IntersectionObserver" in window)
+  ) {
+
+    elements.forEach(
+      element => {
+
+        element.classList.add(
+          "visible"
+        );
+
+      }
+    );
+
+    return;
+  }
+
+
+  const observer =
+    new IntersectionObserver(
+      entries => {
+
+        entries.forEach(
+          entry => {
+
+            if (
+              entry.isIntersecting
+            ) {
+
+              entry.target.classList.add(
+                "visible"
+              );
+
+
+              observer.unobserve(
+                entry.target
+              );
+
+            }
+
+          }
+        );
+
+      },
+      {
+        threshold: 0.12,
+        rootMargin:
+          "0px 0px -35px 0px"
+      }
+    );
+
+
+  elements.forEach(
+    (element, index) => {
+
+      element.style.transitionDelay =
+        `${Math.min(index * 60, 240)}ms`;
+
+
+      observer.observe(
+        element
+      );
+
+    }
+  );
+
+}
+
+
+
+/* ========================================
+   RUN NEW TRACK UI
+======================================== */
+
+document.addEventListener(
+  "DOMContentLoaded",
+  () => {
+
+    if (
+      document.getElementById(
+        "trackDashboard"
+      )
+    ) {
+
+      connectNewTrackUI();
+
+      setupNewTrackReveal();
+
+    }
+
+  }
+);
