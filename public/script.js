@@ -2417,11 +2417,9 @@ async function loadRequestPage() {
           }
 
 
-          formMessage.innerHTML = `
-            <i class="fa-solid fa-circle-check"></i>
-            Service request sent successfully!
-            Request #${result.request_id}
-          `;
+  formMessage.innerHTML =
+  `<i class="fa-solid fa-circle-check"></i>
+   Service request sent successfully!`;
 
 
           formMessage.classList.add(
