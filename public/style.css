@@ -7594,3 +7594,1059 @@ button.my-requests-primary-button {
 
 }
 
+
+
+/* ========================================
+   TRACK SERVICE PAGE — CLEAN LAYOUT
+   Replace the old Track Service CSS block
+======================================== */
+
+.track-page {
+  min-height: 100vh;
+  background: #f7f9f8;
+}
+
+/* ---------- HERO ---------- */
+
+.track-hero {
+  padding: 46px 0 30px;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(79, 175, 143, 0.08) 0%,
+      rgba(79, 175, 143, 0.02) 65%,
+      transparent 100%
+    );
+}
+
+.track-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 24px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 700;
+  transition: 0.2s ease;
+}
+
+.track-back:hover {
+  color: var(--navy);
+  transform: translateX(-3px);
+}
+
+.track-hero-row {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 36px;
+}
+
+.track-hero h1 {
+  max-width: 720px;
+  color: var(--navy-dark);
+  font-size: clamp(38px, 5vw, 56px);
+  line-height: 1.06;
+  letter-spacing: -2.5px;
+}
+
+.track-hero h1 span {
+  color: var(--green-dark);
+}
+
+.track-hero-copy {
+  max-width: 620px;
+  margin-top: 14px;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.track-live-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  flex-shrink: 0;
+  padding: 10px 14px;
+  border: 1px solid #d7e7e0;
+  border-radius: 999px;
+  background: #ffffff;
+  color: var(--green-dark);
+  font-size: 11px;
+  font-weight: 800;
+  box-shadow: 0 8px 22px rgba(23, 59, 87, 0.05);
+}
+
+.track-live-pill > span {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--green);
+  box-shadow: 0 0 0 0 rgba(79, 175, 143, 0.35);
+  animation: trackPulse 1.8s infinite;
+}
+
+@keyframes trackPulse {
+  70% {
+    box-shadow: 0 0 0 8px rgba(79, 175, 143, 0);
+  }
+
+  100% {
+    box-shadow: 0 0 0 0 rgba(79, 175, 143, 0);
+  }
+}
+
+/* ---------- PAGE CONTENT ---------- */
+
+.track-content {
+  padding: 20px 0 95px;
+}
+
+.track-dashboard {
+  display: grid;
+  gap: 18px;
+}
+
+.track-dashboard[hidden],
+.track-error[hidden],
+.track-loading[hidden],
+.track-stage-modal[hidden] {
+  display: none !important;
+}
+
+.track-reveal {
+  animation: trackReveal 0.55s cubic-bezier(0.2, 0.75, 0.25, 1) both;
+}
+
+.track-main-grid .track-map-card {
+  animation-delay: 0.06s;
+}
+
+.track-side-column .track-reveal:first-child {
+  animation-delay: 0.12s;
+}
+
+.track-side-column .track-reveal:last-child {
+  animation-delay: 0.18s;
+}
+
+@keyframes trackReveal {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ---------- SHARED CARDS ---------- */
+
+.track-status-card,
+.track-map-card,
+.track-fixer-card,
+.track-problem-card {
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  background: #ffffff;
+  box-shadow: 0 10px 30px rgba(23, 59, 87, 0.045);
+}
+
+/* ---------- STATUS CARD ---------- */
+
+.track-status-card {
+  position: relative;
+  overflow: hidden;
+  padding: 26px 28px 28px;
+}
+
+.track-status-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 5px;
+  height: 100%;
+  background: var(--green);
+}
+
+.track-status-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.track-service-heading {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.track-service-heading > div:last-child > span,
+.track-card-heading span,
+.track-card-label,
+.track-now-panel span,
+.track-map-floating span,
+.track-fixer-stats span,
+.track-request-date span {
+  display: block;
+  color: #8a989f;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+
+.track-service-heading h2,
+.track-card-heading h2 {
+  color: var(--navy-dark);
+  font-size: 21px;
+  letter-spacing: -0.4px;
+}
+
+.track-service-icon {
+  width: 48px;
+  height: 48px;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  border-radius: 13px;
+  background: #edf7f3;
+  color: var(--green-dark);
+  font-size: 18px;
+}
+
+.track-status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+  padding: 8px 13px;
+  border-radius: 999px;
+  background: #fff5e9;
+  color: #a86827;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.track-status-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.track-status-badge.status-accepted {
+  background: #eef5fb;
+  color: #376d96;
+}
+
+.track-status-badge.status-on-the-way {
+  background: #eef2fb;
+  color: #526aa1;
+}
+
+.track-status-badge.status-in-progress {
+  background: #edf7f3;
+  color: var(--green-dark);
+}
+
+.track-status-badge.status-completed {
+  background: #e8f6ef;
+  color: #2f8f70;
+}
+
+/* ---------- CURRENT STATUS ---------- */
+
+.track-now-panel {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 14px;
+  margin: 22px 0 26px;
+  padding: 16px 18px;
+  border: 1px solid #deebe6;
+  border-radius: 14px;
+  background: #f7fbf9;
+}
+
+.track-now-icon {
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  border-radius: 11px;
+  background: #ffffff;
+  color: var(--green-dark);
+  box-shadow: 0 5px 14px rgba(23, 59, 87, 0.06);
+}
+
+.track-now-panel h3 {
+  margin: 2px 0 1px;
+  color: var(--navy-dark);
+  font-size: 15px;
+}
+
+.track-now-panel p {
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.track-icon-btn {
+  width: 38px;
+  height: 38px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: #ffffff;
+  color: var(--navy);
+  transition: 0.2s ease;
+}
+
+.track-icon-btn:hover {
+  border-color: var(--green);
+  color: var(--green-dark);
+  transform: rotate(8deg);
+}
+
+.track-icon-btn.spinning i {
+  animation: trackSpin 0.55s linear;
+}
+
+@keyframes trackSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ---------- TIMELINE ---------- */
+
+.track-timeline {
+  --track-progress: 0%;
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  padding: 4px 6px 0;
+}
+
+.track-timeline::before,
+.track-timeline::after {
+  content: "";
+  position: absolute;
+  top: 24px;
+  left: 10%;
+  height: 3px;
+  border-radius: 999px;
+}
+
+.track-timeline::before {
+  width: 80%;
+  background: #e6ece9;
+}
+
+.track-timeline::after {
+  width: calc(var(--track-progress) * 0.8);
+  background: var(--green);
+  transition: width 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.track-step {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  border: 0;
+  background: transparent;
+  color: #9aa6ac;
+  text-align: center;
+  cursor: pointer;
+}
+
+.track-step-marker {
+  width: 40px;
+  height: 40px;
+  display: grid;
+  place-items: center;
+  margin-bottom: 8px;
+  border: 2px solid #dfe8e4;
+  border-radius: 50%;
+  background: #ffffff;
+  font-size: 11px;
+  transition: 0.25s ease;
+}
+
+.track-step strong {
+  color: #89979f;
+  font-size: 10px;
+}
+
+.track-step small {
+  margin-top: 2px;
+  color: #aab4b8;
+  font-size: 8px;
+}
+
+.track-step.done .track-step-marker {
+  border-color: var(--green);
+  background: var(--green);
+  color: #ffffff;
+}
+
+.track-step.done strong {
+  color: var(--green-dark);
+}
+
+.track-step.current .track-step-marker {
+  border-color: var(--green);
+  color: var(--green-dark);
+  box-shadow: 0 0 0 6px rgba(79, 175, 143, 0.11);
+  animation: currentStage 2s infinite;
+}
+
+.track-step.current strong {
+  color: var(--navy-dark);
+}
+
+@keyframes currentStage {
+  50% {
+    box-shadow: 0 0 0 10px rgba(79, 175, 143, 0.04);
+  }
+}
+
+.track-step:hover .track-step-marker {
+  transform: translateY(-2px);
+  border-color: var(--green);
+}
+
+.track-timeline-hint {
+  margin-top: 17px;
+  color: #9aa6ac;
+  font-size: 9px;
+  text-align: center;
+}
+
+.track-timeline-hint i {
+  margin-right: 5px;
+  color: var(--green-dark);
+}
+
+/* ---------- MAIN GRID ---------- */
+
+.track-main-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) minmax(285px, 0.65fr);
+  gap: 18px;
+  align-items: start;
+}
+
+.track-side-column {
+  display: grid;
+  gap: 18px;
+  position: sticky;
+  top: 96px;
+}
+
+/* ---------- MAP CARD ---------- */
+
+.track-map-card {
+  padding: 20px;
+  transition: 0.25s ease;
+}
+
+.track-card-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  margin-bottom: 15px;
+}
+
+.track-map-actions {
+  display: flex;
+  gap: 7px;
+}
+
+.track-map-actions button {
+  height: 36px;
+  padding: 0 11px;
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  background: #ffffff;
+  color: var(--navy);
+  font-size: 10px;
+  font-weight: 800;
+  transition: 0.2s ease;
+}
+
+.track-map-actions button:last-child {
+  width: 36px;
+  padding: 0;
+}
+
+.track-map-actions button:hover {
+  border-color: var(--green);
+  background: #f7fbf9;
+  color: var(--green-dark);
+}
+
+.track-map-wrap {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid #e2eae7;
+  border-radius: 14px;
+  background: #e8efec;
+}
+
+.track-map-wrap #trackMap {
+  height: 365px;
+  z-index: 1;
+}
+
+.track-map-floating {
+  position: absolute;
+  z-index: 500;
+  left: 14px;
+  bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  max-width: calc(100% - 28px);
+  padding: 10px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 9px 25px rgba(16, 45, 67, 0.14);
+}
+
+.track-mini-avatar {
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: #e8f3ef;
+  color: var(--green-dark);
+  font-size: 10px;
+  font-weight: 800;
+}
+
+.track-map-floating strong,
+.track-map-floating small {
+  display: block;
+}
+
+.track-map-floating strong {
+  color: var(--navy-dark);
+  font-size: 11px;
+}
+
+.track-map-floating small {
+  color: var(--muted);
+  font-size: 8px;
+}
+
+.track-map-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding-top: 12px;
+  color: #89979f;
+  font-size: 9px;
+  font-weight: 700;
+}
+
+.track-map-footer i {
+  margin-right: 5px;
+  color: var(--green-dark);
+}
+
+/* ---------- MAP MARKER ---------- */
+
+.fixer-map-marker-shell {
+  background: transparent !important;
+  border: 0 !important;
+}
+
+.fixer-map-marker {
+  position: absolute;
+  inset: 7px;
+  display: grid;
+  place-items: center;
+  border: 3px solid #ffffff;
+  border-radius: 50%;
+  background: var(--navy);
+  color: #ffffff;
+  box-shadow: 0 8px 20px rgba(16, 45, 67, 0.28);
+}
+
+.fixer-map-pulse {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: rgba(79, 175, 143, 0.22);
+  animation: mapPulse 1.8s infinite;
+}
+
+@keyframes mapPulse {
+  70% {
+    transform: scale(1.55);
+    opacity: 0;
+  }
+
+  100% {
+    transform: scale(1.55);
+    opacity: 0;
+  }
+}
+
+/* ---------- EXPANDED MAP ---------- */
+
+.track-map-card.expanded {
+  position: fixed;
+  inset: 18px;
+  z-index: 5000;
+  padding: 18px;
+  background: #ffffff;
+}
+
+.track-map-card.expanded .track-map-wrap #trackMap {
+  height: calc(100vh - 140px);
+}
+
+body.track-map-open {
+  overflow: hidden;
+}
+
+/* ---------- FIXER CARD ---------- */
+
+.track-fixer-card,
+.track-problem-card {
+  padding: 21px;
+}
+
+.track-fixer-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 14px 0 18px;
+}
+
+.track-fixer-avatar {
+  width: 50px;
+  height: 50px;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: #e8f3ef;
+  color: var(--green-dark);
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.track-fixer-head h2 {
+  color: var(--navy-dark);
+  font-size: 16px;
+}
+
+.track-fixer-head p {
+  margin-top: 3px;
+  color: var(--green-dark);
+  font-size: 9px;
+  font-weight: 700;
+}
+
+.track-fixer-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  margin-top: 2px;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+.track-fixer-stats > div {
+  padding: 14px 0;
+}
+
+.track-fixer-stats > div + div {
+  padding-left: 15px;
+  border-left: 1px solid var(--border);
+}
+
+.track-fixer-stats strong {
+  display: block;
+  margin-top: 3px;
+  color: var(--navy-dark);
+  font-size: 12px;
+}
+
+.track-fixer-stats .fa-star {
+  color: #e5a443;
+}
+
+.track-fixer-location {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 15px 0;
+  color: var(--muted);
+  font-size: 10px;
+}
+
+.track-fixer-location i {
+  margin-top: 3px;
+  color: var(--green-dark);
+}
+
+.track-primary-btn,
+.track-secondary-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 40px;
+  padding: 10px 15px;
+  border-radius: 9px;
+  font-size: 10px;
+  font-weight: 800;
+  transition: 0.2s ease;
+}
+
+.track-primary-btn {
+  background: var(--navy);
+  color: #ffffff;
+}
+
+.track-secondary-btn {
+  width: 100%;
+  border: 1px solid var(--border);
+  background: #ffffff;
+  color: var(--navy);
+}
+
+.track-secondary-btn:hover {
+  border-color: var(--green);
+  background: #f7fbf9;
+  color: var(--green-dark);
+  transform: translateY(-1px);
+}
+
+/* ---------- PROBLEM DETAILS ---------- */
+
+.track-collapse-head {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border: 0;
+  background: transparent;
+  color: var(--navy-dark);
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.track-collapse-head span {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.track-collapse-head span i {
+  color: var(--green-dark);
+}
+
+.track-collapse-head > i {
+  font-size: 9px;
+  transition: 0.25s ease;
+}
+
+.track-collapse-head > i.rotated {
+  transform: rotate(180deg);
+}
+
+.track-collapse-body {
+  max-height: 220px;
+  overflow: hidden;
+  opacity: 1;
+  transition:
+    max-height 0.35s ease,
+    opacity 0.25s ease;
+}
+
+.track-collapse-body.collapsed {
+  max-height: 0;
+  opacity: 0;
+}
+
+.track-collapse-body > p {
+  padding: 16px 0;
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.7;
+}
+
+.track-request-date {
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+}
+
+.track-request-date strong {
+  display: block;
+  margin-top: 3px;
+  color: var(--navy-dark);
+  font-size: 10px;
+}
+
+/* ---------- LOADING / ERROR ---------- */
+
+.track-loading,
+.track-error {
+  padding: 70px 24px;
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  background: #ffffff;
+  text-align: center;
+}
+
+.track-loading {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+
+.track-loading strong {
+  margin-top: 14px;
+  color: var(--navy-dark);
+}
+
+.track-loading span,
+.track-error p {
+  margin: 5px 0 20px;
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.track-loader-ring {
+  width: 40px;
+  height: 40px;
+  border: 3px solid #e5eeea;
+  border-top-color: var(--green);
+  border-radius: 50%;
+  animation: trackSpin 0.8s linear infinite;
+}
+
+.track-error > i {
+  margin-bottom: 14px;
+  color: #b55d55;
+  font-size: 27px;
+}
+
+.track-error h2 {
+  color: var(--navy-dark);
+}
+
+/* ---------- STAGE MODAL ---------- */
+
+.track-stage-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 7000;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: rgba(10, 31, 46, 0.42);
+  backdrop-filter: blur(5px);
+  opacity: 0;
+  transition: 0.22s ease;
+}
+
+.track-stage-modal.show {
+  opacity: 1;
+}
+
+.track-stage-dialog {
+  position: relative;
+  width: min(390px, 100%);
+  padding: 30px;
+  border-radius: 18px;
+  background: #ffffff;
+  box-shadow: 0 28px 80px rgba(10, 31, 46, 0.23);
+  transform: translateY(12px) scale(0.98);
+  transition: 0.25s ease;
+}
+
+.track-stage-modal.show .track-stage-dialog {
+  transform: translateY(0) scale(1);
+}
+
+.track-modal-close {
+  position: absolute;
+  top: 13px;
+  right: 13px;
+  width: 32px;
+  height: 32px;
+  border: 0;
+  border-radius: 8px;
+  background: #f3f7f5;
+  color: var(--muted);
+}
+
+.track-modal-icon {
+  width: 48px;
+  height: 48px;
+  display: grid;
+  place-items: center;
+  margin-bottom: 17px;
+  border-radius: 13px;
+  background: #edf7f3;
+  color: var(--green-dark);
+  font-size: 17px;
+}
+
+.track-stage-dialog > span {
+  color: var(--green-dark);
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 1.1px;
+}
+
+.track-stage-dialog h2 {
+  margin: 4px 0 8px;
+  color: var(--navy-dark);
+  font-size: 23px;
+}
+
+.track-stage-dialog p {
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+/* ---------- TOAST ---------- */
+
+.track-toast {
+  position: fixed;
+  right: 22px;
+  bottom: 22px;
+  z-index: 8000;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 15px;
+  border-radius: 11px;
+  background: var(--navy-dark);
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 700;
+  box-shadow: 0 15px 40px rgba(16, 45, 67, 0.23);
+  opacity: 0;
+  transform: translateY(14px);
+  pointer-events: none;
+  transition: 0.25s ease;
+}
+
+.track-toast.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.track-toast i {
+  color: var(--green);
+}
+
+/* ---------- RESPONSIVE ---------- */
+
+@media (max-width: 980px) {
+  .track-main-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .track-side-column {
+    position: static;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .track-map-wrap #trackMap {
+    height: 380px;
+  }
+}
+
+@media (max-width: 720px) {
+  .track-hero {
+    padding: 36px 0 24px;
+  }
+
+  .track-hero-row,
+  .track-status-top {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .track-hero h1 {
+    font-size: 40px;
+    letter-spacing: -2px;
+  }
+
+  .track-live-pill {
+    align-self: flex-start;
+  }
+
+  .track-status-card {
+    padding: 20px;
+  }
+
+  .track-now-panel {
+    grid-template-columns: auto 1fr;
+  }
+
+  .track-now-panel .track-icon-btn {
+    grid-column: 1 / -1;
+    width: 100%;
+  }
+
+  .track-timeline {
+    overflow-x: auto;
+    grid-template-columns: repeat(5, 88px);
+    justify-content: start;
+    padding: 8px 3px 10px;
+  }
+
+  .track-timeline::before,
+  .track-timeline::after {
+    display: none;
+  }
+
+  .track-map-card {
+    padding: 15px;
+  }
+
+  .track-card-heading {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .track-map-wrap #trackMap {
+    height: 315px;
+  }
+
+  .track-map-footer {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .track-side-column {
+    grid-template-columns: 1fr;
+  }
+
+  .track-map-card.expanded {
+    inset: 8px;
+  }
+
+  .track-map-card.expanded .track-map-wrap #trackMap {
+    height: calc(100vh - 170px);
+  }
+}

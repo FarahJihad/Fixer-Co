@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Track Service | Fixer.Co</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container nav-content">
+      <a href="index.html" class="logo">Fixer<span>.Co</span></a>
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="services.html">Services</a>
+        <a href="technicians.html">Find a Fixer</a>
+        <a href="about.html">About Us</a>
+        <a href="contact.html">Contact Us</a>
+      </div>
+      <div class="nav-actions">
+        <a href="become-fixer.html" class="become-fixer-nav"><i class="fa-solid fa-screwdriver-wrench"></i> Become a Fixer</a>
+        <a href="login.html" class="login-nav-button"><i class="fa-regular fa-user"></i> Log In</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="track-page">
+    <section class="track-hero">
+      <div class="container">
+        <a href="my-requests.html" class="track-back"><i class="fa-solid fa-arrow-left"></i> Back to My Requests</a>
+        <div class="track-hero-row">
+          <div>
+            <p class="section-label">SERVICE TRACKING</p>
+            <h1>Follow your service<br><span>as it happens.</span></h1>
+            <p class="track-hero-copy">See the latest request status and your Fixer's saved location in one place.</p>
+          </div>
+          <div class="track-live-pill" id="trackLivePill"><span></span> Auto-refreshing</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="track-content">
+      <div class="container">
+        <div id="trackLoading" class="track-loading"><div class="track-loader-ring"></div><strong>Loading your service journey...</strong><span>Getting the latest request details.</span></div>
+        <div id="trackError" class="track-error" hidden><i class="fa-solid fa-triangle-exclamation"></i><h2>We couldn't load this request</h2><p id="trackErrorText">Please try again.</p><a href="my-requests.html" class="track-primary-btn">Back to My Requests</a></div>
+
+        <div id="trackDashboard" class="track-dashboard" hidden>
+          <div class="track-status-card track-reveal">
+            <div class="track-status-top">
+              <div class="track-service-heading">
+                <div class="track-service-icon" id="trackServiceIcon"><i class="fa-solid fa-wrench"></i></div>
+                <div><span>CURRENT SERVICE</span><h2 id="trackServiceName">Home Service</h2></div>
+              </div>
+              <div class="track-status-badge" id="trackStatusBadge"><span class="track-status-dot"></span><span id="trackStatusText">Requested</span></div>
+            </div>
+
+            <div class="track-now-panel">
+              <div class="track-now-icon" id="trackNowIcon"><i class="fa-regular fa-clock"></i></div>
+              <div><span>RIGHT NOW</span><h3 id="trackNowTitle">Request received</h3><p id="trackNowMessage">Your request has been created successfully.</p></div>
+              <button type="button" id="refreshTrackingBtn" class="track-icon-btn" title="Refresh status"><i class="fa-solid fa-rotate"></i></button>
+            </div>
+
+            <div class="track-timeline" id="trackTimeline"></div>
+            <p class="track-timeline-hint"><i class="fa-regular fa-hand-pointer"></i> Click any stage to see what it means.</p>
+          </div>
+
+          <div class="track-main-grid">
+            <div class="track-map-card track-reveal">
+              <div class="track-card-heading">
+                <div><span>FIXER LOCATION</span><h2>Location map</h2></div>
+                <div class="track-map-actions">
+                  <button type="button" id="centerFixerBtn"><i class="fa-solid fa-location-crosshairs"></i> Center</button>
+                  <button type="button" id="expandMapBtn" aria-label="Expand map"><i class="fa-solid fa-expand"></i></button>
+                </div>
+              </div>
+              <div class="track-map-wrap">
+                <div id="trackMap"></div>
+                <div class="track-map-floating">
+                  <div class="track-mini-avatar" id="trackMiniAvatar">FX</div>
+                  <div><span>YOUR FIXER</span><strong id="trackMapFixerName">Fixer</strong><small id="trackMapLocation">Location unavailable</small></div>
+                </div>
+              </div>
+              <div class="track-map-footer"><span><i class="fa-solid fa-satellite-dish"></i> Location refreshes with request updates</span><span id="trackLastUpdated">Updated just now</span></div>
+            </div>
+
+            <aside class="track-side-column">
+              <div class="track-fixer-card track-reveal">
+                <span class="track-card-label">YOUR FIXER</span>
+                <div class="track-fixer-head"><div class="track-fixer-avatar" id="trackFixerAvatar">FX</div><div><h2 id="trackFixerName">Fixer</h2><p><i class="fa-solid fa-circle-check"></i> Verified professional</p></div></div>
+                <div class="track-fixer-stats"><div><span>RATING</span><strong><i class="fa-solid fa-star"></i> <span id="trackFixerRating">—</span></strong></div><div><span>STARTING FROM</span><strong id="trackPrice">—</strong></div></div>
+                <div class="track-fixer-location"><i class="fa-solid fa-location-dot"></i><span id="trackFixerLocation">Location unavailable</span></div>
+                <a id="viewFixerBtn" href="#" class="track-secondary-btn"><i class="fa-regular fa-user"></i> View Fixer Profile</a>
+              </div>
+
+              <div class="track-problem-card track-reveal">
+                <button type="button" class="track-collapse-head" id="problemToggle" aria-expanded="true"><span><i class="fa-regular fa-message"></i> Problem details</span><i class="fa-solid fa-chevron-up"></i></button>
+                <div class="track-collapse-body" id="problemBody"><p id="trackProblem">—</p><div class="track-request-date"><span>REQUESTED</span><strong id="trackRequestDate">—</strong></div></div>
+              </div>
+            </aside>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div class="track-stage-modal" id="trackStageModal" hidden>
+    <div class="track-stage-dialog" role="dialog" aria-modal="true" aria-labelledby="stageModalTitle">
+      <button class="track-modal-close" id="stageModalClose" type="button"><i class="fa-solid fa-xmark"></i></button>
+      <div class="track-modal-icon" id="stageModalIcon"><i class="fa-solid fa-check"></i></div>
+      <span>JOURNEY STAGE</span><h2 id="stageModalTitle">Requested</h2><p id="stageModalText"></p>
+    </div>
+  </div>
+
+  <footer class="footer"><div class="container footer-content"><div><a href="index.html" class="logo footer-logo">Fixer<span>.Co</span></a><p>Trusted home services, made simple.</p></div><div class="footer-links"><a href="services.html">Services</a><a href="technicians.html">Find a Fixer</a><a href="about.html">About</a><a href="contact.html">Contact</a></div></div></footer>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+  <script src="script.js"></script>
+  
+</body>
+</html>
