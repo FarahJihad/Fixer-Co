@@ -74,7 +74,7 @@ async function hashPassword(password) {
       {
         name: "PBKDF2",
         salt: salt,
-        iterations: 210000,
+        iterations: 100000,
         hash: "SHA-256"
       },
       passwordKey,
@@ -139,7 +139,7 @@ export async function onRequestPost(context) {
       body =
         await request.json();
 
-    } catch (error) {
+    } catch {
 
       return jsonResponse(
         {
@@ -329,7 +329,7 @@ export async function onRequestPost(context) {
 
 
     const storedPassword =
-      `pbkdf2$210000$${passwordData.salt}$${passwordData.hash}`;
+      `pbkdf2$100000$${passwordData.salt}$${passwordData.hash}`;
 
 
     // ========================================
