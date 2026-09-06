@@ -2,26 +2,31 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8" />
+
+  <meta charset="UTF-8">
 
   <meta
     name="viewport"
     content="width=device-width, initial-scale=1.0"
-  />
+  >
 
   <title>Fixer.Co</title>
 
+
   <!-- Font Awesome Icons -->
+
   <link
     rel="stylesheet"
     href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
-  />
+  >
+
 
   <!-- Main CSS -->
+
   <link
     rel="stylesheet"
     href="style.css"
-  />
+  >
 
 </head>
 
@@ -38,19 +43,15 @@
     class="site-intro"
   >
 
-  <div class="intro-content">
+    <div class="intro-content">
 
-  <div class="intro-brand">
-    <span id="introText"></span>
-    <span class="intro-cursor"></span>
-  </div>
+      <div class="intro-brand">
 
-  <p id="introTagline" class="intro-tagline">
-    The right fix. Right around you.
-  </p>
+        <span id="introText"></span>
 
-</div>
+        <span class="intro-cursor"></span>
 
+      </div>
 
       <p
         id="introTagline"
@@ -73,6 +74,8 @@
     <div class="container nav-content">
 
 
+      <!-- LOGO -->
+
       <a
         href="index.html"
         class="logo"
@@ -80,6 +83,8 @@
         Fixer<span>.Co</span>
       </a>
 
+
+      <!-- NAV LINKS -->
 
       <nav class="nav-links">
 
@@ -109,6 +114,8 @@
       </nav>
 
 
+      <!-- NAV ACTIONS -->
+
       <div class="nav-actions">
 
         <a
@@ -124,10 +131,14 @@
 
 
         <a
-          href="request.html"
-          class="nav-button"
+          href="login.html"
+          class="login-nav-button"
         >
-          Request Service
+
+          <i class="fa-regular fa-user"></i>
+
+          Log In
+
         </a>
 
       </div>
@@ -149,6 +160,8 @@
 
       <div class="container hero-content">
 
+
+        <!-- HERO TEXT -->
 
         <div class="hero-text">
 
@@ -177,7 +190,9 @@
           </p>
 
 
-          <!-- Problem Search -->
+          <!-- =========================
+               PROBLEM SEARCH
+          ========================== -->
 
           <form
             id="problemForm"
@@ -189,11 +204,13 @@
               id="problemInput"
               placeholder="e.g. My AC is running but not cooling..."
               required
-            />
+            >
 
 
             <button type="submit">
+
               Find a Fixer
+
             </button>
 
           </form>
@@ -401,7 +418,7 @@
          SERVICES PREVIEW
     ========================== -->
 
-<section
+    <section
       class="services-section reveal"
       id="services"
     >
@@ -457,8 +474,6 @@
       </div>
 
     </section>
-
-
 
 
     <!-- =========================
@@ -525,6 +540,7 @@
     ========================== -->
 
     <section class="how-section reveal">
+
       <div class="container">
 
 
@@ -544,7 +560,7 @@
         <div class="steps">
 
 
-          <!-- Step 1 -->
+          <!-- STEP 01 -->
 
           <article class="step">
 
@@ -570,7 +586,7 @@
           </article>
 
 
-          <!-- Step 2 -->
+          <!-- STEP 02 -->
 
           <article class="step">
 
@@ -596,7 +612,7 @@
           </article>
 
 
-          <!-- Step 3 -->
+          <!-- STEP 03 -->
 
           <article class="step">
 
@@ -628,6 +644,8 @@
       </div>
 
     </section>
+
+
     <!-- =========================
          CALL TO ACTION
     ========================== -->
@@ -643,14 +661,25 @@
             READY TO GET STARTED?
           </p>
 
-     <h2>
-  Stop searching around.
-  <br>
-  Find the right help in one place.
-</h2>
+
+          <h2>
+
+            Stop searching around.
+
+            <br>
+
+            Find the right help in one place.
+
+          </h2>
 
         </div>
 
+
+        <!--
+          Keep this button.
+          Later we will require login
+          before opening request.html.
+        -->
 
         <a
           href="request.html"

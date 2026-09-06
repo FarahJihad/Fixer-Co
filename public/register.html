@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Create Account | Fixer.Co</title>
+
+  <!-- Google Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet"
+  >
+
+  <!-- Font Awesome -->
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+  >
+
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="login-page">
+
+  <main class="login-screen">
+
+    <!-- Background overlay -->
+    <div class="login-overlay"></div>
+
+    <!-- Logo -->
+    <a href="index.html" class="login-brand">
+      Fixer<span>.Co</span>
+    </a>
+
+    <!-- Left Content -->
+    <section class="login-hero-content">
+
+      <div class="hero-line"></div>
+
+      <h1>
+        Find the right fixer
+        <span>today.</span>
+      </h1>
+
+      <div class="login-features">
+
+        <div class="login-feature">
+          <i class="fa-solid fa-shield-halved"></i>
+
+          <div>
+            <strong>Trusted</strong>
+            <span>Professionals</span>
+          </div>
+        </div>
+
+        <div class="feature-divider"></div>
+
+        <div class="login-feature">
+          <i class="fa-solid fa-bolt"></i>
+
+          <div>
+            <strong>Fast & Easy</strong>
+            <span>Booking</span>
+          </div>
+        </div>
+
+        <div class="feature-divider"></div>
+
+        <div class="login-feature">
+          <i class="fa-solid fa-house"></i>
+
+          <div>
+            <strong>A More</strong>
+            <span>Comfortable Home</span>
+          </div>
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- Register Card -->
+    <section class="login-card register-card">
+
+      <div class="login-card-heading">
+        <h2>Create your account</h2>
+
+        <p>
+          Sign up to request services and track your fixer.
+        </p>
+      </div>
+
+      <form id="registerForm">
+
+        <!-- Full Name -->
+        <div class="login-input">
+
+          <i class="fa-regular fa-user"></i>
+
+          <input
+            type="text"
+            id="registerName"
+            name="name"
+            placeholder="Full Name"
+            autocomplete="name"
+            required
+          >
+
+        </div>
+
+        <!-- Email -->
+        <div class="login-input">
+
+          <i class="fa-regular fa-envelope"></i>
+
+          <input
+            type="email"
+            id="registerEmail"
+            name="email"
+            placeholder="Email"
+            autocomplete="email"
+            required
+          >
+
+        </div>
+
+        <!-- Phone -->
+        <div class="login-input">
+
+          <i class="fa-solid fa-phone"></i>
+
+          <input
+            type="tel"
+            id="registerPhone"
+            name="phone"
+            placeholder="05XXXXXXXX"
+            maxlength="10"
+            autocomplete="tel"
+          >
+
+        </div>
+
+        <!-- Password -->
+        <div class="login-input">
+
+          <i class="fa-solid fa-lock"></i>
+
+          <input
+            type="password"
+            id="registerPassword"
+            name="password"
+            placeholder="Create a strong password"
+            autocomplete="new-password"
+            required
+          >
+
+          <button
+            type="button"
+            id="toggleRegisterPassword"
+            class="password-toggle"
+            aria-label="Show password"
+          >
+            <i class="fa-regular fa-eye"></i>
+          </button>
+
+        </div>
+
+        <!-- Password Requirements -->
+        <div
+          class="password-requirements"
+          id="passwordRequirements"
+        >
+
+          <p>Password must contain:</p>
+
+          <div
+            class="password-rule"
+            id="lengthRule"
+          >
+            <i class="fa-solid fa-circle"></i>
+            <span>At least 8 characters</span>
+          </div>
+
+          <div
+            class="password-rule"
+            id="uppercaseRule"
+          >
+            <i class="fa-solid fa-circle"></i>
+            <span>One uppercase letter</span>
+          </div>
+
+          <div
+            class="password-rule"
+            id="lowercaseRule"
+          >
+            <i class="fa-solid fa-circle"></i>
+            <span>One lowercase letter</span>
+          </div>
+
+          <div
+            class="password-rule"
+            id="numberRule"
+          >
+            <i class="fa-solid fa-circle"></i>
+            <span>One number</span>
+          </div>
+
+          <div
+            class="password-rule"
+            id="specialRule"
+          >
+            <i class="fa-solid fa-circle"></i>
+            <span>One special character</span>
+          </div>
+
+        </div>
+
+        <!-- Confirm Password -->
+        <div class="login-input">
+
+          <i class="fa-solid fa-lock"></i>
+
+          <input
+            type="password"
+            id="confirmPassword"
+            placeholder="Confirm Password"
+            autocomplete="new-password"
+            required
+          >
+
+          <button
+            type="button"
+            id="toggleConfirmPassword"
+            class="password-toggle"
+            aria-label="Show password"
+          >
+            <i class="fa-regular fa-eye"></i>
+          </button>
+
+        </div>
+
+        <p
+          id="passwordMatchMessage"
+          class="password-match-message"
+        ></p>
+
+        <!-- Submit -->
+        <button
+          type="submit"
+          class="login-submit"
+        >
+          <span>Create Account</span>
+
+          <i class="fa-solid fa-arrow-right"></i>
+        </button>
+
+        <p
+          id="registerMessage"
+          class="login-message"
+          aria-live="polite"
+        ></p>
+
+      </form>
+
+      <!-- Login Link -->
+      <p class="login-register">
+        Already have an account?
+
+        <a href="login.html">
+          Log in
+        </a>
+      </p>
+
+    </section>
+
+   
+
+  </main>
+
+  <script src="script.js"></script>
+
+</body>
+
+</html>

@@ -4160,3 +4160,472 @@ function setupBecomeFixerAnimations() {
 }
 
 setupBecomeFixerAnimations();
+/* ========================================
+   PASSWORD SHOW / HIDE
+======================================== */
+
+function setupPasswordToggle(inputId, buttonId) {
+  const input = document.getElementById(inputId);
+  const button = document.getElementById(buttonId);
+
+  if (!input || !button) return;
+
+  const icon = button.querySelector("i");
+
+  button.addEventListener("click", () => {
+    const isPassword = input.type === "password";
+
+    input.type = isPassword ? "text" : "password";
+
+    if (icon) {
+      icon.classList.toggle("fa-eye", !isPassword);
+      icon.classList.toggle("fa-eye-slash", isPassword);
+    }
+
+    button.setAttribute(
+      "aria-label",
+      isPassword ? "Hide password" : "Show password"
+    );
+  });
+}
+
+
+/* Login password */
+setupPasswordToggle(
+  "loginPassword",
+  "togglePassword"
+);
+
+
+/* Register password */
+setupPasswordToggle(
+  "registerPassword",
+  "toggleRegisterPassword"
+);
+
+
+/* Confirm password */
+setupPasswordToggle(
+  "confirmPassword",
+  "toggleConfirmPassword"
+);
+
+
+/* ========================================
+   REGISTER PASSWORD VALIDATION
+======================================== */
+
+const registerPassword =
+  document.getElementById("registerPassword");
+
+const confirmPassword =
+  document.getElementById("confirmPassword");
+
+const lengthRule =
+  document.getElementById("lengthRule");
+
+const uppercaseRule =
+  document.getElementById("uppercaseRule");
+
+const lowercaseRule =
+  document.getElementById("lowercaseRule");
+
+const numberRule =
+  document.getElementById("numberRule");
+
+const specialRule =
+  document.getElementById("specialRule");
+
+const passwordMatchMessage =
+  document.getElementById("passwordMatchMessage");
+
+
+function updatePasswordRule(element, valid) {
+  if (!element) return;
+
+  element.classList.toggle("valid", valid);
+
+  const icon = element.querySelector("i");
+
+  if (!icon) return;
+
+  if (valid) {
+    icon.className = "fa-solid fa-circle-check";
+  } else {
+    icon.className = "fa-solid fa-circle";
+  }
+}
+
+
+function validateRegisterPassword() {
+  if (!registerPassword) return false;
+
+  const password = registerPassword.value;
+
+  const hasLength =
+    password.length >= 8;
+
+  const hasUppercase =
+    /[A-Z]/.test(password);
+
+  const hasLowercase =
+    /[a-z]/.test(password);
+
+  const hasNumber =
+    /[0-9]/.test(password);
+
+  const hasSpecial =
+    /[^A-Za-z0-9]/.test(password);
+
+
+  updatePasswordRule(
+    lengthRule,
+    hasLength
+  );
+
+  updatePasswordRule(
+    uppercaseRule,
+    hasUppercase
+  );
+
+  updatePasswordRule(
+    lowercaseRule,
+    hasLowercase
+  );
+
+  updatePasswordRule(
+    numberRule,
+    hasNumber
+  );
+
+  updatePasswordRule(
+    specialRule,
+    hasSpecial
+  );
+
+
+  return (
+    hasLength &&
+    hasUppercase &&
+    hasLowercase &&
+    hasNumber &&
+    hasSpecial
+  );
+}
+
+
+function checkPasswordMatch() {
+  if (
+    !registerPassword ||
+    !confirmPassword ||
+    !passwordMatchMessage
+  ) {
+    return false;
+  }
+
+  if (confirmPassword.value === "") {
+    passwordMatchMessage.textContent = "";
+    passwordMatchMessage.className =
+      "password-match-message";
+
+    return false;
+  }
+
+
+  if (
+    registerPassword.value ===
+    confirmPassword.value
+  ) {
+    passwordMatchMessage.textContent =
+      "Passwords match";
+
+    passwordMatchMessage.className =
+      "password-match-message match";
+
+    return true;
+  }
+
+
+  passwordMatchMessage.textContent =
+    "Passwords do not match";
+
+  passwordMatchMessage.className =
+    "password-match-message no-match";
+
+  return false;
+}
+
+
+if (registerPassword) {
+  registerPassword.addEventListener(
+    "input",
+    () => {
+      validateRegisterPassword();
+      checkPasswordMatch();
+    }
+  );
+}
+
+
+if (confirmPassword) {
+  confirmPassword.addEventListener(
+    "input",
+    checkPasswordMatch
+  );
+}
+// ========================================
+// REGISTER FORM
+// ========================================
+
+const registerForm =
+  document.getElementById("registerForm");
+
+const registerMessage =
+  document.getElementById("registerMessage");
+
+
+if (registerForm) {
+
+  registerForm.addEventListener(
+    "submit",
+    async (event) => {
+
+      event.preventDefault();
+
+
+      // Get form fields
+      const name =
+        document
+          .getElementById("registerName")
+          .value
+          .trim();
+
+      const email =
+        document
+          .getElementById("registerEmail")
+          .value
+          .trim();
+
+      const phone =
+        document
+          .getElementById("registerPhone")
+          .value
+          .trim();
+
+      const password =
+        document
+          .getElementById("registerPassword")
+          .value;
+
+      const confirmPasswordValue =
+        document
+          .getElementById("confirmPassword")
+          .value;
+
+
+      // Clear previous message
+      if (registerMessage) {
+
+        registerMessage.textContent = "";
+
+        registerMessage.className =
+          "login-message";
+
+      }
+
+
+      // ========================================
+      // FRONTEND PASSWORD CHECK
+      // ========================================
+
+      const passwordIsValid =
+        validateRegisterPassword();
+
+
+      if (!passwordIsValid) {
+
+        if (registerMessage) {
+
+          registerMessage.textContent =
+            "Please make sure your password meets all requirements.";
+
+          registerMessage.className =
+            "login-message error";
+
+        }
+
+        return;
+
+      }
+
+
+      // ========================================
+      // CONFIRM PASSWORD
+      // ========================================
+
+      if (
+        password !==
+        confirmPasswordValue
+      ) {
+
+        if (registerMessage) {
+
+          registerMessage.textContent =
+            "Passwords do not match.";
+
+          registerMessage.className =
+            "login-message error";
+
+        }
+
+        return;
+
+      }
+
+
+      // ========================================
+      // SUBMIT BUTTON
+      // ========================================
+
+      const submitButton =
+        registerForm.querySelector(
+          'button[type="submit"]'
+        );
+
+
+      const originalButtonHTML =
+        submitButton
+          ? submitButton.innerHTML
+          : "";
+
+
+      if (submitButton) {
+
+        submitButton.disabled = true;
+
+        submitButton.innerHTML = `
+          <span>Creating Account...</span>
+          <i class="fa-solid fa-spinner fa-spin"></i>
+        `;
+
+      }
+
+
+      try {
+
+        // ========================================
+        // SEND DATA TO API
+        // ========================================
+
+        const response =
+          await fetch(
+            "/api/register",
+            {
+              method: "POST",
+
+              headers: {
+                "Content-Type":
+                  "application/json"
+              },
+
+              body:
+                JSON.stringify({
+                  name,
+                  email,
+                  phone,
+                  password
+                })
+            }
+          );
+
+
+        const data =
+          await response.json();
+
+
+        // ========================================
+        // API ERROR
+        // ========================================
+
+        if (!response.ok) {
+
+          throw new Error(
+            data.message ||
+            "Unable to create account."
+          );
+
+        }
+
+
+        // ========================================
+        // SUCCESS
+        // ========================================
+
+        if (registerMessage) {
+
+          registerMessage.textContent =
+            "Account created successfully! Redirecting to login...";
+
+          registerMessage.className =
+            "login-message success";
+
+        }
+
+
+        registerForm.reset();
+
+
+        // Reset password rules
+        validateRegisterPassword();
+
+        checkPasswordMatch();
+
+
+        // Go to login page
+        setTimeout(
+          () => {
+
+            window.location.href =
+              "login.html";
+
+          },
+          1500
+        );
+
+
+      } catch (error) {
+
+        console.error(
+          "Register error:",
+          error
+        );
+
+
+        if (registerMessage) {
+
+          registerMessage.textContent =
+            error.message ||
+            "Something went wrong. Please try again.";
+
+          registerMessage.className =
+            "login-message error";
+
+        }
+
+      } finally {
+
+        if (submitButton) {
+
+          submitButton.disabled = false;
+
+          submitButton.innerHTML =
+            originalButtonHTML;
+
+        }
+
+      }
+
+    }
+  );
+
+}

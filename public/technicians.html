@@ -25,19 +25,44 @@
 <body>
 
   <header class="navbar">
+
     <div class="container nav-content">
 
-      <a href="index.html" class="logo">
+      <a
+        href="index.html"
+        class="logo"
+      >
         Fixer<span>.Co</span>
       </a>
 
+
       <nav class="nav-links">
-        <a href="index.html">Home</a>
-        <a href="services.html">Services</a>
-        <a href="technicians.html" class="active">Find a Fixer</a>
-        <a href="about.html">About Us</a>
-        <a href="contact.html">Contact Us</a>
+
+        <a href="index.html">
+          Home
+        </a>
+
+        <a href="services.html">
+          Services
+        </a>
+
+        <a
+          href="technicians.html"
+          class="active"
+        >
+          Find a Fixer
+        </a>
+
+        <a href="about.html">
+          About Us
+        </a>
+
+        <a href="contact.html">
+          Contact Us
+        </a>
+
       </nav>
+
 
       <div class="nav-actions">
 
@@ -49,21 +74,30 @@
           Become a Fixer
         </a>
 
+
         <a
-          href="request.html"
-          class="nav-button"
+          href="login.html"
+          class="login-nav-button"
         >
-          Request Service
+          <i class="fa-regular fa-user"></i>
+          Log In
         </a>
 
       </div>
 
     </div>
+
   </header>
+
 
   <main>
 
+    <!-- =========================
+         PAGE HERO
+    ========================== -->
+
     <section class="page-hero">
+
       <div class="container">
 
         <p class="section-label">
@@ -75,35 +109,54 @@
         </h1>
 
         <p>
-          Browse Fixers by service, rating, distance, availability and price.
+          Browse Fixers by service, rating, distance,
+          availability and price.
         </p>
 
       </div>
+
     </section>
 
+
+    <!-- =========================
+         FIXERS SECTION
+    ========================== -->
+
     <section class="fixers-page-section">
+
       <div class="container">
+
+
+        <!-- FILTERS -->
 
         <div class="fixer-filters">
 
+
           <div class="filter-group">
+
             <label for="filterService">
               Service
             </label>
 
             <select id="filterService">
+
               <option value="">
                 All Services
               </option>
+
             </select>
+
           </div>
 
+
           <div class="filter-group">
+
             <label for="filterAvailability">
               Availability
             </label>
 
             <select id="filterAvailability">
+
               <option value="">
                 All Fixers
               </option>
@@ -111,15 +164,20 @@
               <option value="available">
                 Available Now
               </option>
+
             </select>
+
           </div>
 
+
           <div class="filter-group">
+
             <label for="filterSort">
               Sort By
             </label>
 
             <select id="filterSort">
+
               <option value="recommended">
                 Recommended
               </option>
@@ -135,28 +193,41 @@
               <option value="price">
                 Lowest Price
               </option>
+
             </select>
+
           </div>
+
 
           <button
             type="button"
             id="useLocationButton"
             class="location-filter-button"
           >
+
             <i class="fa-solid fa-location-crosshairs"></i>
+
             Use My Location
+
           </button>
+
 
           <button
             type="button"
             id="clearFilters"
             class="clear-filter-button"
           >
+
             <i class="fa-solid fa-rotate-left"></i>
+
             Clear Filters
+
           </button>
 
         </div>
+
+
+        <!-- LOCATION STATUS -->
 
         <p
           id="locationStatus"
@@ -164,9 +235,13 @@
           aria-live="polite"
         ></p>
 
+
+        <!-- RESULTS HEADER -->
+
         <div class="results-header">
 
           <div>
+
             <p class="section-label">
               AVAILABLE PROFESSIONALS
             </p>
@@ -174,7 +249,9 @@
             <h2 id="fixerResultsTitle">
               All Fixers
             </h2>
+
           </div>
+
 
           <p id="fixerCount">
             Loading...
@@ -182,25 +259,37 @@
 
         </div>
 
+
+        <!-- FIXERS FROM DATABASE -->
+
         <div
           id="allTechniciansContainer"
           class="technicians-grid"
         >
+
           <p class="loading">
             Loading Fixers...
           </p>
+
         </div>
 
       </div>
+
     </section>
 
   </main>
+
+
+  <!-- =========================
+       FOOTER
+  ========================== -->
 
   <footer class="footer">
 
     <div class="container footer-content">
 
       <div>
+
         <a
           href="index.html"
           class="logo footer-logo"
@@ -211,15 +300,34 @@
         <p>
           The right fix. Right around you.
         </p>
+
       </div>
 
+
       <div class="footer-links">
-        <a href="services.html">Services</a>
-        <a href="technicians.html">Find a Fixer</a>
-        <a href="about.html">About Us</a>
-        <a href="contact.html">Contact Us</a>
-        <a href="become-fixer.html">Become a Fixer</a>
+
+        <a href="services.html">
+          Services
+        </a>
+
+        <a href="technicians.html">
+          Find a Fixer
+        </a>
+
+        <a href="about.html">
+          About Us
+        </a>
+
+        <a href="contact.html">
+          Contact Us
+        </a>
+
+        <a href="become-fixer.html">
+          Become a Fixer
+        </a>
+
       </div>
+
 
       <p>
         © 2026 Fixer.Co
@@ -228,6 +336,7 @@
     </div>
 
   </footer>
+
 
   <script src="script.js"></script>
 

@@ -28,6 +28,31 @@
 
 
   <!-- =========================
+       TEMPORARY AUTH GUARD
+       Will be replaced with real
+       backend authentication later
+  ========================== -->
+
+  <script>
+
+    const isLoggedIn =
+      localStorage.getItem("loggedIn");
+
+    if (isLoggedIn !== "true") {
+
+      localStorage.setItem(
+        "redirectAfterLogin",
+        "become-fixer.html"
+      );
+
+      window.location.replace("login.html");
+
+    }
+
+  </script>
+
+
+  <!-- =========================
        NAVBAR
   ========================== -->
 
@@ -35,7 +60,10 @@
 
     <div class="container nav-content">
 
-      <a href="index.html" class="logo">
+      <a
+        href="index.html"
+        class="logo"
+      >
         Fixer<span>.Co</span>
       </a>
 
@@ -76,10 +104,11 @@
         </a>
 
         <a
-          href="request.html"
-          class="nav-button"
+          href="login.html"
+          class="login-nav-button"
         >
-          Request Service
+          <i class="fa-regular fa-user"></i>
+          Log In
         </a>
 
       </div>
@@ -122,15 +151,19 @@
             href="#fixerApplication"
             class="cta-button"
           >
+
             Apply to Join
 
             <i class="fa-solid fa-arrow-down"></i>
+
           </a>
 
         </div>
 
 
-        <!-- FEE -->
+        <!-- =========================
+             REGISTRATION FEE
+        ========================== -->
 
         <div class="fixer-fee-card">
 
@@ -139,8 +172,15 @@
           </p>
 
           <div class="fixer-fee-price">
-            <strong>99</strong>
-            <span>SAR</span>
+
+            <strong>
+              99
+            </strong>
+
+            <span>
+              SAR
+            </span>
+
           </div>
 
           <p>
@@ -171,33 +211,100 @@
     ========================== -->
 
     <section class="fixer-benefits">
+
       <div class="container">
-        <div class="fixer-section-heading fixer-benefits-heading">
-          <p class="section-label">WHY FIXER.CO</p>
-          <h2>Turn your skills into more opportunities.</h2>
-          <p>Join a platform built to help skilled professionals get discovered, stay flexible, and build trust.</p>
+
+        <div
+          class="fixer-section-heading
+                 fixer-benefits-heading"
+        >
+
+          <p class="section-label">
+            WHY FIXER.CO
+          </p>
+
+          <h2>
+            Turn your skills into more opportunities.
+          </h2>
+
+          <p>
+            Join a platform built to help skilled
+            professionals get discovered, stay flexible,
+            and build trust.
+          </p>
+
         </div>
+
 
         <div class="fixer-benefits-grid">
-          <article class="fixer-benefit-card">
-            <div class="fixer-benefit-icon"><i class="fa-solid fa-location-dot"></i></div>
-            <h3>Get discovered</h3>
-            <p>Customers looking for your specialty can discover your profile based on service and location.</p>
-          </article>
+
 
           <article class="fixer-benefit-card">
-            <div class="fixer-benefit-icon"><i class="fa-solid fa-calendar-check"></i></div>
-            <h3>Work your way</h3>
-            <p>Set your starting price, update your availability, and keep your professional details clear.</p>
+
+            <div class="fixer-benefit-icon">
+
+              <i class="fa-solid fa-location-dot"></i>
+
+            </div>
+
+            <h3>
+              Get discovered
+            </h3>
+
+            <p>
+              Customers looking for your specialty can
+              discover your profile based on service
+              and location.
+            </p>
+
           </article>
 
+
           <article class="fixer-benefit-card">
-            <div class="fixer-benefit-icon"><i class="fa-solid fa-star"></i></div>
-            <h3>Build your reputation</h3>
-            <p>Great service helps strengthen your profile through customer ratings and reviews.</p>
+
+            <div class="fixer-benefit-icon">
+
+              <i class="fa-solid fa-calendar-check"></i>
+
+            </div>
+
+            <h3>
+              Work your way
+            </h3>
+
+            <p>
+              Set your starting price, update your
+              availability, and keep your professional
+              details clear.
+            </p>
+
           </article>
+
+
+          <article class="fixer-benefit-card">
+
+            <div class="fixer-benefit-icon">
+
+              <i class="fa-solid fa-star"></i>
+
+            </div>
+
+            <h3>
+              Build your reputation
+            </h3>
+
+            <p>
+              Great service helps strengthen your profile
+              through customer ratings and reviews.
+            </p>
+
+          </article>
+
+
         </div>
+
       </div>
+
     </section>
 
 
@@ -208,6 +315,7 @@
     <section class="fixer-guide">
 
       <div class="container">
+
 
         <div class="fixer-section-heading">
 
@@ -230,9 +338,13 @@
         <div class="fixer-guide-grid">
 
 
+          <!-- STEP 01 -->
+
           <article class="fixer-guide-card">
 
-            <span>01</span>
+            <span>
+              01
+            </span>
 
             <i class="fa-solid fa-file-lines"></i>
 
@@ -248,9 +360,13 @@
           </article>
 
 
+          <!-- STEP 02 -->
+
           <article class="fixer-guide-card">
 
-            <span>02</span>
+            <span>
+              02
+            </span>
 
             <i class="fa-solid fa-user-pen"></i>
 
@@ -266,9 +382,13 @@
           </article>
 
 
+          <!-- STEP 03 -->
+
           <article class="fixer-guide-card">
 
-            <span>03</span>
+            <span>
+              03
+            </span>
 
             <i class="fa-solid fa-shield-halved"></i>
 
@@ -278,15 +398,19 @@
 
             <p>
               Your application stays pending while
-              fixer.co reviews your information.
+              Fixer.Co reviews your information.
             </p>
 
           </article>
 
 
+          <!-- STEP 04 -->
+
           <article class="fixer-guide-card">
 
-            <span>04</span>
+            <span>
+              04
+            </span>
 
             <i class="fa-solid fa-screwdriver-wrench"></i>
 
@@ -329,7 +453,7 @@
           </h2>
 
           <p>
-            Every professional on fixer.co is expected
+            Every professional on Fixer.Co is expected
             to provide respectful, reliable, and
             transparent service.
           </p>
@@ -340,10 +464,14 @@
         <div class="fixer-policy-list">
 
 
+          <!-- POLICY 01 -->
+
           <div class="policy-item">
 
             <div class="policy-icon">
+
               <i class="fa-solid fa-id-card"></i>
+
             </div>
 
             <div>
@@ -362,10 +490,14 @@
           </div>
 
 
+          <!-- POLICY 02 -->
+
           <div class="policy-item">
 
             <div class="policy-icon">
+
               <i class="fa-solid fa-clock"></i>
+
             </div>
 
             <div>
@@ -384,10 +516,14 @@
           </div>
 
 
+          <!-- POLICY 03 -->
+
           <div class="policy-item">
 
             <div class="policy-icon">
+
               <i class="fa-solid fa-tag"></i>
+
             </div>
 
             <div>
@@ -406,10 +542,17 @@
           </div>
 
 
+          <!-- POLICY 04 -->
+
           <div class="policy-item policy-warning">
 
             <div class="policy-icon">
-              <i class="fa-solid fa-triangle-exclamation"></i>
+
+              <i
+                class="fa-solid
+                       fa-triangle-exclamation"
+              ></i>
+
             </div>
 
             <div>
@@ -419,13 +562,17 @@
               </h3>
 
               <p>
+
                 A fixer who receives
+
                 <strong>
                   4 verified negative customer reviews
                 </strong>
+
                 may have their profile automatically
                 suspended from public listings and
-                reviewed by fixer.co
+                reviewed by Fixer.Co.
+
               </p>
 
             </div>
@@ -452,7 +599,9 @@
       <div class="container fixer-application-grid">
 
 
-        <!-- LEFT -->
+        <!-- =========================
+             LEFT SIDE
+        ========================== -->
 
         <div class="fixer-application-copy">
 
@@ -472,9 +621,22 @@
 
 
           <div class="application-fee-reminder">
+
             <i class="fa-solid fa-circle-info"></i>
-            <p><strong>99 SAR one-time registration fee</strong> is collected only after your application is approved.</p>
+
+            <p>
+
+              <strong>
+                99 SAR one-time registration fee
+              </strong>
+
+              is collected only after your application
+              is approved.
+
+            </p>
+
           </div>
+
 
           <div class="application-status-info">
 
@@ -498,12 +660,16 @@
         </div>
 
 
-        <!-- FORM -->
+        <!-- =========================
+             APPLICATION FORM
+        ========================== -->
 
         <div class="fixer-application-card">
 
           <form id="fixerApplicationForm">
 
+
+            <!-- NAME + PHONE -->
 
             <div class="form-row">
 
@@ -543,6 +709,8 @@
             </div>
 
 
+            <!-- EMAIL -->
+
             <div class="form-group">
 
               <label for="fixerEmail">
@@ -558,6 +726,8 @@
 
             </div>
 
+
+            <!-- SERVICE -->
 
             <div class="form-group">
 
@@ -579,6 +749,8 @@
             </div>
 
 
+            <!-- LOCATION -->
+
             <div class="form-group">
 
               <label for="fixerLocation">
@@ -594,6 +766,8 @@
 
             </div>
 
+
+            <!-- EXPERIENCE + PRICE -->
 
             <div class="form-row">
 
@@ -636,6 +810,8 @@
             </div>
 
 
+            <!-- AVAILABILITY -->
+
             <div class="form-group">
 
               <label for="fixerAvailability">
@@ -657,6 +833,8 @@
             </div>
 
 
+            <!-- BIO -->
+
             <div class="form-group">
 
               <label for="fixerBio">
@@ -672,7 +850,9 @@
             </div>
 
 
-            <!-- AGREEMENT -->
+            <!-- =========================
+                 POLICY AGREEMENT
+            ========================== -->
 
             <label class="policy-agreement">
 
@@ -683,16 +863,22 @@
               >
 
               <span>
+
                 I have read and agree to the
+
                 <strong>
-                  fixer.co Professional Policy
+                  Fixer.Co Professional Policy
                 </strong>
+
                 and understand the quality standards
                 required to remain on the platform.
+
               </span>
 
             </label>
 
+
+            <!-- SUBMIT -->
 
             <button
               type="submit"
@@ -732,6 +918,7 @@
   <footer class="footer">
 
     <div class="container footer-content">
+
 
       <div>
 
@@ -774,12 +961,14 @@
         © 2026 Fixer.Co
       </p>
 
+
     </div>
 
   </footer>
 
 
   <script src="script.js"></script>
+
 
 </body>
 

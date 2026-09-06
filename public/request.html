@@ -9,7 +9,7 @@
     content="width=device-width, initial-scale=1.0"
   />
 
-  <title>Request Service | fixer.co</title>
+  <title>Request Service | Fixer.Co</title>
 
   <!-- Font Awesome -->
   <link
@@ -24,6 +24,34 @@
 </head>
 
 <body>
+
+
+  <!-- =========================
+       TEMPORARY AUTH GUARD
+  ========================== -->
+
+  <script>
+
+    const isLoggedIn =
+      localStorage.getItem("loggedIn");
+
+    if (isLoggedIn !== "true") {
+
+      const currentPage =
+        window.location.pathname.split("/").pop()
+        + window.location.search;
+
+      localStorage.setItem(
+        "redirectAfterLogin",
+        currentPage || "request.html"
+      );
+
+      window.location.replace("login.html");
+
+    }
+
+  </script>
+
 
   <!-- =========================
        NAVBAR
@@ -76,10 +104,11 @@
         </a>
 
         <a
-          href="request.html"
-          class="nav-button active"
+          href="login.html"
+          class="login-nav-button"
         >
-          Request Service
+          <i class="fa-regular fa-user"></i>
+          Log In
         </a>
 
       </div>
