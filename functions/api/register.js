@@ -3,7 +3,6 @@
 // POST /api/register
 // ========================================
 
-
 // Create JSON response
 function jsonResponse(data, status = 200) {
   return new Response(
@@ -17,11 +16,9 @@ function jsonResponse(data, status = 200) {
   );
 }
 
-
 // ========================================
 // CONVERT BUFFER TO HEX
 // ========================================
-
 function bufferToHex(buffer) {
   return Array.from(
     new Uint8Array(buffer)
@@ -35,25 +32,16 @@ function bufferToHex(buffer) {
     .join("");
 }
 
-
 // ========================================
 // HASH PASSWORD WITH PBKDF2
 // ========================================
-
 async function hashPassword(password) {
+  const encoder = new TextEncoder();
 
-  const encoder =
-    new TextEncoder();
+  const salt = crypto.getRandomValues(
+    new Uint8Array(16)
+  );
 
-
-  // Random salt
-  const salt =
-    crypto.getRandomValues(
-      new Uint8Array(16)
-    );
-
-
-  // Import password
   const passwordKey =
     await crypto.subtle.importKey(
       "raw",
@@ -62,18 +50,14 @@ async function hashPassword(password) {
         name: "PBKDF2"
       },
       false,
-      [
-        "deriveBits"
-      ]
+      ["deriveBits"]
     );
 
-
-  // Create hash
   const hashBuffer =
     await crypto.subtle.deriveBits(
       {
         name: "PBKDF2",
-        salt: salt,
+        salt,
         iterations: 100000,
         hash: "SHA-256"
       },
@@ -81,84 +65,53 @@ async function hashPassword(password) {
       256
     );
 
-
   return {
-    salt:
-      bufferToHex(
-        salt.buffer
-      ),
-
-    hash:
-      bufferToHex(
-        hashBuffer
-      )
+    salt: bufferToHex(salt.buffer),
+    hash: bufferToHex(hashBuffer)
   };
 }
-
 
 // ========================================
 // POST /api/register
 // ========================================
-
 export async function onRequestPost(context) {
-
   try {
-
-    const {
-      request,
-      env
-    } = context;
-
-
-    // ========================================
-    // DATABASE CHECK
-    // ========================================
+    const { request, env } = context;
 
     if (!env.DB) {
-
       return jsonResponse(
         {
           success: false,
-          message:
-            "Database connection is not configured."
+          message: "Database connection is not configured."
         },
         500
       );
-
     }
-
-
-    // ========================================
-    // READ REQUEST BODY
-    // ========================================
 
     let body;
 
     try {
-
-      body =
-        await request.json();
-
+      body = await request.json();
     } catch {
-
       return jsonResponse(
         {
           success: false,
-          message:
-            "Invalid request body."
+          message: "Invalid request body."
         },
         400
       );
-
     }
-
 
     // ========================================
     // USER DATA
     // ========================================
-
     const name =
       body.name?.trim();
+
+    const username =
+      body.username
+        ?.trim()
+        .toLowerCase();
 
     const email =
       body.email
@@ -171,41 +124,49 @@ export async function onRequestPost(context) {
     const password =
       body.password;
 
-
     // ========================================
     // REQUIRED FIELDS
     // ========================================
-
     if (
       !name ||
+      !username ||
       !email ||
       !password
     ) {
-
       return jsonResponse(
         {
           success: false,
           message:
-            "Name, email and password are required."
+            "Name, username, email and password are required."
         },
         400
       );
-
     }
 
+    // ========================================
+    // USERNAME VALIDATION
+    // ========================================
+    const usernamePattern =
+      /^[a-z0-9._]{3,20}$/;
+
+    if (!usernamePattern.test(username)) {
+      return jsonResponse(
+        {
+          success: false,
+          message:
+            "Username must be 3-20 characters and contain only letters, numbers, dots, or underscores."
+        },
+        400
+      );
+    }
 
     // ========================================
     // EMAIL VALIDATION
     // ========================================
-
     const emailPattern =
       /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-
-    if (
-      !emailPattern.test(email)
-    ) {
-
+    if (!emailPattern.test(email)) {
       return jsonResponse(
         {
           success: false,
@@ -214,24 +175,16 @@ export async function onRequestPost(context) {
         },
         400
       );
-
     }
-
 
     // ========================================
     // PHONE VALIDATION
     // ========================================
-
     if (phone) {
-
       const phonePattern =
         /^05\d{8}$/;
 
-
-      if (
-        !phonePattern.test(phone)
-      ) {
-
+      if (!phonePattern.test(phone)) {
         return jsonResponse(
           {
             success: false,
@@ -240,16 +193,12 @@ export async function onRequestPost(context) {
           },
           400
         );
-
       }
-
     }
-
 
     // ========================================
     // PASSWORD VALIDATION
     // ========================================
-
     const hasLength =
       password.length >= 8;
 
@@ -265,7 +214,6 @@ export async function onRequestPost(context) {
     const hasSpecial =
       /[^A-Za-z0-9]/.test(password);
 
-
     if (
       !hasLength ||
       !hasUppercase ||
@@ -273,7 +221,6 @@ export async function onRequestPost(context) {
       !hasNumber ||
       !hasSpecial
     ) {
-
       return jsonResponse(
         {
           success: false,
@@ -282,15 +229,12 @@ export async function onRequestPost(context) {
         },
         400
       );
-
     }
 
-
     // ========================================
-    // CHECK EXISTING USER
+    // CHECK EXISTING EMAIL
     // ========================================
-
-    const existingUser =
+    const existingEmail =
       await env.DB
         .prepare(
           `
@@ -303,9 +247,7 @@ export async function onRequestPost(context) {
         .bind(email)
         .first();
 
-
-    if (existingUser) {
-
+    if (existingEmail) {
       return jsonResponse(
         {
           success: false,
@@ -314,31 +256,47 @@ export async function onRequestPost(context) {
         },
         409
       );
-
     }
 
+    // ========================================
+    // CHECK EXISTING USERNAME
+    // ========================================
+    const existingUsername =
+      await env.DB
+        .prepare(
+          `
+          SELECT id
+          FROM users
+          WHERE username = ?
+          LIMIT 1
+          `
+        )
+        .bind(username)
+        .first();
+
+    if (existingUsername) {
+      return jsonResponse(
+        {
+          success: false,
+          message:
+            "This username is already taken."
+        },
+        409
+      );
+    }
 
     // ========================================
     // HASH PASSWORD
     // ========================================
-
     const passwordData =
-      await hashPassword(
-        password
-      );
-
+      await hashPassword(password);
 
     const storedPassword =
       `pbkdf2$100000$${passwordData.salt}$${passwordData.hash}`;
 
-
     // ========================================
     // INSERT USER
-    // IMPORTANT:
-    // Save the hashed password
-    // inside the existing "password" column
     // ========================================
-
     const result =
       await env.DB
         .prepare(
@@ -346,67 +304,51 @@ export async function onRequestPost(context) {
           INSERT INTO users
           (
             name,
+            username,
             email,
             phone,
             password
           )
-          VALUES (?, ?, ?, ?)
+          VALUES (?, ?, ?, ?, ?)
           `
         )
         .bind(
           name,
+          username,
           email,
           phone,
           storedPassword
         )
         .run();
 
-
-    // ========================================
-    // SUCCESS
-    // ========================================
-
     return jsonResponse(
       {
         success: true,
-
         message:
           "Account created successfully.",
-
         user: {
           id:
             result.meta?.last_row_id,
-
-          name:
-            name,
-
-          email:
-            email,
-
-          phone:
-            phone
+          name,
+          username,
+          email,
+          phone
         }
       },
       201
     );
 
-
   } catch (error) {
-
     console.error(
       "Register error:",
       error
     );
 
-
-    // Temporary debugging response
     return jsonResponse(
       {
         success: false,
-
         message:
           "Something went wrong while creating your account.",
-
         error:
           error instanceof Error
             ? error.message
@@ -414,7 +356,5 @@ export async function onRequestPost(context) {
       },
       500
     );
-
   }
-
 }
