@@ -5225,3 +5225,975 @@ if (logoutButton) {
 // ========================================
 
 updateNavbarAuth();
+
+/* ========================================
+   MY REQUESTS PAGE
+======================================== */
+
+async function loadMyRequestsPage() {
+
+  const container =
+    document.getElementById("myRequestsContainer");
+
+  if (!container) return;
+
+
+  const countElement =
+    document.getElementById("myRequestsCount");
+
+
+  try {
+
+    const response =
+      await fetch(
+        "/api/my-requests",
+        {
+          method: "GET",
+          credentials: "same-origin"
+        }
+      );
+
+
+    const data =
+      await response.json();
+
+
+    // If the user is not logged in,
+    // redirect them to the login page.
+    if (response.status === 401) {
+
+      localStorage.setItem(
+        "redirectAfterLogin",
+        "my-requests.html"
+      );
+
+      window.location.replace(
+        "login.html"
+      );
+
+      return;
+    }
+
+
+    if (
+      !response.ok ||
+      !data.success
+    ) {
+
+      throw new Error(
+        data.message ||
+        "Could not load your requests."
+      );
+
+    }
+
+
+    const requests =
+      Array.isArray(data.requests)
+        ? data.requests
+        : [];
+
+
+    /* ========================================
+       REQUEST COUNT
+    ======================================== */
+
+    if (countElement) {
+
+      countElement.textContent =
+        `${requests.length} ${
+          requests.length === 1
+            ? "request"
+            : "requests"
+        }`;
+
+    }
+
+
+    /* ========================================
+       EMPTY STATE
+    ======================================== */
+
+    if (requests.length === 0) {
+
+      container.innerHTML = `
+
+        <div class="my-requests-empty">
+
+          <div class="my-requests-empty-icon">
+
+            <i class="fa-solid fa-screwdriver-wrench"></i>
+
+          </div>
+
+          <h2>
+            No service requests yet
+          </h2>
+
+          <p>
+            When you request a Fixer,
+            your service details and progress
+            will appear here.
+          </p>
+
+          <a
+            href="services.html"
+            class="my-requests-primary-button"
+          >
+
+            Browse Services
+
+            <i class="fa-solid fa-arrow-right"></i>
+
+          </a>
+
+        </div>
+
+      `;
+
+      return;
+    }
+
+
+    /* ========================================
+       DISPLAY REQUESTS
+    ======================================== */
+
+    container.innerHTML = "";
+
+
+    requests.forEach(
+      (requestItem) => {
+
+        const status =
+          String(
+            requestItem.status ||
+            "requested"
+          )
+            .trim()
+            .toLowerCase();
+
+
+        const statusInfo =
+          getRequestStatusInfo(
+            status
+          );
+
+
+        /* Fixer initials */
+
+        const initials =
+          requestItem.technician_name
+            ? requestItem.technician_name
+                .split(" ")
+                .map(
+                  (word) => word[0]
+                )
+                .join("")
+                .substring(0, 2)
+                .toUpperCase()
+            : "FX";
+
+
+        /* Date */
+
+        const createdDate =
+          formatRequestDate(
+            requestItem.created_at
+          );
+
+
+        /* Rating */
+
+        const rating =
+          requestItem.technician_rating !== null &&
+          requestItem.technician_rating !== undefined
+
+            ? Number(
+                requestItem.technician_rating
+              ).toFixed(1)
+
+            : "—";
+
+
+        /* Starting price */
+
+        const price =
+          requestItem.starting_price !== null &&
+          requestItem.starting_price !== undefined
+
+            ? `${Number(
+                requestItem.starting_price
+              ).toFixed(0)} SAR`
+
+            : "—";
+
+
+        const isCompleted =
+          status === "completed";
+
+
+        /* ========================================
+           CREATE REQUEST CARD
+        ======================================== */
+
+        const card =
+          document.createElement(
+            "article"
+          );
+
+
+        card.className =
+          "my-request-card";
+
+
+        card.innerHTML = `
+
+          <div class="my-request-card-top">
+
+
+            <!-- SERVICE -->
+
+            <div class="my-request-service">
+
+              <div class="my-request-service-icon">
+
+                ${
+                  serviceIcons[
+                    Number(
+                      requestItem.service_id
+                    )
+                  ] ||
+                  '<i class="fa-solid fa-wrench"></i>'
+                }
+
+              </div>
+
+
+              <div>
+
+                <p class="my-request-eyebrow">
+                  SERVICE REQUEST
+                </p>
+
+                <h2>
+
+                  ${
+                    escapeMyRequestsHtml(
+                      requestItem.service_name ||
+                      "Home Service"
+                    )
+                  }
+
+                </h2>
+
+              </div>
+
+            </div>
+
+
+            <!-- STATUS -->
+
+            <span
+              class="
+                my-request-status
+                ${statusInfo.className}
+              "
+            >
+
+              <i class="${statusInfo.icon}"></i>
+
+              ${statusInfo.label}
+
+            </span>
+
+
+          </div>
+
+
+          <!-- =========================
+               PROGRESS
+          ========================== -->
+
+          <div class="my-request-progress">
+
+            ${buildRequestProgress(status)}
+
+          </div>
+
+
+          <!-- =========================
+               DETAILS
+          ========================== -->
+
+          <div class="my-request-details-grid">
+
+
+            <!-- FIXER -->
+
+            <div class="my-request-fixer">
+
+              <div class="my-request-avatar">
+
+                ${initials}
+
+              </div>
+
+
+              <div>
+
+                <span>
+                  YOUR FIXER
+                </span>
+
+                <strong>
+
+                  ${
+                    escapeMyRequestsHtml(
+                      requestItem.technician_name ||
+                      "Fixer pending"
+                    )
+                  }
+
+                </strong>
+
+
+                <p>
+
+                  <i class="fa-solid fa-star"></i>
+
+                  ${rating}
+
+
+                  <span class="my-request-dot">
+                    •
+                  </span>
+
+
+                  <i class="fa-solid fa-location-dot"></i>
+
+                  ${
+                    escapeMyRequestsHtml(
+                      requestItem.technician_location ||
+                      "Location unavailable"
+                    )
+                  }
+
+                </p>
+
+              </div>
+
+            </div>
+
+
+            <!-- DATE -->
+
+            <div class="my-request-detail">
+
+              <span>
+                REQUESTED
+              </span>
+
+              <strong>
+                ${createdDate}
+              </strong>
+
+            </div>
+
+
+            <!-- PRICE -->
+
+            <div class="my-request-detail">
+
+              <span>
+                STARTING PRICE
+              </span>
+
+              <strong>
+                ${price}
+              </strong>
+
+            </div>
+
+
+          </div>
+
+
+          <!-- =========================
+               PROBLEM
+          ========================== -->
+
+          <div class="my-request-problem">
+
+            <span>
+
+              <i class="fa-regular fa-message"></i>
+
+              Problem details
+
+            </span>
+
+
+            <p>
+
+              ${
+                escapeMyRequestsHtml(
+                  requestItem.problem ||
+                  "No problem description."
+                )
+              }
+
+            </p>
+
+          </div>
+
+
+          <!-- =========================
+               ACTIONS
+          ========================== -->
+
+          <div class="my-request-card-footer">
+
+
+            <a
+              href="profile.html?id=${encodeURIComponent(
+                requestItem.technician_id || ""
+              )}"
+              class="my-requests-secondary-button"
+            >
+
+              <i class="fa-regular fa-user"></i>
+
+              View Fixer
+
+            </a>
+
+
+            ${
+              isCompleted
+
+                ? `
+
+                  <button
+                    type="button"
+                    class="
+                      my-requests-primary-button
+                      review-request-button
+                    "
+                    data-request-id="${requestItem.id}"
+                  >
+
+                    <i class="fa-regular fa-star"></i>
+
+                    Leave a Review
+
+                  </button>
+
+                `
+
+                : `
+
+                  <a
+                    href="track.html?request=${encodeURIComponent(
+                      requestItem.id
+                    )}"
+                    class="my-requests-primary-button"
+                  >
+
+                    Track Service
+
+                    <i class="fa-solid fa-arrow-right"></i>
+
+                  </a>
+
+                `
+            }
+
+
+          </div>
+
+        `;
+
+
+        container.appendChild(
+          card
+        );
+
+      }
+    );
+
+
+  } catch (error) {
+
+    console.error(
+      "My Requests page error:",
+      error
+    );
+
+
+    if (countElement) {
+
+      countElement.textContent =
+        "Unavailable";
+
+    }
+
+
+    container.innerHTML = `
+
+      <div class="my-requests-empty">
+
+
+        <div
+          class="
+            my-requests-empty-icon
+            error
+          "
+        >
+
+          <i class="fa-solid fa-triangle-exclamation"></i>
+
+        </div>
+
+
+        <h2>
+          We couldn't load your requests
+        </h2>
+
+
+        <p>
+          Please refresh the page
+          and try again.
+        </p>
+
+
+        <button
+          type="button"
+          class="my-requests-primary-button"
+          onclick="window.location.reload()"
+        >
+
+          Try Again
+
+        </button>
+
+
+      </div>
+
+    `;
+
+  }
+
+}
+
+
+/* ========================================
+   REQUEST STATUS
+======================================== */
+
+function getRequestStatusInfo(
+  status
+) {
+
+  const statuses = {
+
+
+    pending: {
+
+      label:
+        "Requested",
+
+      className:
+        "status-requested",
+
+      icon:
+        "fa-regular fa-clock"
+
+    },
+
+
+    requested: {
+
+      label:
+        "Requested",
+
+      className:
+        "status-requested",
+
+      icon:
+        "fa-regular fa-clock"
+
+    },
+
+
+    accepted: {
+
+      label:
+        "Accepted",
+
+      className:
+        "status-accepted",
+
+      icon:
+        "fa-solid fa-check"
+
+    },
+
+
+    on_the_way: {
+
+      label:
+        "On the way",
+
+      className:
+        "status-on-the-way",
+
+      icon:
+        "fa-solid fa-car-side"
+
+    },
+
+
+    arrived: {
+
+      label:
+        "Arrived",
+
+      className:
+        "status-arrived",
+
+      icon:
+        "fa-solid fa-location-dot"
+
+    },
+
+
+    in_progress: {
+
+      label:
+        "In progress",
+
+      className:
+        "status-in-progress",
+
+      icon:
+        "fa-solid fa-screwdriver-wrench"
+
+    },
+
+
+    completed: {
+
+      label:
+        "Completed",
+
+      className:
+        "status-completed",
+
+      icon:
+        "fa-solid fa-circle-check"
+
+    }
+
+  };
+
+
+  return (
+    statuses[status] ||
+    {
+
+      label:
+        status
+          .replaceAll(
+            "_",
+            " "
+          )
+          .replace(
+            /\b\w/g,
+            (letter) =>
+              letter.toUpperCase()
+          ),
+
+      className:
+        "status-requested",
+
+      icon:
+        "fa-regular fa-clock"
+
+    }
+  );
+
+}
+
+
+/* ========================================
+   REQUEST PROGRESS
+======================================== */
+
+function buildRequestProgress(
+  status
+) {
+
+  const steps = [
+
+    {
+      key:
+        "requested",
+
+      label:
+        "Requested",
+
+      icon:
+        "fa-regular fa-file-lines"
+    },
+
+
+    {
+      key:
+        "accepted",
+
+      label:
+        "Accepted",
+
+      icon:
+        "fa-solid fa-check"
+    },
+
+
+    {
+      key:
+        "on_the_way",
+
+      label:
+        "On the way",
+
+      icon:
+        "fa-solid fa-car-side"
+    },
+
+
+    {
+      key:
+        "in_progress",
+
+      label:
+        "In progress",
+
+      icon:
+        "fa-solid fa-screwdriver-wrench"
+    },
+
+
+    {
+      key:
+        "completed",
+
+      label:
+        "Completed",
+
+      icon:
+        "fa-solid fa-flag-checkered"
+    }
+
+  ];
+
+
+  const normalizedStatus =
+    status === "pending"
+
+      ? "requested"
+
+      : status === "arrived"
+
+        ? "on_the_way"
+
+        : status;
+
+
+  let currentIndex =
+    steps.findIndex(
+      (step) =>
+        step.key ===
+        normalizedStatus
+    );
+
+
+  if (currentIndex < 0) {
+
+    currentIndex = 0;
+
+  }
+
+
+  return steps
+    .map(
+      (step, index) => {
+
+        const isDone =
+          index < currentIndex;
+
+
+        const isCurrent =
+          index === currentIndex;
+
+
+        return `
+
+          <div
+            class="
+              my-request-progress-step
+
+              ${
+                isDone
+
+                  ? "done"
+
+                  : isCurrent
+
+                    ? "current"
+
+                    : ""
+              }
+            "
+          >
+
+            <div
+              class="
+                my-request-progress-marker
+              "
+            >
+
+              <i class="${step.icon}"></i>
+
+            </div>
+
+
+            <span>
+              ${step.label}
+            </span>
+
+
+          </div>
+
+        `;
+
+      }
+    )
+    .join("");
+
+}
+
+
+/* ========================================
+   FORMAT REQUEST DATE
+======================================== */
+
+function formatRequestDate(
+  value
+) {
+
+  if (!value) {
+
+    return "—";
+
+  }
+
+
+  const normalizedValue =
+    String(value).includes("T")
+
+      ? value
+
+      : String(value).replace(
+          " ",
+          "T"
+        ) + "Z";
+
+
+  const date =
+    new Date(
+      normalizedValue
+    );
+
+
+  if (
+    Number.isNaN(
+      date.getTime()
+    )
+  ) {
+
+    return value;
+
+  }
+
+
+  return new Intl.DateTimeFormat(
+    "en",
+    {
+
+      day:
+        "numeric",
+
+      month:
+        "short",
+
+      year:
+        "numeric",
+
+      hour:
+        "numeric",
+
+      minute:
+        "2-digit"
+
+    }
+  ).format(date);
+
+}
+
+
+/* ========================================
+   ESCAPE HTML
+======================================== */
+
+function escapeMyRequestsHtml(
+  value
+) {
+
+  return String(
+    value ?? ""
+  )
+
+    .replaceAll(
+      "&",
+      "&amp;"
+    )
+
+    .replaceAll(
+      "<",
+      "&lt;"
+    )
+
+    .replaceAll(
+      ">",
+      "&gt;"
+    )
+
+    .replaceAll(
+      '"',
+      "&quot;"
+    )
+
+    .replaceAll(
+      "'",
+      "&#039;"
+    );
+
+}
+
+
+/* ========================================
+   RUN MY REQUESTS PAGE
+======================================== */
+
+loadMyRequestsPage();
