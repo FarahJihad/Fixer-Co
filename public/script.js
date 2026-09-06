@@ -6512,6 +6512,11 @@ function renderTrackService(request) {
   updateTrackTimeline(
     status
   );
+  /* Show the next expected step */
+updateTrackNextStep(
+  status,
+  request
+);
 
 
   /* Completed state */
@@ -7560,20 +7565,50 @@ function updateTrackCompletedState(
   }
 
 
-  if (status === "completed") {
+  /* Hide review until service is completed */
 
-    reviewButton.hidden = false;
+  if (status !== "completed") {
 
+    reviewButton.hidden = true;
+
+    reviewButton.style.display =
+      "none";
+
+    reviewButton.classList.remove(
+      "review-ready"
+    );
 
     reviewButton.onclick =
-      () => {
+      null;
 
-        window.location.href =
-          `profile.html?id=${request.technician_id}#reviews`;
+    return;
+  }
 
-      };
 
-  } else {
+  /* Show review only after completion */
+
+  reviewButton.hidden =
+    false;
+
+  reviewButton.style.display =
+    "inline-flex";
+
+  reviewButton.classList.add(
+    "review-ready"
+  );
+
+
+  reviewButton.onclick =
+    () => {
+
+      window.location.href =
+        `profile.html?id=${request.technician_id}#reviews`;
+
+    };
+
+}
+
+   else {
 
     reviewButton.hidden = true;
 
@@ -7832,3 +7867,219 @@ function escapeTrackHTML(value) {
 ======================================== */
 
 loadTrackServicePage();
+/* ========================================
+   TRACK SERVICE - WHAT'S NEXT
+======================================== */
+
+function updateTrackNextStep(
+  status,
+  request
+) {
+
+  const fixerName =
+    request.technician_name
+      ? request.technician_name.split(" ")[0]
+      : "Your Fixer";
+
+
+  const nextSteps = {
+
+    requested: {
+
+      title:
+        `Waiting for ${fixerName} to accept`,
+
+      description:
+        `Once ${fixerName} accepts your request, you'll see the next service update here.`,
+
+      stage:
+        "Accepted",
+
+      icon:
+        "fa-solid fa-user-check"
+
+    },
+
+
+    accepted: {
+
+      title:
+        `${fixerName} is preparing`,
+
+      description:
+        `Your request has been accepted. The next update will appear when ${fixerName} starts heading to you.`,
+
+      stage:
+        "On the way",
+
+      icon:
+        "fa-solid fa-route"
+
+    },
+
+
+    on_the_way: {
+
+      title:
+        `${fixerName} is heading your way`,
+
+      description:
+        `Keep an eye on this page. The next update will appear when your Fixer starts the service.`,
+
+      stage:
+        "In progress",
+
+      icon:
+        "fa-solid fa-location-arrow"
+
+    },
+
+
+    in_progress: {
+
+      title:
+        "Service completion",
+
+      description:
+        `Once ${fixerName} finishes the service, you'll be able to leave your review.`,
+
+      stage:
+        "Completed",
+
+      icon:
+        "fa-solid fa-check-double"
+
+    },
+
+
+    completed: {
+
+      title:
+        "Service completed",
+
+      description:
+        `Your service is complete. You can now share your experience and review ${fixerName}.`,
+
+      stage:
+        "Leave a review",
+
+      icon:
+        "fa-solid fa-star"
+
+    }
+
+  };
+
+
+  const info =
+    nextSteps[status] ||
+    nextSteps.requested;
+
+
+  setTrackText(
+    "trackNextTitle",
+    info.title
+  );
+
+
+  setTrackText(
+    "trackNextDescription",
+    info.description
+  );
+
+
+  setTrackText(
+    "trackNextStage",
+    info.stage
+  );
+
+
+  const icon =
+    document.getElementById(
+      "trackNextIcon"
+    );
+
+
+  if (icon) {
+
+    icon.className =
+      info.icon;
+
+  }
+
+}
+
+
+/* ========================================
+   SCROLL REVEAL INTERACTION
+======================================== */
+
+function setupTrackScrollReveal() {
+
+  function setupTrackInteractions() {
+
+  setupTrackScrollReveal();
+
+  const params =
+    new URLSearchParams(
+      window.location.search
+    );
+  const elements =
+    document.querySelectorAll(
+      ".track-scroll-reveal"
+    );
+
+
+  if (!elements.length) {
+    return;
+  }
+
+
+  const observer =
+    new IntersectionObserver(
+
+      entries => {
+
+        entries.forEach(
+          entry => {
+
+            if (
+              entry.isIntersecting
+            ) {
+
+              entry.target
+                .classList
+                .add(
+                  "visible"
+                );
+
+
+              observer.unobserve(
+                entry.target
+              );
+
+            }
+
+          }
+        );
+
+      },
+
+      {
+        threshold: 0.18
+      }
+
+    );
+
+
+  elements.forEach(
+    element => {
+
+      observer.observe(
+        element
+      );
+
+    }
+  );
+
+}
