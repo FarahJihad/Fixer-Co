@@ -10291,16 +10291,17 @@ body.track-map-open {
 .request-success-view {
   border: none;
 
-  background: #172033;
+  background: #22a06b;
   color: #ffffff;
 }
 
 
 .request-success-view:hover {
+  background: #1b8a5c;
   transform: translateY(-2px);
 
   box-shadow:
-    0 8px 20px rgba(23, 32, 51, 0.18);
+    0 8px 20px rgba(34, 160, 107, 0.25);
 }
 
 
@@ -10346,6 +10347,108 @@ body.track-map-open {
 
   .request-success-actions {
     flex-direction: column;
+  }
+
+}
+
+/* ========================================
+   INTRO SOFT MOVING GLOW
+======================================== */
+
+.site-intro {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+}
+
+
+.intro-content {
+  position: relative;
+  z-index: 2;
+}
+
+
+.intro-glow {
+  position: absolute;
+
+  border-radius: 50%;
+
+  filter: blur(90px);
+
+  pointer-events: none;
+
+  opacity: 0.28;
+
+  z-index: 1;
+}
+
+
+.intro-glow-one {
+  width: 420px;
+  height: 420px;
+
+  background: rgba(34, 160, 107, 0.42);
+
+  top: -120px;
+  left: -100px;
+
+  animation:
+    introGlowOne 5s ease-in-out infinite alternate;
+}
+
+
+.intro-glow-two {
+  width: 360px;
+  height: 360px;
+
+  background: rgba(34, 160, 107, 0.26);
+
+  right: -100px;
+  bottom: -120px;
+
+  animation:
+    introGlowTwo 5.5s ease-in-out infinite alternate;
+}
+
+
+@keyframes introGlowOne {
+
+  from {
+    transform:
+      translate(0, 0)
+      scale(1);
+  }
+
+  to {
+    transform:
+      translate(160px, 90px)
+      scale(1.15);
+  }
+
+}
+
+
+@keyframes introGlowTwo {
+
+  from {
+    transform:
+      translate(0, 0)
+      scale(1);
+  }
+
+  to {
+    transform:
+      translate(-140px, -80px)
+      scale(1.12);
+  }
+
+}
+
+
+@media (prefers-reduced-motion: reduce) {
+
+  .intro-glow {
+    animation: none;
   }
 
 }
