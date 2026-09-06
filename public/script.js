@@ -2734,197 +2734,317 @@ async function loadRequestPage() {
        SUBMIT REQUEST
     ========================= */
 
-    requestForm.addEventListener(
-      "submit",
-      async (event) => {
+   requestForm.addEventListener(
+  "submit",
+  async (event) => {
 
-        event.preventDefault();
-        const currentUser =
-  await loadCurrentUser();
+    event.preventDefault();
 
-if (!currentUser) {
+    const currentUser =
+      await loadCurrentUser();
 
-  showLoginRequiredPopup(
-    window.location.href
-  );
+    if (!currentUser) {
 
-  return;
-}
+      showLoginRequiredPopup(
+        window.location.href
+      );
 
-
-        formMessage.textContent = "";
-
-        formMessage.className =
-          "form-message";
+      return;
+    }
 
 
-        const nameValue =
-          customerName.value.trim();
+    formMessage.textContent = "";
+
+    formMessage.className =
+      "form-message";
 
 
-        const phoneValue =
-          phone.value.trim();
+    const nameValue =
+      customerName.value.trim();
 
 
-        const problemValue =
-          problemDescription.value.trim();
+    const phoneValue =
+      phone.value.trim();
 
 
-        const serviceValue =
-          serviceSelect.value;
+    const problemValue =
+      problemDescription.value.trim();
 
 
-        const technicianValue =
-          technicianSelect.value;
+    const serviceValue =
+      serviceSelect.value;
 
 
-        if (
-          !nameValue ||
-          !phoneValue ||
-          !problemValue ||
-          !serviceValue
-        ) {
-
-          formMessage.textContent =
-            "Please fill in all required fields.";
-
-          formMessage.classList.add(
-            "error"
-          );
-
-          return;
-
-        }
+    const technicianValue =
+      technicianSelect.value;
 
 
-        if (
-          !/^05\d{8}$/.test(phoneValue)
-        ) {
+    if (
+      !nameValue ||
+      !phoneValue ||
+      !problemValue ||
+      !serviceValue
+    ) {
 
-          formMessage.textContent =
-            "Please enter a valid phone number starting with 05.";
+      formMessage.textContent =
+        "Please fill in all required fields.";
 
-          formMessage.classList.add(
-            "error"
-          );
+      formMessage.classList.add(
+        "error"
+      );
 
-          return;
-
-        }
-
-
-        try {
-
-          const response =
-            await fetch(
-              "/api/requests",
-              {
-
-                method: "POST",
-
-                headers: {
-                  "Content-Type":
-                    "application/json"
-                },
-
-                body: JSON.stringify({
-
-                  customer_name:
-                    nameValue,
-
-                  phone:
-                    phoneValue,
-
-                  problem:
-                    problemValue,
-
-                  service_id:
-                    Number(serviceValue),
-
-                  technician_id:
-                    technicianValue
-                      ? Number(
-                          technicianValue
-                        )
-                      : null
-
-                })
-
-              }
-            );
+      return;
+    }
 
 
-          const result =
-            await response.json();
+    if (
+      !/^05\d{8}$/.test(phoneValue)
+    ) {
+
+      formMessage.textContent =
+        "Please enter a valid phone number starting with 05.";
+
+      formMessage.classList.add(
+        "error"
+      );
+
+      return;
+    }
 
 
-          if (!response.ok) {
+    try {
 
-            throw new Error(
-              result.error ||
-              "Request failed"
-            );
+      const response =
+        await fetch(
+          "/api/requests",
+          {
+
+            method: "POST",
+
+            headers: {
+              "Content-Type":
+                "application/json"
+            },
+
+            body: JSON.stringify({
+
+              customer_name:
+                nameValue,
+
+              phone:
+                phoneValue,
+
+              problem:
+                problemValue,
+
+              service_id:
+                Number(serviceValue),
+
+              technician_id:
+                technicianValue
+                  ? Number(
+                      technicianValue
+                    )
+                  : null
+
+            })
 
           }
+        );
 
 
-  formMessage.innerHTML =
-  `<i class="fa-solid fa-circle-check"></i>
-   Service request sent successfully!`;
+      const result =
+        await response.json();
 
 
-          formMessage.classList.add(
-            "success"
-          );
+      if (!response.ok) {
 
-
-          requestForm.reset();
-
-
-          technicianSelect.innerHTML = `
-            <option value="">
-              Select a fixer
-            </option>
-          `;
-
-
-        } catch (error) {
-
-          console.error(
-            "Request error:",
-            error
-          );
-
-
-          formMessage.textContent =
-            "Something went wrong. Please try again.";
-
-          formMessage.classList.add(
-            "error"
-          );
-
-        }
+        throw new Error(
+          result.error ||
+          "Request failed"
+        );
 
       }
-    );
 
 
-  } catch (error) {
-
-    console.error(
-      "Error loading request page:",
-      error
-    );
+      formMessage.innerHTML =
+        `<i class="fa-solid fa-circle-check"></i>
+         Service request sent successfully!`;
 
 
-    formMessage.textContent =
-      "Could not load services. Please refresh the page.";
+      formMessage.classList.add(
+        "success"
+      );
 
-    formMessage.classList.add(
-      "error"
-    );
+
+      requestForm.reset();
+
+
+      technicianSelect.innerHTML = `
+        <option value="">
+          Select a fixer
+        </option>
+      `;
+
+
+      /* Show follow-up popup after 2 seconds */
+
+      setTimeout(() => {
+
+        const oldPopup =
+          document.getElementById(
+            "requestSuccessPopup"
+          );
+
+        if (oldPopup) {
+          oldPopup.remove();
+        }
+
+
+        const overlay =
+          document.createElement(
+            "div"
+          );
+
+        overlay.id =
+          "requestSuccessPopup";
+
+        overlay.className =
+          "request-success-overlay";
+
+
+        overlay.innerHTML = `
+          <div class="request-success-card">
+
+            <div class="request-success-icon">
+              <i class="fa-solid fa-circle-check"></i>
+            </div>
+
+            <h3>
+              Request Submitted!
+            </h3>
+
+            <p>
+              Your service request was created successfully.
+              Would you like to view your requests?
+            </p>
+
+            <div class="request-success-actions">
+
+              <button
+                type="button"
+                class="request-success-stay"
+                id="requestSuccessStay"
+              >
+                Stay Here
+              </button>
+
+              <button
+                type="button"
+                class="request-success-view"
+                id="requestSuccessView"
+              >
+                View My Requests
+                <i class="fa-solid fa-arrow-right"></i>
+              </button>
+
+            </div>
+
+          </div>
+        `;
+
+
+        document.body.appendChild(
+          overlay
+        );
+
+
+        const stayButton =
+          document.getElementById(
+            "requestSuccessStay"
+          );
+
+
+        const viewButton =
+          document.getElementById(
+            "requestSuccessView"
+          );
+
+
+        stayButton.addEventListener(
+          "click",
+          () => {
+            overlay.remove();
+          }
+        );
+
+
+        viewButton.addEventListener(
+          "click",
+          () => {
+
+            window.location.href =
+              "my-requests.html";
+
+          }
+        );
+
+
+        overlay.addEventListener(
+          "click",
+          (event) => {
+
+            if (
+              event.target === overlay
+            ) {
+
+              overlay.remove();
+
+            }
+
+          }
+        );
+
+      }, 2000);
+
+
+    } catch (error) {
+
+      console.error(
+        "Request error:",
+        error
+      );
+
+
+      formMessage.textContent =
+        "Something went wrong. Please try again.";
+
+      formMessage.classList.add(
+        "error"
+      );
+
+    }
 
   }
+);
+
+
+} catch (error) {
+
+  console.error(
+    "Error loading request page:",
+    error
+  );
+
+
+  formMessage.textContent =
+    "Could not load services. Please refresh the page.";
+
+  formMessage.classList.add(
+    "error"
+  );
+
+}
 
 }
 
