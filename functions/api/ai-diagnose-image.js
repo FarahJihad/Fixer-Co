@@ -299,7 +299,48 @@ const categoryLine =
     /CATEGORY\s*:\s*([^\n\r]+)/i
   )?.[1]?.trim() || "";
 
+/*
+  Safety check for unrelated images.
 
+  Sometimes the vision model correctly says
+  the image is not a home-repair issue,
+  but still tries to choose a service.
+*/
+const lowerAIResponse =
+  generatedText.toLowerCase();
+
+const unrelatedImage =
+  lowerAIResponse.includes(
+    "not a home repair issue"
+  ) ||
+  lowerAIResponse.includes(
+    "not a home-repair issue"
+  ) ||
+  lowerAIResponse.includes(
+    "unrelated to home repair"
+  ) ||
+  lowerAIResponse.includes(
+    "does not show a home repair"
+  ) ||
+  lowerAIResponse.includes(
+    "doesn't show a home repair"
+  );
+
+if (unrelatedImage) {
+  return jsonResponse(
+    {
+      success: true,
+
+      diagnosis: {
+        category: "UNKNOWN",
+        confidence: 0,
+        explanation:
+          "We couldn't identify a home repair issue from this photo."
+      }
+    },
+    200
+  );
+}
 /*
   UNKNOWN is a valid result.
 
