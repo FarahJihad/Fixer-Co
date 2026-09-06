@@ -4886,31 +4886,25 @@ if (loginForm) {
 
 }
 // ========================================
-// AUTHENTICATION STATE
+// AUTHENTICATION STATE - GLOBAL
 // ========================================
 
 async function loadCurrentUser() {
-
   try {
-
-    const response =
-      await fetch(
-        "/api/me",
-        {
-          method: "GET",
-          credentials: "same-origin"
-        }
-      );
-
+    const response = await fetch(
+      "/api/me",
+      {
+        method: "GET",
+        credentials: "same-origin"
+      }
+    );
 
     if (!response.ok) {
       return null;
     }
 
-
     const data =
       await response.json();
-
 
     if (
       !data.success ||
@@ -4919,7 +4913,6 @@ async function loadCurrentUser() {
     ) {
       return null;
     }
-
 
     return data.user;
 
@@ -4932,32 +4925,29 @@ async function loadCurrentUser() {
 
     return null;
   }
-
 }
 
 
 // ========================================
-// UPDATE NAVBAR
+// UPDATE NAVBAR ON EVERY PAGE
 // ========================================
 
 async function updateNavbarAuth() {
-
-  const user =
-    await loadCurrentUser();
-
 
   const navActions =
     document.querySelector(
       ".nav-actions"
     );
 
-
   if (!navActions) {
     return;
   }
 
+  const user =
+    await loadCurrentUser();
 
-  // Remove old generated account area
+
+  // Remove any generated account area
   const oldAuthArea =
     document.getElementById(
       "authUserArea"
@@ -4968,52 +4958,80 @@ async function updateNavbarAuth() {
   }
 
 
+  // Find existing login button
+  const existingLoginLink =
+    navActions.querySelector(
+      'a[href="login.html"], a[href="/login"], a[href="/login.html"], #navLoginButton'
+    );
+
+
+  // ========================================
+  // USER LOGGED OUT
+  // ========================================
+
   if (!user) {
 
-    // Show login button when logged out
-    if (
-      !document.getElementById(
-        "navLoginButton"
-      )
-    ) {
+    if (existingLoginLink) {
 
-      const loginLink =
-        document.createElement("a");
+      existingLoginLink.style.display =
+        "";
 
-      loginLink.href =
-        "login.html";
-
-      loginLink.id =
+      existingLoginLink.id =
         "navLoginButton";
 
-      loginLink.className =
-        "nav-button";
-
-      loginLink.textContent =
-        "Log In";
-
-      navActions.appendChild(
-        loginLink
-      );
+      return;
     }
+
+
+    const loginLink =
+      document.createElement("a");
+
+
+    loginLink.href =
+      "login.html";
+
+    loginLink.id =
+      "navLoginButton";
+
+    loginLink.className =
+      "login-nav-button";
+
+    loginLink.innerHTML = `
+      <i class="fa-regular fa-user"></i>
+      Log In
+    `;
+
+
+    navActions.appendChild(
+      loginLink
+    );
 
     return;
   }
 
 
-  // User is logged in
-  const loginButton =
-    document.getElementById(
-      "navLoginButton"
-    );
+  // ========================================
+  // USER LOGGED IN
+  // ========================================
 
-  if (loginButton) {
-    loginButton.remove();
+  if (existingLoginLink) {
+    existingLoginLink.remove();
   }
+
+
+  const firstName =
+    (
+      user.name ||
+      user.username ||
+      "Account"
+    )
+      .trim()
+      .split(/\s+/)[0];
 
 
   const authArea =
     document.createElement("div");
+
 
   authArea.id =
     "authUserArea";
@@ -5022,17 +5040,12 @@ async function updateNavbarAuth() {
     "auth-user-area";
 
 
-  const firstName =
-    user.name
-      ? user.name.split(" ")[0]
-      : user.username;
-
-
   authArea.innerHTML = `
     <button
       type="button"
       class="auth-user-button"
       id="authUserButton"
+      aria-expanded="false"
     >
       <i class="fa-regular fa-circle-user"></i>
 
@@ -5042,6 +5055,7 @@ async function updateNavbarAuth() {
 
       <i class="fa-solid fa-chevron-down"></i>
     </button>
+
 
     <div
       class="auth-user-menu"
@@ -5073,6 +5087,10 @@ async function updateNavbarAuth() {
   );
 
 
+  // ========================================
+  // DROPDOWN
+  // ========================================
+
   const userButton =
     document.getElementById(
       "authUserButton"
@@ -5091,11 +5109,47 @@ async function updateNavbarAuth() {
 
     userButton.addEventListener(
       "click",
-      () => {
+      (event) => {
+
+        event.stopPropagation();
 
         userMenu.classList.toggle(
           "show"
         );
+
+        userButton.setAttribute(
+          "aria-expanded",
+          userMenu.classList.contains(
+            "show"
+          )
+            ? "true"
+            : "false"
+        );
+
+      }
+    );
+
+
+    document.addEventListener(
+      "click",
+      (event) => {
+
+        if (
+          !authArea.contains(
+            event.target
+          )
+        ) {
+
+          userMenu.classList.remove(
+            "show"
+          );
+
+          userButton.setAttribute(
+            "aria-expanded",
+            "false"
+          );
+
+        }
 
       }
     );
@@ -5105,5 +5159,8 @@ async function updateNavbarAuth() {
 }
 
 
-// Run on every page
+// ========================================
+// RUN AUTH ON EVERY PAGE
+// ========================================
+
 updateNavbarAuth();
