@@ -411,9 +411,10 @@ async function loadTopFixers() {
 
 
   
-/* =========================
+/* ==================================================
    AI HOME SEARCH FORM
-========================= */
+   TEXT + IMAGE VISION
+================================================== */
 
 if (problemForm) {
 
@@ -425,17 +426,17 @@ if (problemForm) {
 
 
   /*
-    Map the AI category name
-    to the correct Fixer.Co service ID.
+    Map Fixer.Co service names
+    to their database IDs.
   */
- const serviceCategoryMap = {
-  "AC & Cooling": 1,
-  "Plumbing": 2,
-  "Electrical": 3,
-  "Appliances": 4,
-  "Carpentry & Furniture": 5,
-  "General Maintenance": 6
-};
+  const serviceCategoryMap = {
+    "AC & Cooling": 1,
+    "Plumbing": 2,
+    "Electrical": 3,
+    "Appliances": 4,
+    "Carpentry & Furniture": 5,
+    "General Maintenance": 6
+  };
 
 
   problemForm.addEventListener(
@@ -444,19 +445,33 @@ if (problemForm) {
 
       event.preventDefault();
 
+
       const problem =
         problemInput.value.trim();
 
 
-      if (!problem) {
+      /*
+        The user must provide at least
+        a description OR an image.
+      */
+      if (
+        !problem &&
+        !selectedProblemImage
+      ) {
+
+        alert(
+          "Please describe the problem or add a photo."
+        );
+
         return;
+
       }
 
 
-      /*
-        Show loading state
-        while Workers AI analyzes the problem.
-      */
+      /* =========================
+         LOADING STATE
+      ========================= */
+
       aiSearchButton.disabled = true;
 
       aiSearchButton.innerHTML = `
@@ -466,6 +481,7 @@ if (problemForm) {
 
 
       aiDiagnosisResult.hidden = false;
+
 
       aiDiagnosisResult.innerHTML = `
         <div class="ai-result-loading">
@@ -479,8 +495,11 @@ if (problemForm) {
             </strong>
 
             <p>
-              Finding the service that best matches
-              your description.
+              ${
+                selectedProblemImage
+                  ? "Analyzing the photo and finding the best service match."
+                  : "Finding the service that best matches your description."
+              }
             </p>
 
           </div>
@@ -491,27 +510,83 @@ if (problemForm) {
 
       try {
 
-        /*
-          Send the customer's description
-          to the real Workers AI endpoint.
-        */
-        const response =
-          await fetch(
-            "/api/ai-diagnose",
-            {
-              method: "POST",
+        let response;
 
-              headers: {
-                "Content-Type":
-                  "application/json"
-              },
 
-              body: JSON.stringify({
-                problem
-              })
-            }
-          );
+        /* =========================================
+           IMAGE MODE
+           Image only OR Image + Description
+        ========================================= */
 
+        if (selectedProblemImage) {
+
+          /*
+            Convert the selected image
+            into a smaller Base64 image.
+
+            This reduces request size
+            and Workers AI usage.
+          */
+          const imageData =
+            await prepareImageForAI(
+              selectedProblemImage
+            );
+
+
+          response =
+            await fetch(
+              "/api/ai-diagnose-image",
+              {
+
+                method: "POST",
+
+                headers: {
+                  "Content-Type":
+                    "application/json"
+                },
+
+                body: JSON.stringify({
+                  problem,
+                  image: imageData
+                })
+
+              }
+            );
+
+        }
+
+
+        /* =========================================
+           TEXT-ONLY MODE
+        ========================================= */
+
+        else {
+
+          response =
+            await fetch(
+              "/api/ai-diagnose",
+              {
+
+                method: "POST",
+
+                headers: {
+                  "Content-Type":
+                    "application/json"
+                },
+
+                body: JSON.stringify({
+                  problem
+                })
+
+              }
+            );
+
+        }
+
+
+        /* =========================
+           READ RESPONSE
+        ========================= */
 
         const data =
           await response.json();
@@ -542,9 +617,8 @@ if (problemForm) {
 
 
         /*
-          Safety check:
-          do not create a broken service link
-          if AI returns an unknown category.
+          Never create a broken link
+          from an invalid AI category.
         */
         if (!serviceId) {
 
@@ -555,9 +629,10 @@ if (problemForm) {
         }
 
 
-        /*
-          Show the AI result card.
-        */
+        /* =========================
+           RESULT CARD
+        ========================= */
+
         aiDiagnosisResult.innerHTML = `
 
           <div class="ai-result-card">
@@ -641,10 +716,10 @@ if (problemForm) {
         );
 
 
-        /*
-          The website should still be usable
-          even if AI is temporarily unavailable.
-        */
+        /* =========================
+           ERROR STATE
+        ========================= */
+
         aiDiagnosisResult.innerHTML = `
 
           <div class="ai-result-error">
@@ -658,7 +733,10 @@ if (problemForm) {
               </strong>
 
               <p>
-                You can still choose a service category below.
+                ${escapeHTML(
+                  error.message ||
+                  "Please try again or choose a service category below."
+                )}
               </p>
 
             </div>
@@ -666,12 +744,15 @@ if (problemForm) {
           </div>
         `;
 
+
       } finally {
 
-        /*
-          Restore the button.
-        */
+        /* =========================
+           RESTORE BUTTON
+        ========================= */
+
         aiSearchButton.disabled = false;
+
 
         aiSearchButton.innerHTML = `
           <span>Find My Service</span>
@@ -686,6 +767,188 @@ if (problemForm) {
 }
 
 
+/* ==================================================
+   PREPARE IMAGE FOR AI
+================================================== */
+
+/*
+  Resize and compress the uploaded image
+  before sending it to Workers AI.
+
+  This keeps the request smaller and faster.
+*/
+function prepareImageForAI(file) {
+
+  return new Promise(
+    (resolve, reject) => {
+
+      const reader =
+        new FileReader();
+
+
+      reader.onload = () => {
+
+        const image =
+          new Image();
+
+
+        image.onload = () => {
+
+          /*
+            Maximum image dimension.
+            Large photos do not need to be sent
+            at their original camera resolution.
+          */
+          const maxDimension = 1024;
+
+
+          let width =
+            image.width;
+
+          let height =
+            image.height;
+
+
+          /*
+            Resize while keeping
+            the original aspect ratio.
+          */
+          if (
+            width > maxDimension ||
+            height > maxDimension
+          ) {
+
+            if (width > height) {
+
+              height =
+                Math.round(
+                  height *
+                  (
+                    maxDimension /
+                    width
+                  )
+                );
+
+              width =
+                maxDimension;
+
+            } else {
+
+              width =
+                Math.round(
+                  width *
+                  (
+                    maxDimension /
+                    height
+                  )
+                );
+
+              height =
+                maxDimension;
+
+            }
+
+          }
+
+
+          const canvas =
+            document.createElement(
+              "canvas"
+            );
+
+
+          canvas.width =
+            width;
+
+          canvas.height =
+            height;
+
+
+          const context =
+            canvas.getContext("2d");
+
+
+          if (!context) {
+
+            reject(
+              new Error(
+                "Could not prepare the image."
+              )
+            );
+
+            return;
+
+          }
+
+
+          /*
+            Draw the resized image.
+          */
+          context.drawImage(
+            image,
+            0,
+            0,
+            width,
+            height
+          );
+
+
+          /*
+            Convert to JPEG Base64.
+
+            0.82 gives good visual quality
+            while keeping the request small.
+          */
+          const compressedImage =
+            canvas.toDataURL(
+              "image/jpeg",
+              0.82
+            );
+
+
+          resolve(
+            compressedImage
+          );
+
+        };
+
+
+        image.onerror = () => {
+
+          reject(
+            new Error(
+              "Could not read the selected image."
+            )
+          );
+
+        };
+
+
+        image.src =
+          reader.result;
+
+      };
+
+
+      reader.onerror = () => {
+
+        reject(
+          new Error(
+            "Could not read the selected image."
+          )
+        );
+
+      };
+
+
+      reader.readAsDataURL(
+        file
+      );
+
+    }
+  );
+
+}
 /* =========================
    ESCAPE HTML
 ========================= */
