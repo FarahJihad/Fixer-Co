@@ -9,8 +9,9 @@ export async function onRequestGet(context) {
 
     let query = `
       SELECT
-        technicians.*,
-        services.name AS service_name
+  technicians.*,
+  technicians.starting_price AS price,
+  services.name AS service_name
       FROM technicians
       JOIN services
         ON technicians.service_id = services.id
