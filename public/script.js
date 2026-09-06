@@ -9739,3 +9739,169 @@ if (removeProblemImage) {
   );
 
 }
+
+/* =========================================
+   LOGIN REQUIRED POPUP
+========================================= */
+
+function showLoginRequiredPopup(
+  redirectUrl
+) {
+
+  const oldPopup =
+    document.getElementById(
+      "loginRequiredPopup"
+    );
+
+  if (oldPopup) {
+    oldPopup.remove();
+  }
+
+
+  const overlay =
+    document.createElement("div");
+
+  overlay.id =
+    "loginRequiredPopup";
+
+  overlay.className =
+    "login-required-overlay";
+
+
+  overlay.innerHTML = `
+    <div class="login-required-card">
+
+      <div class="login-required-icon">
+        <i class="fa-solid fa-lock"></i>
+      </div>
+
+      <h3>
+        Login Required
+      </h3>
+
+      <p>
+        You need to log in before
+        continuing with this action.
+      </p>
+
+      <div class="login-required-actions">
+
+        <button
+          type="button"
+          class="login-required-cancel"
+          id="loginRequiredCancel"
+        >
+          Cancel
+        </button>
+
+        <button
+          type="button"
+          class="login-required-login"
+          id="loginRequiredLogin"
+        >
+          Log In
+          <i class="fa-solid fa-arrow-right"></i>
+        </button>
+
+      </div>
+
+    </div>
+  `;
+
+
+  document.body.appendChild(
+    overlay
+  );
+
+
+  const cancelButton =
+    document.getElementById(
+      "loginRequiredCancel"
+    );
+
+
+  const loginButton =
+    document.getElementById(
+      "loginRequiredLogin"
+    );
+
+
+  cancelButton.addEventListener(
+    "click",
+    () => {
+
+      overlay.remove();
+
+    }
+  );
+
+
+  loginButton.addEventListener(
+    "click",
+    () => {
+
+      /*
+        Save the page/action
+        the user wanted to open.
+      */
+      localStorage.setItem(
+        "redirectAfterLogin",
+        redirectUrl
+      );
+
+
+      window.location.href =
+        "login.html";
+
+    }
+  );
+
+
+  overlay.addEventListener(
+    "click",
+    (event) => {
+
+      if (
+        event.target === overlay
+      ) {
+
+        overlay.remove();
+
+      }
+
+    }
+  );
+
+}
+
+
+/* =========================================
+   REQUIRE LOGIN BEFORE ACTION
+========================================= */
+
+async function requireLogin(
+  redirectUrl
+) {
+
+  const user =
+    await loadCurrentUser();
+
+
+  if (user) {
+
+    window.location.href =
+      redirectUrl;
+
+    return true;
+
+  }
+
+
+  showLoginRequiredPopup(
+    redirectUrl
+  );
+
+
+  return false;
+
+}
