@@ -157,18 +157,17 @@ Return ONLY valid JSON in this exact format:
     });
 
   } catch (error) {
-    console.error(
-      "AI diagnose error:",
-      error
-    );
+  console.error(
+    "AI diagnose error:",
+    error
+  );
 
-    return Response.json(
-      {
-        success: false,
-        error:
-          "AI service is temporarily unavailable."
-      },
-      { status: 500 }
-    );
-  }
+  return Response.json(
+    {
+      success: false,
+      error: error?.message || String(error)
+    },
+    { status: 500 }
+  );
+}
 }
