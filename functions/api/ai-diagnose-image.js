@@ -5,10 +5,6 @@ export async function onRequestPost(context) {
     const { request, env } = context;
 
 
-    /* =========================
-       CHECK AI BINDING
-    ========================= */
-
     if (!env.AI) {
 
       return jsonResponse(
@@ -21,10 +17,6 @@ export async function onRequestPost(context) {
 
     }
 
-
-    /* =========================
-       READ REQUEST
-    ========================= */
 
     let body;
 
@@ -57,10 +49,6 @@ export async function onRequestPost(context) {
         : "";
 
 
-    /* =========================
-       VALIDATE IMAGE
-    ========================= */
-
     if (!image) {
 
       return jsonResponse(
@@ -74,15 +62,7 @@ export async function onRequestPost(context) {
     }
 
 
-    /*
-      Only accept image Data URLs.
-      Example:
-      data:image/jpeg;base64,...
-    */
-
-    if (
-      !image.startsWith("data:image/")
-    ) {
+    if (!image.startsWith("data:image/")) {
 
       return jsonResponse(
         {
@@ -109,10 +89,6 @@ export async function onRequestPost(context) {
     }
 
 
-    /* =========================
-       VALID FIXER.CO SERVICES
-    ========================= */
-
     const categories = [
       "AC & Cooling",
       "Plumbing",
@@ -123,112 +99,132 @@ export async function onRequestPost(context) {
     ];
 
 
-    /* =========================
-       AI PROMPT
-    ========================= */
+    const userPrompt = `
+Analyze the uploaded repair image for Fixer.Co.
 
-    const prompt = `
-You are the AI visual service classifier for Fixer.Co.
-
-Look carefully at the customer's uploaded repair image.
-
-Your task is NOT to provide a guaranteed technical diagnosis.
-
-Your task is to recommend the ONE Fixer.Co service category that is most appropriate for the visible problem.
+Your job is to recommend exactly ONE service category.
 
 VALID CATEGORIES:
 
-1. AC & Cooling
-Air conditioners, AC units, cooling systems and related problems.
+AC & Cooling
+Plumbing
+Electrical
+Appliances
+Carpentry & Furniture
+General Maintenance
 
-2. Plumbing
-Pipes, sinks, faucets, toilets, drains, visible water leaks and plumbing problems.
+Rules:
 
-3. Electrical
-Electrical outlets, switches, wiring, lights, breakers and electrical problems.
-
-4. Appliances
-Washing machines, refrigerators, dryers, ovens, microwaves, dishwashers and other home appliances.
-
-5. Carpentry & Furniture
-Wooden doors, cabinets, tables, chairs, shelves and furniture repairs.
-
-6. General Maintenance
-General home repairs or visible problems that do not clearly belong to another category.
-
-IMPORTANT RULES:
-
-- Choose EXACTLY ONE category.
+- Choose exactly one category.
 - Never invent another category.
-- Analyze what is actually visible in the image.
-- If the image is unclear, use a lower confidence.
-- Do not pretend you can see damage that is not visible.
-- If text from the customer is provided, use it together with the image.
-- The category and explanation must agree.
-- Confidence must be an integer from 0 to 100.
-- Keep the explanation short.
-- This is only a service recommendation, not a guaranteed diagnosis.
+- Use only what is visible in the image.
+- If the customer provides a description, use it together with the image.
+- If the image is unclear, lower the confidence.
+- Do not claim damage that cannot be seen.
+- Washing machines, refrigerators, ovens, dryers, microwaves and dishwashers are Appliances.
+- Pipes, sinks, faucets, toilets, drains and water leaks are Plumbing.
+- Air conditioners and AC units are AC & Cooling.
+- Wiring, outlets, switches, breakers and electrical problems are Electrical.
+- Wooden furniture, cabinets, doors, tables and chairs are Carpentry & Furniture.
+- Use General Maintenance only when no other category clearly fits.
 
 Customer description:
-${problem || "No written description was provided."}
+${problem || "No written description provided."}
 
-Return ONLY these three lines:
+Return ONLY:
 
 CATEGORY: exact category name
-CONFIDENCE: number
+CONFIDENCE: number from 0 to 100
 EXPLANATION: one short explanation
 `;
 
 
-    /* =========================
-       RUN CLOUDFLARE VISION AI
-    ========================= */
-
-    const aiResult =
-      await env.AI.run(
+    /*
+      Current Cloudflare Vision format:
+      messages + image
+    */
+    const aiPromise =
+      env.AI.run(
         "@cf/meta/llama-3.2-11b-vision-instruct",
         {
-          prompt,
+          messages: [
+            {
+              role: "system",
+              content:
+                "You are a visual service classifier for Fixer.Co."
+            },
+            {
+              role: "user",
+              content: userPrompt
+            }
+          ],
+
           image,
+
           max_tokens: 120,
+
           temperature: 0
         }
       );
 
 
-    /* =========================
-       READ AI RESPONSE
-    ========================= */
+    /*
+      Prevent the request from hanging forever.
+    */
+    const timeoutPromise =
+      new Promise(
+        (_, reject) => {
+
+          setTimeout(
+            () => {
+
+              reject(
+                new Error(
+                  "Vision AI request timed out."
+                )
+              );
+
+            },
+            25000
+          );
+
+        }
+      );
+
+
+    const aiResult =
+      await Promise.race([
+        aiPromise,
+        timeoutPromise
+      ]);
+
+
+    console.log(
+      "Vision AI raw result:",
+      JSON.stringify(aiResult)
+    );
+
 
     const generatedText =
       aiResult?.response ||
+      aiResult?.result ||
       aiResult?.choices?.[0]?.text ||
       "";
 
 
     if (!generatedText) {
 
-      console.error(
-        "Vision AI returned no text:",
-        JSON.stringify(aiResult)
-      );
-
-
       return jsonResponse(
         {
           success: false,
           error:
-            "Vision AI did not return a recommendation."
+            "Vision AI returned no readable response."
         },
         500
       );
 
     }
 
-
-    /* =========================
-       PARSE AI RESPONSE
-    ========================= */
 
     const categoryMatch =
       generatedText.match(
@@ -252,17 +248,13 @@ EXPLANATION: one short explanation
       categoryMatch?.[1]?.trim();
 
 
-    /* =========================
-       VALIDATE AI CATEGORY
-    ========================= */
-
     if (
       !category ||
       !categories.includes(category)
     ) {
 
       console.error(
-        "Invalid Vision AI category:",
+        "Invalid Vision AI response:",
         generatedText
       );
 
@@ -278,10 +270,6 @@ EXPLANATION: one short explanation
 
     }
 
-
-    /* =========================
-       CONFIDENCE
-    ========================= */
 
     let confidence =
       Number.parseInt(
@@ -299,32 +287,26 @@ EXPLANATION: one short explanation
 
     const explanation =
       explanationMatch?.[1]?.trim() ||
-      "This service appears to be the closest match for the uploaded image.";
+      "This appears to be the closest service match.";
 
 
-    /* =========================
-       SUCCESS RESPONSE
-    ========================= */
+    return jsonResponse(
+      {
+        success: true,
 
-    return jsonResponse({
-
-      success: true,
-
-      diagnosis: {
-
-        category,
-        confidence,
-        explanation
-
+        diagnosis: {
+          category,
+          confidence,
+          explanation
+        }
       }
-
-    });
+    );
 
 
   } catch (error) {
 
     console.error(
-      "AI image diagnosis error:",
+      "Vision AI error:",
       error
     );
 
@@ -345,10 +327,6 @@ EXPLANATION: one short explanation
 }
 
 
-/* =========================
-   JSON RESPONSE HELPER
-========================= */
-
 function jsonResponse(
   data,
   status = 200
@@ -357,14 +335,12 @@ function jsonResponse(
   return new Response(
     JSON.stringify(data),
     {
-
       status,
 
       headers: {
         "Content-Type":
           "application/json; charset=UTF-8"
       }
-
     }
   );
 
