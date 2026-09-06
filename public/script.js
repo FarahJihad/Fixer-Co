@@ -2739,6 +2739,17 @@ async function loadRequestPage() {
       async (event) => {
 
         event.preventDefault();
+        const currentUser =
+  await loadCurrentUser();
+
+if (!currentUser) {
+
+  showLoginRequiredPopup(
+    window.location.href
+  );
+
+  return;
+}
 
 
         formMessage.textContent = "";
@@ -3274,6 +3285,17 @@ async function setupFixerApplication() {
     async (event) => {
 
       event.preventDefault();
+      const currentUser =
+  await loadCurrentUser();
+
+if (!currentUser) {
+
+  showLoginRequiredPopup(
+    window.location.href
+  );
+
+  return;
+}
 
 
       applicationMessage.textContent =
