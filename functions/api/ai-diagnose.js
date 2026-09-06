@@ -2,7 +2,7 @@ export async function onRequestPost(context) {
   try {
     const { request, env } = context;
 
-    /* Make sure the Workers AI binding exists */
+    /* Make sure Workers AI binding exists */
     if (!env.AI) {
       return jsonResponse(
         {
@@ -13,7 +13,8 @@ export async function onRequestPost(context) {
       );
     }
 
-    /* Read data sent from the frontend */
+
+    /* Read request body */
     let body;
 
     try {
@@ -28,12 +29,14 @@ export async function onRequestPost(context) {
       );
     }
 
+
     const problem =
       typeof body.problem === "string"
         ? body.problem.trim()
         : "";
 
-    /* Validate the problem description */
+
+    /* Validate user input */
     if (!problem) {
       return jsonResponse(
         {
@@ -43,6 +46,7 @@ export async function onRequestPost(context) {
         400
       );
     }
+
 
     if (problem.length > 500) {
       return jsonResponse(
@@ -55,80 +59,166 @@ export async function onRequestPost(context) {
       );
     }
 
+
     /*
-      These are the ONLY service categories
-      the AI is allowed to recommend.
+      These are the ONLY valid Fixer.Co categories.
     */
-  const categories = [
-  "AC & Cooling",
-  "Plumbing",
-  "Electrical",
-  "Appliances",
-  "Carpentry & Furniture",
-  "General Maintenance"
-];
+    const categories = [
+      "AC & Cooling",
+      "Plumbing",
+      "Electrical",
+      "Appliances",
+      "Carpentry & Furniture",
+      "General Maintenance"
+    ];
+
 
     /*
-      Ask the AI to classify the customer's problem.
+      Stronger classification prompt.
 
-      We use a very strict response format because
-      it is easier and safer for our JavaScript to read.
+      The examples help the model clearly understand
+      what belongs to each Fixer.Co service.
     */
     const prompt = `
-You are the AI service assistant for Fixer.Co.
+You are the AI service classifier for Fixer.Co.
 
-Your task is to classify a customer's home maintenance problem.
+Your ONLY task is to classify a customer's home repair problem into exactly ONE Fixer.Co service category.
 
-Choose EXACTLY ONE category from this list:
+VALID CATEGORIES:
 
-AC & Cooling
-Plumbing
-Electrical
-Appliances
-Carpentry & Furniture
-General Maintenance
+1. AC & Cooling
+Use for:
+- air conditioner
+- AC unit
+- cooling problems
+- warm air from AC
+- AC not turning on
+- AC leaking
+- thermostat related to AC
 
-Customer problem:
-"${problem}"
+2. Plumbing
+Use for:
+- water leaks
+- sinks
+- toilets
+- faucets
+- pipes
+- drains
+- water pressure
+- clogged plumbing
 
-Rules:
-- Never create a new category.
-- Choose the category that best matches the problem.
+3. Electrical
+Use for:
+- electrical outlets
+- sockets
+- switches
+- wiring
+- lights
+- electricity
+- circuit breakers
+- power problems in the house
+
+4. Appliances
+Use for:
+- washing machines
+- dryers
+- refrigerators
+- freezers
+- ovens
+- microwaves
+- dishwashers
+- other home appliances
+
+5. Carpentry & Furniture
+Use for:
+- wooden doors
+- cabinets
+- tables
+- chairs
+- shelves
+- furniture
+- carpentry
+- broken wooden parts
+
+6. General Maintenance
+Use for:
+- general home repairs
+- wall damage
+- minor maintenance
+- problems that do not clearly belong to the other categories
+
+
+IMPORTANT EXAMPLES:
+
+"My washing machine stopped working."
+CATEGORY: Appliances
+
+"My refrigerator is not cooling."
+CATEGORY: Appliances
+
+"My AC is running but the room is still hot."
+CATEGORY: AC & Cooling
+
+"There is water leaking under my kitchen sink."
+CATEGORY: Plumbing
+
+"The electrical outlet stopped working."
+CATEGORY: Electrical
+
+"The leg of my wooden table is broken."
+CATEGORY: Carpentry & Furniture
+
+
+VERY IMPORTANT RULES:
+
+- Choose EXACTLY ONE category from the valid categories above.
+- Never invent a new category.
+- Washing machines, refrigerators, ovens, dryers and dishwashers are Appliances.
+- Do NOT classify a refrigerator as AC & Cooling.
+- Do NOT classify a washing machine as AC & Cooling.
+- AC & Cooling is ONLY for air-conditioning and cooling-system service problems.
+- The CATEGORY must agree with the EXPLANATION.
+- If your explanation says the problem is NOT related to a category, you MUST NOT select that category.
 - Confidence must be an integer from 0 to 100.
-- If the description is unclear, lower the confidence.
+- If the problem is unclear, lower the confidence.
 - Give one short explanation.
 - This is a service recommendation, not a guaranteed technical diagnosis.
 
-IMPORTANT:
-Return ONLY the following three lines.
-Do not add markdown.
-Do not add extra text.
 
-CATEGORY: category name
+CUSTOMER PROBLEM:
+
+"${problem}"
+
+
+Return ONLY these three lines:
+
+CATEGORY: exact category name
 CONFIDENCE: number
-EXPLANATION: short explanation
+EXPLANATION: one short explanation
 `;
 
-    /* Send the prompt to Cloudflare Workers AI */
+
+    /*
+      Call Cloudflare Workers AI.
+    */
     const aiResult = await env.AI.run(
       "@cf/meta/llama-3.2-3b-instruct",
       {
         prompt,
-        max_tokens: 100,
-        temperature: 0.1
+        max_tokens: 120,
+        temperature: 0
       }
     );
 
-    /*
-      Workers AI can return generated text in
-      different response shapes depending on the model.
 
-      First try response, then choices[0].text.
+    /*
+      Read generated model text.
     */
     const generatedText =
       aiResult?.response ||
       aiResult?.choices?.[0]?.text ||
       "";
+
 
     if (!generatedText) {
       console.error(
@@ -145,8 +235,9 @@ EXPLANATION: short explanation
       );
     }
 
+
     /*
-      Extract the three values from the AI response.
+      Extract category, confidence and explanation.
     */
     const categoryMatch =
       generatedText.match(
@@ -163,14 +254,13 @@ EXPLANATION: short explanation
         /EXPLANATION:\s*(.+)/i
       );
 
+
     const category =
       categoryMatch?.[1]?.trim();
 
+
     /*
       Never trust an AI response without validation.
-
-      If it returns a category that does not exist
-      in Fixer.Co, reject the response.
     */
     if (
       !category ||
@@ -191,7 +281,10 @@ EXPLANATION: short explanation
       );
     }
 
-    /* Keep confidence safely between 0 and 100 */
+
+    /*
+      Keep confidence safely between 0 and 100.
+    */
     let confidence =
       Number.parseInt(
         confidenceMatch?.[1] || "0",
@@ -203,22 +296,77 @@ EXPLANATION: short explanation
       Math.min(100, confidence)
     );
 
+
     const explanation =
       explanationMatch?.[1]?.trim() ||
       "This service appears to be the closest match for your problem.";
 
+
     /*
-      Send a clean result back to Fixer.Co.
+      Extra consistency protection.
+
+      This prevents clearly impossible category mistakes
+      for common appliance descriptions.
     */
+    const lowerProblem =
+      problem.toLowerCase();
+
+    const applianceTerms = [
+      "washing machine",
+      "washer",
+      "dryer",
+      "refrigerator",
+      "fridge",
+      "freezer",
+      "oven",
+      "microwave",
+      "dishwasher"
+    ];
+
+
+    const clearlyAppliance =
+      applianceTerms.some(
+        (term) =>
+          lowerProblem.includes(term)
+      );
+
+
+    let finalCategory = category;
+    let finalConfidence = confidence;
+    let finalExplanation = explanation;
+
+
+    /*
+      If the user explicitly names a common appliance,
+      ensure the final service is Appliances.
+
+      AI still handles the diagnosis and explanation,
+      but this prevents contradictory outputs.
+    */
+    if (
+      clearlyAppliance &&
+      category !== "Appliances"
+    ) {
+      finalCategory = "Appliances";
+
+      finalConfidence =
+        Math.max(confidence, 90);
+
+      finalExplanation =
+        "The problem involves a home appliance, so Appliances is the best service match.";
+    }
+
+
     return jsonResponse({
       success: true,
 
       diagnosis: {
-        category,
-        confidence,
-        explanation
+        category: finalCategory,
+        confidence: finalConfidence,
+        explanation: finalExplanation
       }
     });
+
 
   } catch (error) {
     console.error(
@@ -239,13 +387,14 @@ EXPLANATION: short explanation
 
 
 /*
-  Small helper function for returning JSON responses.
+  Helper for returning JSON responses.
 */
 function jsonResponse(data, status = 200) {
   return new Response(
     JSON.stringify(data),
     {
       status,
+
       headers: {
         "Content-Type":
           "application/json; charset=UTF-8"
