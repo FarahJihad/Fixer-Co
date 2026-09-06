@@ -5,6 +5,10 @@ export async function onRequestPost(context) {
     const { request, env } = context;
 
 
+    /* =========================
+       CHECK AI BINDING
+    ========================= */
+
     if (!env.AI) {
 
       return jsonResponse(
@@ -17,6 +21,10 @@ export async function onRequestPost(context) {
 
     }
 
+
+    /* =========================
+       READ REQUEST BODY
+    ========================= */
 
     let body;
 
@@ -49,6 +57,10 @@ export async function onRequestPost(context) {
         : "";
 
 
+    /* =========================
+       VALIDATE IMAGE
+    ========================= */
+
     if (!image) {
 
       return jsonResponse(
@@ -62,7 +74,14 @@ export async function onRequestPost(context) {
     }
 
 
-    if (!image.startsWith("data:image/")) {
+    /*
+      The frontend sends the image
+      as a Base64 Data URL.
+    */
+    if (
+      !/^data:image\/(jpeg|jpg|png|webp);base64,/i
+        .test(image)
+    ) {
 
       return jsonResponse(
         {
@@ -74,6 +93,10 @@ export async function onRequestPost(context) {
 
     }
 
+
+    /* =========================
+       VALIDATE DESCRIPTION
+    ========================= */
 
     if (problem.length > 500) {
 
@@ -89,6 +112,10 @@ export async function onRequestPost(context) {
     }
 
 
+    /* =========================
+       FIXER.CO CATEGORIES
+    ========================= */
+
     const categories = [
       "AC & Cooling",
       "Plumbing",
@@ -99,12 +126,16 @@ export async function onRequestPost(context) {
     ];
 
 
-    const userPrompt = `
-Analyze the uploaded repair image for Fixer.Co.
+    /* =========================
+       VISION AI PROMPT
+    ========================= */
 
-Your job is to recommend exactly ONE service category.
+    const prompt = `
+Look at the uploaded home-repair image.
 
-VALID CATEGORIES:
+Choose the ONE Fixer.Co service that best matches what is visible.
+
+Allowed services:
 
 AC & Cooling
 Plumbing
@@ -113,103 +144,129 @@ Appliances
 Carpentry & Furniture
 General Maintenance
 
-Rules:
+Examples:
 
-- Choose exactly one category.
-- Never invent another category.
-- Use only what is visible in the image.
-- If the customer provides a description, use it together with the image.
-- If the image is unclear, lower the confidence.
-- Do not claim damage that cannot be seen.
-- Washing machines, refrigerators, ovens, dryers, microwaves and dishwashers are Appliances.
-- Pipes, sinks, faucets, toilets, drains and water leaks are Plumbing.
-- Air conditioners and AC units are AC & Cooling.
-- Wiring, outlets, switches, breakers and electrical problems are Electrical.
-- Wooden furniture, cabinets, doors, tables and chairs are Carpentry & Furniture.
-- Use General Maintenance only when no other category clearly fits.
+- sink, pipe, faucet, toilet, drain or water leak = Plumbing
+
+- AC or air conditioner = AC & Cooling
+
+- outlet, switch, wire or breaker = Electrical
+
+- washing machine, refrigerator, oven or dishwasher = Appliances
+
+- wooden door, cabinet, chair or table = Carpentry & Furniture
+
+- another home repair that does not clearly fit above = General Maintenance
+
 
 Customer description:
+
 ${problem || "No written description provided."}
 
-Return ONLY:
 
-CATEGORY: exact category name
-CONFIDENCE: number from 0 to 100
-EXPLANATION: one short explanation
+Rules:
+
+- Use the uploaded image as the main evidence.
+
+- Choose exactly ONE allowed service.
+
+- If the image is unclear, use lower confidence.
+
+- Do not invent damage that is not visible.
+
+- Keep the explanation to one short sentence.
+
+
+Return exactly these three lines:
+
+CATEGORY: exact allowed service
+CONFIDENCE: integer from 0 to 100
+EXPLANATION: one short sentence
 `;
 
 
-    /*
-      Current Cloudflare Vision format:
-      messages + image
-    */
-    const aiPromise =
-      env.AI.run(
+    /* =========================
+       RUN CLOUDFLARE VISION AI
+    ========================= */
+
+    const aiResult =
+      await env.AI.run(
         "@cf/meta/llama-3.2-11b-vision-instruct",
         {
+
           messages: [
+
             {
               role: "system",
+
               content:
-                "You are a visual service classifier for Fixer.Co."
+                "You classify home repair photos into Fixer.Co service categories."
             },
+
             {
               role: "user",
-              content: userPrompt
+              content: prompt
             }
+
           ],
+
 
           image,
 
-          max_tokens: 120,
+
+          max_tokens: 140,
+
 
           temperature: 0
+
         }
       );
+
+
+    /* =========================
+       READ AI RESPONSE
+    ========================= */
+
+    let generatedText = "";
+
+
+    if (
+      typeof aiResult?.response === "string"
+    ) {
+
+      generatedText =
+        aiResult.response;
+
+    }
+
+    else if (
+      typeof aiResult?.result === "string"
+    ) {
+
+      generatedText =
+        aiResult.result;
+
+    }
+
+    else if (
+      typeof aiResult?.choices?.[0]?.text
+        === "string"
+    ) {
+
+      generatedText =
+        aiResult.choices[0].text;
+
+    }
 
 
     /*
-      Prevent the request from hanging forever.
+      Helpful when checking
+      Cloudflare Function logs.
     */
-    const timeoutPromise =
-      new Promise(
-        (_, reject) => {
-
-          setTimeout(
-            () => {
-
-              reject(
-                new Error(
-                  "Vision AI request timed out."
-                )
-              );
-
-            },
-            25000
-          );
-
-        }
-      );
-
-
-    const aiResult =
-      await Promise.race([
-        aiPromise,
-        timeoutPromise
-      ]);
-
-
     console.log(
-      "Vision AI raw result:",
-      JSON.stringify(aiResult)
+      "Vision AI response:",
+      generatedText
     );
-
-
-    const generatedText =
-      aiResult?.response ||
-      aiResult?.result ||
-      aiResult?.choices?.[0]?.text ||
-      "";
 
 
     if (!generatedText) {
@@ -217,6 +274,7 @@ EXPLANATION: one short explanation
       return jsonResponse(
         {
           success: false,
+
           error:
             "Vision AI returned no readable response."
         },
@@ -226,35 +284,155 @@ EXPLANATION: one short explanation
     }
 
 
-    const categoryMatch =
+    /* =========================
+       FIND CATEGORY
+    ========================= */
+
+    /*
+      First try to read:
+
+      CATEGORY: Plumbing
+    */
+    const categoryLine =
       generatedText.match(
-        /CATEGORY:\s*(.+)/i
+        /CATEGORY\s*:\s*([^\n\r]+)/i
+      )?.[1] || "";
+
+
+    let category =
+      matchValidCategory(
+        categoryLine,
+        categories
       );
 
 
-    const confidenceMatch =
-      generatedText.match(
-        /CONFIDENCE:\s*(\d+)/i
-      );
+    /*
+      If the model did not follow
+      the exact format, search its
+      complete response instead.
+    */
+    if (!category) {
+
+      category =
+        matchValidCategory(
+          generatedText,
+          categories
+        );
+
+    }
 
 
-    const explanationMatch =
-      generatedText.match(
-        /EXPLANATION:\s*(.+)/i
-      );
+    /* =========================
+       SEMANTIC FALLBACK
+    ========================= */
+
+    /*
+      Sometimes the model may say:
+
+      "This appears to be a plumbing issue."
+
+      instead of:
+
+      CATEGORY: Plumbing
+
+      These checks prevent that from
+      being rejected as invalid.
+    */
+    if (!category) {
+
+      const lower =
+        generatedText.toLowerCase();
 
 
-    const category =
-      categoryMatch?.[1]?.trim();
+      /* Plumbing */
+
+      if (
+        lower.includes("plumb") ||
+        lower.includes("pipe") ||
+        lower.includes("sink") ||
+        lower.includes("faucet") ||
+        lower.includes("water leak") ||
+        lower.includes("drain")
+      ) {
+
+        category =
+          "Plumbing";
+
+      }
 
 
-    if (
-      !category ||
-      !categories.includes(category)
-    ) {
+      /* AC & Cooling */
+
+      else if (
+        lower.includes("air conditioner") ||
+        lower.includes(" ac ") ||
+        lower.includes("cooling")
+      ) {
+
+        category =
+          "AC & Cooling";
+
+      }
+
+
+      /* Electrical */
+
+      else if (
+        lower.includes("electrical") ||
+        lower.includes("outlet") ||
+        lower.includes("socket") ||
+        lower.includes("wiring") ||
+        lower.includes("breaker")
+      ) {
+
+        category =
+          "Electrical";
+
+      }
+
+
+      /* Appliances */
+
+      else if (
+        lower.includes("appliance") ||
+        lower.includes("washing machine") ||
+        lower.includes("refrigerator") ||
+        lower.includes("fridge") ||
+        lower.includes("oven") ||
+        lower.includes("dishwasher")
+      ) {
+
+        category =
+          "Appliances";
+
+      }
+
+
+      /* Carpentry & Furniture */
+
+      else if (
+        lower.includes("carpentry") ||
+        lower.includes("furniture") ||
+        lower.includes("cabinet") ||
+        lower.includes("wooden")
+      ) {
+
+        category =
+          "Carpentry & Furniture";
+
+      }
+
+    }
+
+
+    /* =========================
+       CATEGORY FAILED
+    ========================= */
+
+    if (!category) {
 
       console.error(
-        "Invalid Vision AI response:",
+        "Could not map Vision AI output:",
         generatedText
       );
 
@@ -262,62 +440,107 @@ EXPLANATION: one short explanation
       return jsonResponse(
         {
           success: false,
+
           error:
-            "AI could not match the image to a valid service."
+            "AI could not confidently match this photo. Try a clearer image or add a short description."
         },
-        500
+        422
       );
 
     }
 
 
+    /* =========================
+       CONFIDENCE
+    ========================= */
+
+    const confidenceMatch =
+      generatedText.match(
+        /CONFIDENCE\s*:\s*(\d{1,3})/i
+      );
+
+
     let confidence =
       Number.parseInt(
-        confidenceMatch?.[1] || "0",
+        confidenceMatch?.[1] || "80",
         10
       );
 
 
+    /*
+      Keep confidence between
+      0 and 100.
+    */
     confidence =
       Math.max(
         0,
-        Math.min(100, confidence)
+        Math.min(
+          100,
+          confidence
+        )
       );
 
 
-    const explanation =
-      explanationMatch?.[1]?.trim() ||
-      "This appears to be the closest service match.";
+    /* =========================
+       EXPLANATION
+    ========================= */
 
+    const explanation =
+      generatedText.match(
+        /EXPLANATION\s*:\s*([^\n\r]+)/i
+      )?.[1]?.trim() ||
+
+      `The uploaded image most closely matches ${category}.`;
+
+
+    /* =========================
+       SUCCESS
+    ========================= */
 
     return jsonResponse(
       {
+
         success: true,
 
+
         diagnosis: {
+
           category,
+
           confidence,
+
           explanation
+
         }
-      }
+
+      },
+      200
     );
 
 
   } catch (error) {
 
+
+    /* =========================
+       SERVER / AI ERROR
+    ========================= */
+
     console.error(
-      "Vision AI error:",
+      "AI image diagnosis error:",
       error
     );
 
 
     return jsonResponse(
       {
+
         success: false,
+
 
         error:
           error?.message ||
           "Vision AI is temporarily unavailable."
+
       },
       500
     );
@@ -327,6 +550,148 @@ EXPLANATION: one short explanation
 }
 
 
+/* ==================================================
+   MATCH VALID FIXER.CO CATEGORY
+================================================== */
+
+function matchValidCategory(
+  text,
+  categories
+) {
+
+  /*
+    Clean formatting that the AI
+    may add accidentally.
+
+    Example:
+
+    **Plumbing**
+
+    becomes:
+
+    plumbing
+  */
+  const cleaned =
+    String(text || "")
+
+      .replace(
+        /\*\*/g,
+        ""
+      )
+
+      .replace(
+        /[`"'“”]/g,
+        ""
+      )
+
+      .replace(
+        /\s+/g,
+        " "
+      )
+
+      .trim()
+
+      .toLowerCase();
+
+
+  /* =========================
+     FULL CATEGORY NAMES
+  ========================= */
+
+  for (
+    const category of categories
+  ) {
+
+    if (
+      cleaned.includes(
+        category.toLowerCase()
+      )
+    ) {
+
+      return category;
+
+    }
+
+  }
+
+
+  /* =========================
+     SHORTER AI ANSWERS
+  ========================= */
+
+
+  if (
+    /\bplumbing\b/i.test(
+      cleaned
+    )
+  ) {
+
+    return "Plumbing";
+
+  }
+
+
+  if (
+    /\belectrical\b/i.test(
+      cleaned
+    )
+  ) {
+
+    return "Electrical";
+
+  }
+
+
+  if (
+    /\bappliances?\b/i.test(
+      cleaned
+    )
+  ) {
+
+    return "Appliances";
+
+  }
+
+
+  if (
+    /\bcarpentry\b|\bfurniture\b/i
+      .test(cleaned)
+  ) {
+
+    return "Carpentry & Furniture";
+
+  }
+
+
+  if (
+    /\bgeneral maintenance\b/i
+      .test(cleaned)
+  ) {
+
+    return "General Maintenance";
+
+  }
+
+
+  if (
+    /\bac\b|\bair conditioning\b|\bcooling\b/i
+      .test(cleaned)
+  ) {
+
+    return "AC & Cooling";
+
+  }
+
+
+  return null;
+
+}
+
+
+/* ==================================================
+   JSON RESPONSE HELPER
+================================================== */
+
 function jsonResponse(
   data,
   status = 200
@@ -335,12 +700,17 @@ function jsonResponse(
   return new Response(
     JSON.stringify(data),
     {
+
       status,
 
+
       headers: {
+
         "Content-Type":
           "application/json; charset=UTF-8"
+
       }
+
     }
   );
 
