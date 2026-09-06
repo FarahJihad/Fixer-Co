@@ -168,18 +168,16 @@ Rules:
 
 - Use the uploaded image as the main evidence.
 
-- Choose exactly ONE allowed service.
-
+- Choose exactly one allowed service ONLY if the image clearly matches a home-repair issue.
+- If the image is unrelated to home repair, too unclear, too dark, or does not provide enough evidence, return CATEGORY: UNKNOWN.
 - If the image is unclear, use lower confidence.
-
 - Do not invent damage that is not visible.
 
 - Keep the explanation to one short sentence.
 
 
 Return exactly these three lines:
-
-CATEGORY: exact allowed service
+CATEGORY: exact allowed service OR UNKNOWN
 CONFIDENCE: integer from 0 to 100
 EXPLANATION: one short sentence
 `;
@@ -293,17 +291,47 @@ EXPLANATION: one short sentence
 
       CATEGORY: Plumbing
     */
-    const categoryLine =
-      generatedText.match(
-        /CATEGORY\s*:\s*([^\n\r]+)/i
-      )?.[1] || "";
+/*
+  Read the category returned by AI.
+*/
+const categoryLine =
+  generatedText.match(
+    /CATEGORY\s*:\s*([^\n\r]+)/i
+  )?.[1]?.trim() || "";
 
 
-    let category =
-      matchValidCategory(
-        categoryLine,
-        categories
-      );
+/*
+  UNKNOWN is a valid result.
+
+  It means the image is unclear,
+  unrelated to home repair,
+  or does not contain enough evidence.
+*/
+if (
+  categoryLine.toUpperCase() === "UNKNOWN"
+) {
+
+  return jsonResponse(
+    {
+      success: true,
+
+      diagnosis: {
+        category: "UNKNOWN",
+        confidence: 0,
+        explanation:
+          "We couldn't clearly identify a home repair issue from this photo."
+      }
+    },
+    200
+  );
+}
+
+
+let category =
+  matchValidCategory(
+    categoryLine,
+    categories
+  );
 
 
     /*
@@ -475,7 +503,7 @@ EXPLANATION: one short sentence
       Math.max(
         0,
         Math.min(
-          100,
+          98,
           confidence
         )
       );

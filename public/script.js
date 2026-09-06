@@ -608,7 +608,36 @@ if (problemForm) {
 
         const diagnosis =
           data.diagnosis;
+/*
+  The AI could not confidently
+  identify a service.
+*/
+if (
+  diagnosis.category === "UNKNOWN"
+) {
 
+  aiDiagnosisResult.innerHTML = `
+    <div class="ai-result-error">
+
+      <i class="fa-solid fa-circle-question"></i>
+
+      <div>
+        <strong>
+          We couldn't identify the issue.
+        </strong>
+
+        <p>
+          Please describe the problem more clearly
+          or upload a photo so we can find the
+          right service.
+        </p>
+      </div>
+
+    </div>
+  `;
+
+  return;
+}
 
         const serviceId =
           serviceCategoryMap[

@@ -76,13 +76,15 @@ export async function onRequestPost(context) {
     /*
       Stronger classification prompt.
 
-      The examples help the model clearly understand
-      what belongs to each Fixer.Co service.
+      UNKNOWN is used when the user's text
+      cannot be meaningfully classified.
     */
     const prompt = `
 You are the AI service classifier for Fixer.Co.
 
-Your ONLY task is to classify a customer's home repair problem into exactly ONE Fixer.Co service category.
+Your task is to classify a customer's home repair problem into ONE Fixer.Co service category.
+
+If the customer's description is meaningless, random, unrelated to home repair, or does not provide enough information to identify a service, return UNKNOWN instead of guessing.
 
 VALID CATEGORIES:
 
@@ -169,18 +171,40 @@ CATEGORY: Electrical
 CATEGORY: Carpentry & Furniture
 
 
+UNKNOWN EXAMPLES:
+
+"asdfgh"
+CATEGORY: UNKNOWN
+
+"hello banana"
+CATEGORY: UNKNOWN
+
+"I don't know"
+CATEGORY: UNKNOWN
+
+"something is wrong"
+CATEGORY: UNKNOWN
+
+"?????"
+CATEGORY: UNKNOWN
+
+
 VERY IMPORTANT RULES:
 
-- Choose EXACTLY ONE category from the valid categories above.
-- Never invent a new category.
+- Choose ONE valid category only when there is enough information to identify the service.
+- If the description is meaningless, random, unrelated to home repair, or too vague, return CATEGORY: UNKNOWN.
+- Never guess a service when there is not enough information.
+- Never invent a new category other than UNKNOWN.
+- General Maintenance must only be used for an actual home maintenance or repair problem.
+- Do NOT use General Maintenance as a fallback for meaningless or unrelated text.
 - Washing machines, refrigerators, ovens, dryers and dishwashers are Appliances.
 - Do NOT classify a refrigerator as AC & Cooling.
 - Do NOT classify a washing machine as AC & Cooling.
 - AC & Cooling is ONLY for air-conditioning and cooling-system service problems.
 - The CATEGORY must agree with the EXPLANATION.
 - If your explanation says the problem is NOT related to a category, you MUST NOT select that category.
-- Confidence must be an integer from 0 to 100.
-- If the problem is unclear, lower the confidence.
+- Confidence must be an integer from 0 to 98.
+- If the problem is unclear, return UNKNOWN instead of guessing.
 - Give one short explanation.
 - This is a service recommendation, not a guaranteed technical diagnosis.
 
@@ -192,7 +216,7 @@ CUSTOMER PROBLEM:
 
 Return ONLY these three lines:
 
-CATEGORY: exact category name
+CATEGORY: exact category name OR UNKNOWN
 CONFIDENCE: number
 EXPLANATION: one short explanation
 `;
@@ -260,6 +284,30 @@ EXPLANATION: one short explanation
 
 
     /*
+      Handle UNKNOWN separately.
+
+      This is not a server error.
+      It simply means the AI does not have
+      enough information to recommend a service.
+    */
+    if (
+      category &&
+      category.toUpperCase() === "UNKNOWN"
+    ) {
+      return jsonResponse({
+        success: true,
+
+        diagnosis: {
+          category: "UNKNOWN",
+          confidence: 0,
+          explanation:
+            "We couldn't clearly identify a home repair issue from that description."
+        }
+      });
+    }
+
+
+    /*
       Never trust an AI response without validation.
     */
     if (
@@ -283,7 +331,7 @@ EXPLANATION: one short explanation
 
 
     /*
-      Keep confidence safely between 0 and 100.
+      Keep confidence safely between 0 and 98.
     */
     let confidence =
       Number.parseInt(
@@ -293,7 +341,7 @@ EXPLANATION: one short explanation
 
     confidence = Math.max(
       0,
-      Math.min(100, confidence)
+      Math.min(98, confidence)
     );
 
 
@@ -350,7 +398,10 @@ EXPLANATION: one short explanation
       finalCategory = "Appliances";
 
       finalConfidence =
-        Math.max(confidence, 90);
+        Math.min(
+          98,
+          Math.max(confidence, 90)
+        );
 
       finalExplanation =
         "The problem involves a home appliance, so Appliances is the best service match.";
