@@ -11338,3 +11338,263 @@ body.track-map-open {
   }
 
 }
+/* ==================================================
+   AI IMAGE - CAMERA / UPLOAD
+================================================== */
+
+.image-action-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+
+/* Camera button inside search */
+
+.problem-image-button {
+  width: 43px;
+  height: 43px;
+  flex-shrink: 0;
+
+  display: grid;
+  place-items: center;
+
+  padding: 0 !important;
+  margin-right: 5px;
+
+  border: none;
+  border-radius: 10px;
+
+  background: #edf7f3 !important;
+  color: var(--green-dark) !important;
+
+  font-size: 15px;
+  transition: 0.2s ease;
+}
+
+.problem-image-button:hover {
+  background: #dcefe7 !important;
+  transform: translateY(-1px);
+}
+
+
+/* ==================================================
+   CAMERA MENU
+================================================== */
+
+.image-action-menu {
+  position: absolute;
+  z-index: 50;
+
+  top: calc(100% + 12px);
+  right: 0;
+
+  width: 190px;
+  padding: 7px;
+
+  border: 1px solid var(--border);
+  border-radius: 13px;
+
+  background: var(--white);
+
+  box-shadow:
+    0 16px 40px rgba(23, 59, 87, 0.14);
+
+  animation: imageMenuAppear 0.2s ease;
+}
+
+.image-action-menu[hidden] {
+  display: none;
+}
+
+
+@keyframes imageMenuAppear {
+
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+}
+
+
+.image-action-menu button {
+  width: 100%;
+
+  display: flex;
+  align-items: center;
+  gap: 11px;
+
+  padding: 11px 12px;
+
+  border: none;
+  border-radius: 9px;
+
+  background: transparent;
+  color: var(--navy-dark);
+
+  font-size: 12px;
+  font-weight: 700;
+
+  text-align: left;
+
+  transition: 0.2s;
+}
+
+
+.image-action-menu button:hover {
+  background: #edf7f3;
+  color: var(--green-dark);
+}
+
+
+.image-action-menu button i {
+  width: 18px;
+
+  color: var(--green-dark);
+
+  font-size: 13px;
+
+  text-align: center;
+}
+
+
+/* ==================================================
+   SELECTED IMAGE PREVIEW
+================================================== */
+
+.problem-image-preview {
+  margin-top: 13px;
+
+  overflow: hidden;
+
+  border: 1px solid var(--border);
+  border-radius: 14px;
+
+  background: var(--white);
+
+  box-shadow:
+    0 8px 25px rgba(23, 59, 87, 0.06);
+
+  animation: aiImageAppear 0.3s ease;
+}
+
+
+.problem-image-preview[hidden] {
+  display: none;
+}
+
+
+@keyframes aiImageAppear {
+
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+}
+
+
+.problem-image-preview img {
+  display: block;
+
+  width: 100%;
+  height: 180px;
+
+  object-fit: cover;
+}
+
+
+/* Image information */
+
+.problem-image-info {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 15px;
+
+  padding: 11px 14px;
+}
+
+
+.problem-image-info > span {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+
+  color: var(--muted);
+
+  font-size: 11px;
+  font-weight: 600;
+}
+
+
+.problem-image-info > span i {
+  color: var(--green-dark);
+}
+
+
+/* Remove image */
+
+.problem-image-info button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+
+  padding: 6px 9px;
+
+  border: none;
+  border-radius: 7px;
+
+  background: transparent;
+  color: #9a6464;
+
+  font-size: 10px;
+  font-weight: 700;
+
+  transition: 0.2s;
+}
+
+
+.problem-image-info button:hover {
+  background: #fff1f1;
+}
+
+
+/* ==================================================
+   MOBILE
+================================================== */
+
+@media (max-width: 600px) {
+
+  .problem-image-button {
+    width: 100%;
+    margin: 0;
+  }
+
+  .image-action-wrapper {
+    width: 100%;
+  }
+
+  .image-action-menu {
+    width: 100%;
+    right: auto;
+    left: 0;
+  }
+
+  .problem-image-preview img {
+    height: 160px;
+  }
+
+}

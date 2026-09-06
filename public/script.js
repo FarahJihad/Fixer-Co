@@ -9212,3 +9212,267 @@ document.addEventListener(
 
   }
 );
+
+/* ==================================================
+   PROBLEM IMAGE - CAMERA / UPLOAD
+================================================== */
+
+const imageActionButton =
+  document.getElementById("imageActionButton");
+
+const imageActionMenu =
+  document.getElementById("imageActionMenu");
+
+const takePhotoButton =
+  document.getElementById("takePhotoButton");
+
+const uploadPhotoButton =
+  document.getElementById("uploadPhotoButton");
+
+const cameraImageInput =
+  document.getElementById("cameraImageInput");
+
+const uploadImageInput =
+  document.getElementById("uploadImageInput");
+
+const problemImagePreview =
+  document.getElementById("problemImagePreview");
+
+const problemImagePreviewImg =
+  document.getElementById("problemImagePreviewImg");
+
+const removeProblemImage =
+  document.getElementById("removeProblemImage");
+
+
+/*
+  Keep the selected image available
+  so we can send it to AI Vision later.
+*/
+let selectedProblemImage = null;
+
+
+/* =========================
+   OPEN / CLOSE IMAGE MENU
+========================= */
+
+if (
+  imageActionButton &&
+  imageActionMenu
+) {
+
+  imageActionButton.addEventListener(
+    "click",
+    (event) => {
+
+      event.stopPropagation();
+
+      imageActionMenu.hidden =
+        !imageActionMenu.hidden;
+
+    }
+  );
+
+
+  /*
+    Close the menu when clicking
+    anywhere outside it.
+  */
+  document.addEventListener(
+    "click",
+    (event) => {
+
+      if (
+        !imageActionMenu.hidden &&
+        !imageActionMenu.contains(event.target) &&
+        !imageActionButton.contains(event.target)
+      ) {
+
+        imageActionMenu.hidden = true;
+
+      }
+
+    }
+  );
+
+}
+
+
+/* =========================
+   TAKE A PHOTO
+========================= */
+
+if (
+  takePhotoButton &&
+  cameraImageInput
+) {
+
+  takePhotoButton.addEventListener(
+    "click",
+    () => {
+
+      imageActionMenu.hidden = true;
+
+      cameraImageInput.click();
+
+    }
+  );
+
+
+  cameraImageInput.addEventListener(
+    "change",
+    () => {
+
+      const file =
+        cameraImageInput.files[0];
+
+      handleProblemImage(file);
+
+    }
+  );
+
+}
+
+
+/* =========================
+   UPLOAD IMAGE
+========================= */
+
+if (
+  uploadPhotoButton &&
+  uploadImageInput
+) {
+
+  uploadPhotoButton.addEventListener(
+    "click",
+    () => {
+
+      imageActionMenu.hidden = true;
+
+      uploadImageInput.click();
+
+    }
+  );
+
+
+  uploadImageInput.addEventListener(
+    "change",
+    () => {
+
+      const file =
+        uploadImageInput.files[0];
+
+      handleProblemImage(file);
+
+    }
+  );
+
+}
+
+
+/* =========================
+   HANDLE SELECTED IMAGE
+========================= */
+
+function handleProblemImage(file) {
+
+  if (!file) {
+    return;
+  }
+
+
+  /*
+    Only allow image files.
+  */
+  if (!file.type.startsWith("image/")) {
+
+    alert(
+      "Please choose a valid image file."
+    );
+
+    return;
+  }
+
+
+  /*
+    Limit image size to 5 MB.
+  */
+  const maxImageSize =
+    5 * 1024 * 1024;
+
+
+  if (file.size > maxImageSize) {
+
+    alert(
+      "Please choose an image smaller than 5 MB."
+    );
+
+    return;
+  }
+
+
+  selectedProblemImage =
+    file;
+
+
+  /*
+    Create a temporary preview URL.
+  */
+  const imageUrl =
+    URL.createObjectURL(file);
+
+
+  problemImagePreviewImg.src =
+    imageUrl;
+
+
+  problemImagePreview.hidden =
+    false;
+
+}
+
+
+/* =========================
+   REMOVE IMAGE
+========================= */
+
+if (removeProblemImage) {
+
+  removeProblemImage.addEventListener(
+    "click",
+    () => {
+
+      selectedProblemImage = null;
+
+
+      if (
+        problemImagePreviewImg.src
+      ) {
+
+        URL.revokeObjectURL(
+          problemImagePreviewImg.src
+        );
+
+      }
+
+
+      problemImagePreviewImg.src =
+        "";
+
+
+      problemImagePreview.hidden =
+        true;
+
+
+      /*
+        Clear both file inputs so the
+        same image can be selected again.
+      */
+      cameraImageInput.value = "";
+
+      uploadImageInput.value = "";
+
+    }
+  );
+
+}

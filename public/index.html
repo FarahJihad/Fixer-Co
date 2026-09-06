@@ -207,41 +207,137 @@
     <span>AI POWERED</span>
   </div>
 
-  <form
-    id="problemForm"
-    class="problem-search"
+  
+
+<form
+  id="problemForm"
+  class="problem-search"
+>
+
+  <input
+    type="text"
+    id="problemInput"
+    placeholder="Describe what's wrong..."
+    maxlength="500"
   >
 
-    <input
-      type="text"
-      id="problemInput"
-      placeholder="Describe what's wrong..."
-      maxlength="500"
-      required
-    >
-
-    <button
-      type="submit"
-      id="aiSearchButton"
-    >
-      <span>Find My Service</span>
-      <i class="fa-solid fa-arrow-right"></i>
-    </button>
-
-  </form>
-
-  <p class="ai-search-hint">
-    <i class="fa-solid fa-sparkles"></i>
-    Describe the problem in your own words and AI will suggest the right service.
-  </p>
-
-
-  <!-- AI result will appear here -->
-  <div
-    id="aiDiagnosisResult"
-    class="ai-diagnosis-result"
+  <!-- Hidden camera input -->
+  <input
+    type="file"
+    id="cameraImageInput"
+    accept="image/*"
+    capture="environment"
     hidden
   >
+
+  <!-- Hidden upload input -->
+  <input
+    type="file"
+    id="uploadImageInput"
+    accept="image/*"
+    hidden
+  >
+
+
+  <!-- Image actions -->
+  <div class="image-action-wrapper">
+
+    <button
+      type="button"
+      id="imageActionButton"
+      class="problem-image-button"
+      aria-label="Add a photo"
+    >
+      <i class="fa-solid fa-camera"></i>
+    </button>
+
+
+    <div
+      id="imageActionMenu"
+      class="image-action-menu"
+      hidden
+    >
+
+      <button
+        type="button"
+        id="takePhotoButton"
+      >
+        <i class="fa-solid fa-camera"></i>
+
+        <span>
+          Take a Photo
+        </span>
+      </button>
+
+
+      <button
+        type="button"
+        id="uploadPhotoButton"
+      >
+        <i class="fa-regular fa-image"></i>
+
+        <span>
+          Upload Image
+        </span>
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <button
+    type="submit"
+    id="aiSearchButton"
+  >
+    <span>
+      Find My Service
+    </span>
+
+    <i class="fa-solid fa-arrow-right"></i>
+  </button>
+
+</form>
+
+
+<!-- =========================
+     IMAGE PREVIEW
+========================== -->
+
+<div
+  id="problemImagePreview"
+  class="problem-image-preview"
+  hidden
+>
+
+  <img
+    id="problemImagePreviewImg"
+    src=""
+    alt="Selected problem"
+  >
+
+  <div class="problem-image-info">
+
+    <span>
+
+      <i class="fa-solid fa-image"></i>
+
+      Photo attached
+
+    </span>
+
+
+    <button
+      type="button"
+      id="removeProblemImage"
+    >
+
+      <i class="fa-solid fa-xmark"></i>
+
+      Remove
+
+    </button>
+
   </div>
 
 </div>
