@@ -5780,107 +5780,170 @@ button:hover,
   .become-fixer-page .fixer-join-copy, .become-fixer-page .fixer-fee-card, .become-fixer-page .fixer-benefits-heading, .become-fixer-page .fixer-benefit-card, .become-fixer-page .fixer-guide-card, .become-fixer-page .policy-item, .become-fixer-page .fixer-application-copy, .become-fixer-page .fixer-application-card { opacity:1; transform:none; }
 }
 
-/* ==================================================
-   HERO LAYOUT FIX
-   Keep the emergency card beside the main hero content
-   on desktop and medium screens.
-================================================== */
+/* =========================================================
+   FINAL HOME HERO + AUTH DROPDOWN FIX
+========================================================= */
 
+/* Desktop hero: text/search on the left, urgent card on the right */
 .hero-content {
   display: grid;
-  grid-template-columns:
-    minmax(0, 1.45fr)
-    minmax(280px, 0.55fr);
-  align-items: start;
-  gap: 52px;
+  grid-template-columns: minmax(0, 1.45fr) minmax(300px, 0.55fr);
+  align-items: center;
+  gap: 64px;
+}
+
+.hero-text {
+  min-width: 0;
 }
 
 .hero-side-card {
-  align-self: start;
-  margin-top: 150px;
+  width: 100%;
+  margin: 0;
+  align-self: center;
 }
 
-
-/* Keep both columns side by side on tablets/laptops */
-@media (min-width: 701px) and (max-width: 1100px) {
-
-  .hero-content {
-    grid-template-columns:
-      minmax(0, 1.35fr)
-      minmax(250px, 0.65fr);
-    gap: 30px;
-  }
-
-  .hero-side-card {
-    margin-top: 120px;
-    padding: 28px;
-  }
-
+/* Keep the AI area from overflowing its grid column */
+.ai-search-wrapper,
+.problem-search,
+.problem-image-preview,
+.ai-diagnosis-result,
+.search-categories {
+  max-width: 100%;
 }
 
+/* ---------------- AUTH USER DROPDOWN ---------------- */
 
-/* Stack only on smaller mobile screens */
-@media (max-width: 700px) {
+.auth-user-area {
+  position: relative;
+  flex-shrink: 0;
+}
 
+.auth-user-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 42px;
+  padding: 9px 13px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--white);
+  color: var(--navy-dark);
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.auth-user-button:hover {
+  border-color: #c9d7d2;
+  background: #f4f8f6;
+}
+
+.auth-user-button .fa-circle-user {
+  color: var(--green-dark);
+  font-size: 15px;
+}
+
+.auth-user-button .fa-chevron-down {
+  font-size: 9px;
+  transition: transform 0.2s ease;
+}
+
+.auth-user-button[aria-expanded="true"] .fa-chevron-down {
+  transform: rotate(180deg);
+}
+
+.auth-user-menu {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  z-index: 1200;
+
+  display: none;
+  width: 205px;
+  padding: 7px;
+
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--white);
+
+  box-shadow: 0 18px 45px rgba(23, 59, 87, 0.14);
+}
+
+.auth-user-menu.show {
+  display: grid;
+  gap: 3px;
+}
+
+.auth-user-menu a,
+.auth-user-menu button {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  padding: 10px 11px;
+
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+
+  color: var(--navy-dark);
+  font-size: 11px;
+  font-weight: 700;
+  text-align: left;
+  white-space: nowrap;
+
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.auth-user-menu a:hover,
+.auth-user-menu button:hover {
+  background: #edf7f3;
+  color: var(--green-dark);
+}
+
+.auth-user-menu i {
+  width: 16px;
+  color: var(--green-dark);
+  text-align: center;
+}
+
+/* Tablet: still keep the urgent card beside the hero when there is room */
+@media (min-width: 901px) and (max-width: 1100px) {
   .hero-content {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1.3fr) minmax(260px, 0.7fr);
     gap: 34px;
   }
 
   .hero-side-card {
-    margin-top: 0;
+    padding: 28px;
   }
-
 }
 
-
-/* =========================================================
-   FINAL HOME HERO FIX
-   Keep the Urgent Problem card beside the hero content.
-========================================================= */
-
-@media (min-width: 851px) {
+/* Stack only on tablet/mobile */
+@media (max-width: 900px) {
   .hero-content {
-    display: grid !important;
-    grid-template-columns: minmax(0, 1.55fr) minmax(300px, 0.65fr) !important;
-    align-items: center !important;
-    column-gap: 56px !important;
-  }
-
-  .hero-content > :first-child {
-    min-width: 0;
+    grid-template-columns: 1fr;
+    gap: 38px;
   }
 
   .hero-side-card {
-    width: 100% !important;
-    max-width: 360px !important;
-    margin: 0 !important;
-    align-self: center !important;
-    justify-self: end !important;
+    margin: 0;
   }
 }
 
-@media (min-width: 851px) and (max-width: 1100px) {
-  .hero-content {
-    grid-template-columns: minmax(0, 1.35fr) minmax(270px, 0.65fr) !important;
-    column-gap: 30px !important;
+@media (max-width: 600px) {
+  .auth-user-button {
+    padding: 8px 10px;
   }
 
-  .hero-side-card {
-    max-width: 320px !important;
-    padding: 28px !important;
+  .auth-user-menu {
+    right: 0;
+    width: 190px;
   }
 }
 
-@media (max-width: 850px) {
-  .hero-content {
-    grid-template-columns: 1fr !important;
-    gap: 34px !important;
-  }
-
-  .hero-side-card {
-    width: 100% !important;
-    max-width: none !important;
-    margin: 0 !important;
-  }
-}
