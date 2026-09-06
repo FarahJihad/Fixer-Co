@@ -5833,3 +5833,54 @@ button:hover,
 
 }
 
+
+/* =========================================================
+   FINAL HOME HERO FIX
+   Keep the Urgent Problem card beside the hero content.
+========================================================= */
+
+@media (min-width: 851px) {
+  .hero-content {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1.55fr) minmax(300px, 0.65fr) !important;
+    align-items: center !important;
+    column-gap: 56px !important;
+  }
+
+  .hero-content > :first-child {
+    min-width: 0;
+  }
+
+  .hero-side-card {
+    width: 100% !important;
+    max-width: 360px !important;
+    margin: 0 !important;
+    align-self: center !important;
+    justify-self: end !important;
+  }
+}
+
+@media (min-width: 851px) and (max-width: 1100px) {
+  .hero-content {
+    grid-template-columns: minmax(0, 1.35fr) minmax(270px, 0.65fr) !important;
+    column-gap: 30px !important;
+  }
+
+  .hero-side-card {
+    max-width: 320px !important;
+    padding: 28px !important;
+  }
+}
+
+@media (max-width: 850px) {
+  .hero-content {
+    grid-template-columns: 1fr !important;
+    gap: 34px !important;
+  }
+
+  .hero-side-card {
+    width: 100% !important;
+    max-width: none !important;
+    margin: 0 !important;
+  }
+}
