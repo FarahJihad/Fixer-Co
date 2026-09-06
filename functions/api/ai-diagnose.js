@@ -59,14 +59,14 @@ export async function onRequestPost(context) {
       These are the ONLY service categories
       the AI is allowed to recommend.
     */
-    const categories = [
-      "AC & Cooling",
-      "Plumbing",
-      "Electrical",
-      "General Maintenance",
-      "Carpentry & Furniture",
-      "Home Services"
-    ];
+  const categories = [
+  "AC & Cooling",
+  "Plumbing",
+  "Electrical",
+  "Appliances",
+  "Carpentry & Furniture",
+  "General Maintenance"
+];
 
     /*
       Ask the AI to classify the customer's problem.
@@ -84,9 +84,9 @@ Choose EXACTLY ONE category from this list:
 AC & Cooling
 Plumbing
 Electrical
-General Maintenance
+Appliances
 Carpentry & Furniture
-Home Services
+General Maintenance
 
 Customer problem:
 "${problem}"

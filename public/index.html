@@ -195,28 +195,56 @@
                PROBLEM SEARCH
           ========================== -->
 
-          <form
-            id="problemForm"
-            class="problem-search"
-          >
+          
+<!-- =========================
+     AI PROBLEM SEARCH
+========================== -->
 
-            <input
-              type="text"
-              id="problemInput"
-              placeholder="e.g. My AC is running but not cooling..."
-              required
-            >
+<div class="ai-search-wrapper">
+
+  <div class="ai-search-label">
+    <i class="fa-solid fa-wand-magic-sparkles"></i>
+    <span>AI POWERED</span>
+  </div>
+
+  <form
+    id="problemForm"
+    class="problem-search"
+  >
+
+    <input
+      type="text"
+      id="problemInput"
+      placeholder="Describe what's wrong..."
+      maxlength="500"
+      required
+    >
+
+    <button
+      type="submit"
+      id="aiSearchButton"
+    >
+      <span>Find My Service</span>
+      <i class="fa-solid fa-arrow-right"></i>
+    </button>
+
+  </form>
+
+  <p class="ai-search-hint">
+    <i class="fa-solid fa-sparkles"></i>
+    Describe the problem in your own words and AI will suggest the right service.
+  </p>
 
 
-            <button type="submit">
+  <!-- AI result will appear here -->
+  <div
+    id="aiDiagnosisResult"
+    class="ai-diagnosis-result"
+    hidden
+  >
+  </div>
 
-              Find a Fixer
-
-            </button>
-
-          </form>
-
-
+</div>
           <!-- =========================
                QUICK SERVICE CATEGORIES
           ========================== -->

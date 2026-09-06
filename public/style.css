@@ -11030,3 +11030,311 @@ body.track-map-open {
   }
 
 }
+
+/* ==================================================
+   AI SERVICE SEARCH
+================================================== */
+
+.ai-search-wrapper {
+  max-width: 680px;
+}
+
+
+/* Small AI label above the search box */
+
+.ai-search-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin-bottom: 10px;
+  color: var(--green-dark);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1.2px;
+}
+
+.ai-search-label i {
+  font-size: 12px;
+}
+
+
+/* Small explanation below search */
+
+.ai-search-hint {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 11px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.ai-search-hint i {
+  color: var(--green-dark);
+  font-size: 11px;
+}
+
+
+/* Disabled button while AI is working */
+
+#aiSearchButton:disabled {
+  cursor: wait;
+  opacity: 0.8;
+}
+
+
+/* ==================================================
+   AI RESULT AREA
+================================================== */
+
+.ai-diagnosis-result {
+  margin-top: 18px;
+}
+
+.ai-diagnosis-result[hidden] {
+  display: none;
+}
+
+
+/* ==================================================
+   AI LOADING
+================================================== */
+
+.ai-result-loading {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 17px 19px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--white);
+  box-shadow: 0 10px 30px rgba(23, 59, 87, 0.06);
+}
+
+.ai-result-loading > i {
+  color: var(--green-dark);
+  font-size: 20px;
+}
+
+.ai-result-loading strong {
+  display: block;
+  margin-bottom: 2px;
+  color: var(--navy-dark);
+  font-size: 13px;
+}
+
+.ai-result-loading p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+
+/* ==================================================
+   AI RESULT CARD
+================================================== */
+
+.ai-result-card {
+  overflow: hidden;
+  padding: 20px;
+  border: 1px solid #cfe5dc;
+  border-radius: 16px;
+  background: linear-gradient(
+    135deg,
+    #ffffff 0%,
+    #f3faf7 100%
+  );
+  box-shadow: 0 14px 35px rgba(23, 59, 87, 0.08);
+
+  animation: aiResultAppear 0.35s ease;
+}
+
+
+@keyframes aiResultAppear {
+
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+}
+
+
+/* Top section */
+
+.ai-result-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+
+/* AI SERVICE MATCH */
+
+.ai-result-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 7px;
+  color: var(--green-dark);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+
+.ai-result-label i {
+  font-size: 11px;
+}
+
+
+/* Recommended service */
+
+.ai-result-card h3 {
+  margin: 0;
+  color: var(--navy-dark);
+  font-size: 22px;
+  letter-spacing: -0.5px;
+}
+
+
+/* Confidence badge */
+
+.ai-confidence {
+  flex-shrink: 0;
+  padding: 7px 11px;
+  border-radius: 20px;
+  background: #e3f2ec;
+  color: var(--green-dark);
+  font-size: 11px;
+  font-weight: 800;
+}
+
+
+/* AI explanation */
+
+.ai-result-explanation {
+  margin: 13px 0 17px;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.65;
+}
+
+
+/* Bottom area */
+
+.ai-result-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding-top: 15px;
+  border-top: 1px solid var(--border);
+}
+
+.ai-result-footer p {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+  color: var(--muted);
+  font-size: 10px;
+}
+
+.ai-result-footer p i {
+  color: var(--green-dark);
+}
+
+
+/* View Fixers button */
+
+.ai-view-fixers {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 14px;
+  border-radius: 9px;
+  background: var(--navy);
+  color: var(--white);
+  font-size: 11px;
+  font-weight: 800;
+  transition: 0.25s ease;
+}
+
+.ai-view-fixers:hover {
+  background: var(--navy-dark);
+  transform: translateY(-2px);
+}
+
+
+/* ==================================================
+   AI ERROR
+================================================== */
+
+.ai-result-error {
+  display: flex;
+  align-items: flex-start;
+  gap: 13px;
+  padding: 16px 18px;
+  border: 1px solid #ead9c7;
+  border-radius: 14px;
+  background: #fffaf5;
+
+  animation: aiResultAppear 0.3s ease;
+}
+
+.ai-result-error > i {
+  margin-top: 2px;
+  color: var(--orange);
+  font-size: 18px;
+}
+
+.ai-result-error strong {
+  display: block;
+  margin-bottom: 3px;
+  color: var(--navy-dark);
+  font-size: 13px;
+}
+
+.ai-result-error p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+
+/* ==================================================
+   AI SEARCH - MOBILE
+================================================== */
+
+@media (max-width: 600px) {
+
+  .ai-search-wrapper {
+    width: 100%;
+  }
+
+  .ai-result-top {
+    gap: 12px;
+  }
+
+  .ai-result-card h3 {
+    font-size: 19px;
+  }
+
+  .ai-result-footer {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .ai-view-fixers {
+    width: 100%;
+    justify-content: center;
+  }
+
+}

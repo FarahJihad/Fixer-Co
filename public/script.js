@@ -409,124 +409,301 @@ async function loadTopFixers() {
    SMART PROBLEM SEARCH
 ========================= */
 
-function detectService(problem) {
 
-  const text =
-    problem.toLowerCase();
-
-  const keywords = {
-
-    1: [
-      "ac",
-      "air conditioner",
-      "cooling",
-      "cold",
-      "مكيف",
-      "تبريد"
-    ],
-
-    2: [
-      "water",
-      "leak",
-      "pipe",
-      "sink",
-      "plumbing",
-      "موية",
-      "ماء",
-      "تسريب"
-    ],
-
-    3: [
-      "electric",
-      "electricity",
-      "power",
-      "light",
-      "socket",
-      "كهرباء",
-      "لمبة"
-    ],
-
-    4: [
-      "washing machine",
-      "washer",
-      "fridge",
-      "refrigerator",
-      "oven",
-      "appliance",
-      "غسالة",
-      "ثلاجة"
-    ],
-
-    5: [
-      "door",
-      "cabinet",
-      "wood",
-      "furniture",
-      "carpentry",
-      "باب",
-      "خزانة",
-      "نجارة"
-    ]
-
-  };
-
-  for (const serviceId in keywords) {
-
-    const found =
-      keywords[serviceId].some(
-        (keyword) =>
-          text.includes(keyword)
-      );
-
-    if (found) {
-
-      return serviceId;
-
-    }
-
-  }
-
-  return null;
-
-}
-
-
+  
 /* =========================
-   HOME SEARCH FORM
+   AI HOME SEARCH FORM
 ========================= */
 
 if (problemForm) {
 
+  const aiSearchButton =
+    document.getElementById("aiSearchButton");
+
+  const aiDiagnosisResult =
+    document.getElementById("aiDiagnosisResult");
+
+
+  /*
+    Map the AI category name
+    to the correct Fixer.Co service ID.
+  */
+ const serviceCategoryMap = {
+  "AC & Cooling": 1,
+  "Plumbing": 2,
+  "Electrical": 3,
+  "Appliances": 4,
+  "Carpentry & Furniture": 5,
+  "General Maintenance": 6
+};
+
+
   problemForm.addEventListener(
     "submit",
-    (event) => {
+    async (event) => {
 
       event.preventDefault();
 
       const problem =
         problemInput.value.trim();
 
-      if (!problem) return;
 
-      const serviceId =
-        detectService(problem);
-
-      if (!serviceId) {
-
-        showUnknownServicePopup(problem);
-
+      if (!problem) {
         return;
-
       }
 
-      window.location.href =
-        `technicians.html?service=${serviceId}&problem=${encodeURIComponent(problem)}`;
+
+      /*
+        Show loading state
+        while Workers AI analyzes the problem.
+      */
+      aiSearchButton.disabled = true;
+
+      aiSearchButton.innerHTML = `
+        <i class="fa-solid fa-spinner fa-spin"></i>
+        <span>Analyzing...</span>
+      `;
+
+
+      aiDiagnosisResult.hidden = false;
+
+      aiDiagnosisResult.innerHTML = `
+        <div class="ai-result-loading">
+
+          <i class="fa-solid fa-wand-magic-sparkles"></i>
+
+          <div>
+
+            <strong>
+              AI is analyzing your problem...
+            </strong>
+
+            <p>
+              Finding the service that best matches
+              your description.
+            </p>
+
+          </div>
+
+        </div>
+      `;
+
+
+      try {
+
+        /*
+          Send the customer's description
+          to the real Workers AI endpoint.
+        */
+        const response =
+          await fetch(
+            "/api/ai-diagnose",
+            {
+              method: "POST",
+
+              headers: {
+                "Content-Type":
+                  "application/json"
+              },
+
+              body: JSON.stringify({
+                problem
+              })
+            }
+          );
+
+
+        const data =
+          await response.json();
+
+
+        if (
+          !response.ok ||
+          !data.success ||
+          !data.diagnosis
+        ) {
+
+          throw new Error(
+            data.error ||
+            "AI could not analyze the problem."
+          );
+
+        }
+
+
+        const diagnosis =
+          data.diagnosis;
+
+
+        const serviceId =
+          serviceCategoryMap[
+            diagnosis.category
+          ];
+
+
+        /*
+          Safety check:
+          do not create a broken service link
+          if AI returns an unknown category.
+        */
+        if (!serviceId) {
+
+          throw new Error(
+            "The recommended service is not available."
+          );
+
+        }
+
+
+        /*
+          Show the AI result card.
+        */
+        aiDiagnosisResult.innerHTML = `
+
+          <div class="ai-result-card">
+
+            <div class="ai-result-top">
+
+              <div>
+
+                <span class="ai-result-label">
+
+                  <i class="fa-solid fa-wand-magic-sparkles"></i>
+
+                  AI SERVICE MATCH
+
+                </span>
+
+
+                <h3>
+                  ${escapeHTML(
+                    diagnosis.category
+                  )}
+                </h3>
+
+              </div>
+
+
+              <span class="ai-confidence">
+
+                ${Number(
+                  diagnosis.confidence
+                )}% Match
+
+              </span>
+
+            </div>
+
+
+            <p class="ai-result-explanation">
+
+              ${escapeHTML(
+                diagnosis.explanation
+              )}
+
+            </p>
+
+
+            <div class="ai-result-footer">
+
+              <p>
+
+                <i class="fa-solid fa-circle-info"></i>
+
+                AI suggestion — not a guaranteed
+                technical diagnosis.
+
+              </p>
+
+
+              <a
+                href="technicians.html?service=${serviceId}&problem=${encodeURIComponent(problem)}"
+                class="ai-view-fixers"
+              >
+
+                View Fixers
+
+                <i class="fa-solid fa-arrow-right"></i>
+
+              </a>
+
+            </div>
+
+          </div>
+        `;
+
+
+      } catch (error) {
+
+        console.error(
+          "AI search error:",
+          error
+        );
+
+
+        /*
+          The website should still be usable
+          even if AI is temporarily unavailable.
+        */
+        aiDiagnosisResult.innerHTML = `
+
+          <div class="ai-result-error">
+
+            <i class="fa-solid fa-triangle-exclamation"></i>
+
+            <div>
+
+              <strong>
+                AI Assistant is temporarily unavailable.
+              </strong>
+
+              <p>
+                You can still choose a service category below.
+              </p>
+
+            </div>
+
+          </div>
+        `;
+
+      } finally {
+
+        /*
+          Restore the button.
+        */
+        aiSearchButton.disabled = false;
+
+        aiSearchButton.innerHTML = `
+          <span>Find My Service</span>
+          <i class="fa-solid fa-arrow-right"></i>
+        `;
+
+      }
 
     }
   );
 
 }
 
+
+/* =========================
+   ESCAPE HTML
+========================= */
+
+/*
+  Prevent text returned by the API
+  from being inserted as HTML.
+*/
+function escapeHTML(value) {
+
+  return String(value)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+
+}
 
 /* =========================
    UNKNOWN SERVICE POPUP
