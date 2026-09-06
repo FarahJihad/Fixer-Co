@@ -4885,3 +4885,225 @@ if (loginForm) {
   );
 
 }
+// ========================================
+// AUTHENTICATION STATE
+// ========================================
+
+async function loadCurrentUser() {
+
+  try {
+
+    const response =
+      await fetch(
+        "/api/me",
+        {
+          method: "GET",
+          credentials: "same-origin"
+        }
+      );
+
+
+    if (!response.ok) {
+      return null;
+    }
+
+
+    const data =
+      await response.json();
+
+
+    if (
+      !data.success ||
+      !data.authenticated ||
+      !data.user
+    ) {
+      return null;
+    }
+
+
+    return data.user;
+
+  } catch (error) {
+
+    console.error(
+      "Auth state error:",
+      error
+    );
+
+    return null;
+  }
+
+}
+
+
+// ========================================
+// UPDATE NAVBAR
+// ========================================
+
+async function updateNavbarAuth() {
+
+  const user =
+    await loadCurrentUser();
+
+
+  const navActions =
+    document.querySelector(
+      ".nav-actions"
+    );
+
+
+  if (!navActions) {
+    return;
+  }
+
+
+  // Remove old generated account area
+  const oldAuthArea =
+    document.getElementById(
+      "authUserArea"
+    );
+
+  if (oldAuthArea) {
+    oldAuthArea.remove();
+  }
+
+
+  if (!user) {
+
+    // Show login button when logged out
+    if (
+      !document.getElementById(
+        "navLoginButton"
+      )
+    ) {
+
+      const loginLink =
+        document.createElement("a");
+
+      loginLink.href =
+        "login.html";
+
+      loginLink.id =
+        "navLoginButton";
+
+      loginLink.className =
+        "nav-button";
+
+      loginLink.textContent =
+        "Log In";
+
+      navActions.appendChild(
+        loginLink
+      );
+    }
+
+    return;
+  }
+
+
+  // User is logged in
+  const loginButton =
+    document.getElementById(
+      "navLoginButton"
+    );
+
+  if (loginButton) {
+    loginButton.remove();
+  }
+
+
+  const authArea =
+    document.createElement("div");
+
+  authArea.id =
+    "authUserArea";
+
+  authArea.className =
+    "auth-user-area";
+
+
+  const firstName =
+    user.name
+      ? user.name.split(" ")[0]
+      : user.username;
+
+
+  authArea.innerHTML = `
+    <button
+      type="button"
+      class="auth-user-button"
+      id="authUserButton"
+    >
+      <i class="fa-regular fa-circle-user"></i>
+
+      <span>
+        ${firstName}
+      </span>
+
+      <i class="fa-solid fa-chevron-down"></i>
+    </button>
+
+    <div
+      class="auth-user-menu"
+      id="authUserMenu"
+    >
+      <a href="my-requests.html">
+        <i class="fa-regular fa-clipboard"></i>
+        My Requests
+      </a>
+
+      <a href="track.html">
+        <i class="fa-solid fa-location-dot"></i>
+        Track Service
+      </a>
+
+      <button
+        type="button"
+        id="logoutButton"
+      >
+        <i class="fa-solid fa-arrow-right-from-bracket"></i>
+        Log Out
+      </button>
+    </div>
+  `;
+
+
+  navActions.appendChild(
+    authArea
+  );
+
+
+  const userButton =
+    document.getElementById(
+      "authUserButton"
+    );
+
+  const userMenu =
+    document.getElementById(
+      "authUserMenu"
+    );
+
+
+  if (
+    userButton &&
+    userMenu
+  ) {
+
+    userButton.addEventListener(
+      "click",
+      () => {
+
+        userMenu.classList.toggle(
+          "show"
+        );
+
+      }
+    );
+
+  }
+
+}
+
+
+// Run on every page
+updateNavbarAuth();
