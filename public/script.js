@@ -6216,11 +6216,10 @@ async function loadTrackServicePage() {
   const trackLoading =
     document.getElementById("trackLoading");
 
-  const trackError =
-    document.getElementById("trackError");
-
   const params =
-    new URLSearchParams(window.location.search);
+    new URLSearchParams(
+      window.location.search
+    );
 
   const requestId =
     params.get("request");
@@ -6253,6 +6252,7 @@ async function loadTrackServicePage() {
 
 
     /* User is not logged in */
+
     if (response.status === 401) {
 
       sessionStorage.setItem(
@@ -6281,45 +6281,67 @@ async function loadTrackServicePage() {
         data.message ||
         "Unable to load service request."
       );
+
     }
 
 
     /* Hide loading */
+
     if (trackLoading) {
       trackLoading.hidden = true;
     }
 
 
     /* Show dashboard */
+
     trackDashboard.hidden = false;
 
+
+    /* Render request */
 
     renderTrackService(
       data.request
     );
 
 
+    /* Start map */
+
     initializeTrackMap(
       data.request
     );
 
 
+    /* Start interactions */
+
     setupTrackInteractions();
 
 
     /* Save current status */
+
     trackDashboard.dataset.status =
       data.request.status;
 
 
     /* Auto refresh every 20 seconds */
+
+    if (window.trackRefreshInterval) {
+
+      clearInterval(
+        window.trackRefreshInterval
+      );
+
+    }
+
+
     window.trackRefreshInterval =
       setInterval(
         () => {
+
           refreshTrackService(
             requestId,
             false
           );
+
         },
         20000
       );
@@ -6343,6 +6365,7 @@ async function loadTrackServicePage() {
 }
 
 
+
 /* ========================================
    RENDER TRACK SERVICE
 ======================================== */
@@ -6361,7 +6384,9 @@ function renderTrackService(request) {
     );
 
 
-  /* Service name */
+  /* ========================================
+     SERVICE
+  ======================================== */
 
   setTrackText(
     "trackServiceName",
@@ -6370,7 +6395,40 @@ function renderTrackService(request) {
   );
 
 
-  /* Status */
+  /* Service icon */
+
+  const serviceIcon =
+    document.getElementById(
+      "trackServiceIcon"
+    );
+
+
+  if (serviceIcon) {
+
+    const iconMap = {
+
+      1: "fa-solid fa-snowflake",
+      2: "fa-solid fa-droplet",
+      3: "fa-solid fa-bolt",
+      4: "fa-solid fa-screwdriver-wrench",
+      5: "fa-solid fa-hammer",
+      6: "fa-solid fa-house"
+
+    };
+
+
+    serviceIcon.innerHTML =
+      `<i class="${
+        iconMap[request.service_id] ||
+        "fa-solid fa-wrench"
+      }"></i>`;
+
+  }
+
+
+  /* ========================================
+     STATUS
+  ======================================== */
 
   setTrackText(
     "trackStatusText",
@@ -6387,12 +6445,66 @@ function renderTrackService(request) {
   if (statusBadge) {
 
     statusBadge.className =
-      `track-status-badge status-${status}`;
+      `track-status-badge status-${status.replaceAll("_", "-")}`;
 
   }
 
 
-  /* Current status */
+  /* ========================================
+     RIGHT NOW
+  ======================================== */
+
+  const firstName =
+    request.technician_name
+      ? request.technician_name
+          .trim()
+          .split(/\s+/)[0]
+      : "Your Fixer";
+
+
+  let currentDescription =
+    statusInfo.description;
+
+
+  if (status === "requested") {
+
+    currentDescription =
+      `Waiting for ${firstName} to accept your request.`;
+
+  }
+
+
+  else if (status === "accepted") {
+
+    currentDescription =
+      `${firstName} accepted your request and is preparing for your service.`;
+
+  }
+
+
+  else if (status === "on_the_way") {
+
+    currentDescription =
+      `${firstName} is heading toward your service location.`;
+
+  }
+
+
+  else if (status === "in_progress") {
+
+    currentDescription =
+      `${firstName} is currently working on your service.`;
+
+  }
+
+
+  else if (status === "completed") {
+
+    currentDescription =
+      `Your service is complete. You can now leave a review for ${firstName}.`;
+
+  }
+
 
   setTrackText(
     "trackNowTitle",
@@ -6402,7 +6514,7 @@ function renderTrackService(request) {
 
   setTrackText(
     "trackNowDescription",
-    statusInfo.description
+    currentDescription
   );
 
 
@@ -6420,7 +6532,9 @@ function renderTrackService(request) {
   }
 
 
-  /* Fixer information */
+  /* ========================================
+     FIXER INFORMATION
+  ======================================== */
 
   setTrackText(
     "trackFixerName",
@@ -6431,7 +6545,8 @@ function renderTrackService(request) {
 
   setTrackText(
     "trackFixerRating",
-    request.technician_rating
+    request.technician_rating !== null &&
+    request.technician_rating !== undefined
       ? Number(
           request.technician_rating
         ).toFixed(1)
@@ -6441,8 +6556,11 @@ function renderTrackService(request) {
 
   setTrackText(
     "trackFixerPrice",
-    request.starting_price
-      ? `${request.starting_price} SAR`
+    request.starting_price !== null &&
+    request.starting_price !== undefined
+      ? `${Number(
+          request.starting_price
+        ).toFixed(0)} SAR`
       : "—"
   );
 
@@ -6454,7 +6572,28 @@ function renderTrackService(request) {
   );
 
 
-  /* Fixer initials */
+  /* Fixer profile link */
+
+  const profileButton =
+    document.getElementById(
+      "trackViewFixerButton"
+    );
+
+
+  if (
+    profileButton &&
+    request.technician_id
+  ) {
+
+    profileButton.href =
+      `profile.html?id=${request.technician_id}`;
+
+  }
+
+
+  /* ========================================
+     INITIALS
+  ======================================== */
 
   const initials =
     getTrackInitials(
@@ -6488,7 +6627,9 @@ function renderTrackService(request) {
   );
 
 
-  /* Problem */
+  /* ========================================
+     REQUEST DETAILS
+  ======================================== */
 
   setTrackText(
     "trackProblemText",
@@ -6496,8 +6637,6 @@ function renderTrackService(request) {
     "No problem description provided."
   );
 
-
-  /* Date */
 
   setTrackText(
     "trackRequestDate",
@@ -6507,19 +6646,28 @@ function renderTrackService(request) {
   );
 
 
-  /* Timeline */
+  /* ========================================
+     TIMELINE
+  ======================================== */
 
   updateTrackTimeline(
     status
   );
-  /* Show the next expected step */
-updateTrackNextStep(
-  status,
-  request
-);
 
 
-  /* Completed state */
+  /* ========================================
+     WHAT'S NEXT
+  ======================================== */
+
+  updateTrackNextStep(
+    status,
+    request
+  );
+
+
+  /* ========================================
+     REVIEW BUTTON
+  ======================================== */
 
   updateTrackCompletedState(
     status,
@@ -6529,8 +6677,9 @@ updateTrackNextStep(
 }
 
 
+
 /* ========================================
-   STATUS INFORMATION
+   NORMALIZE STATUS
 ======================================== */
 
 function normalizeTrackStatus(status) {
@@ -6559,57 +6708,97 @@ function normalizeTrackStatus(status) {
 }
 
 
+
+/* ========================================
+   STATUS INFORMATION
+======================================== */
+
 function getTrackStatusInfo(status) {
 
   const statuses = {
 
     requested: {
-      label: "Requested",
-      title: "Request received",
+
+      label:
+        "Requested",
+
+      title:
+        "Request received",
+
       description:
-        "Your service request has been sent successfully. We're waiting for the fixer to accept it.",
+        "Your service request has been sent successfully.",
+
       icon:
         "fa-solid fa-paper-plane"
+
     },
 
 
     accepted: {
-      label: "Accepted",
-      title: "Your fixer accepted the request",
+
+      label:
+        "Accepted",
+
+      title:
+        "Request accepted",
+
       description:
-        "Great news! Your fixer has accepted your service request and is preparing to help you.",
+        "Your Fixer accepted the service request.",
+
       icon:
         "fa-solid fa-circle-check"
+
     },
 
 
     on_the_way: {
-      label: "On the way",
-      title: "Your fixer is on the way",
+
+      label:
+        "On the way",
+
+      title:
+        "Your Fixer is on the way",
+
       description:
-        "Your fixer is heading toward your service location.",
+        "Your Fixer is heading toward your location.",
+
       icon:
         "fa-solid fa-route"
+
     },
 
 
     in_progress: {
-      label: "In progress",
-      title: "Service in progress",
+
+      label:
+        "In progress",
+
+      title:
+        "Service in progress",
+
       description:
-        "Your fixer is currently working on your service request.",
+        "Your Fixer is currently working on your request.",
+
       icon:
         "fa-solid fa-screwdriver-wrench"
+
     },
 
 
     completed: {
-      label: "Completed",
-      title: "Service completed",
+
+      label:
+        "Completed",
+
+      title:
+        "Service completed",
+
       description:
-        "Your service has been completed successfully. You can now leave a review.",
+        "Your service has been completed successfully.",
+
       icon:
         "fa-solid fa-circle-check"
+
     }
 
   };
@@ -6621,8 +6810,6 @@ function getTrackStatusInfo(status) {
   );
 
 }
-
-
 /* ========================================
    TIMELINE
 ======================================== */
@@ -6692,7 +6879,7 @@ function updateTrackTimeline(status) {
         );
 
 
-      /* Previous stages */
+      /* Completed previous stages */
 
       if (index < currentIndex) {
 
@@ -6732,7 +6919,7 @@ function updateTrackTimeline(status) {
       }
 
 
-      /* Future stages */
+      /* Future stage */
 
       else {
 
@@ -6749,6 +6936,153 @@ function updateTrackTimeline(status) {
   );
 
 }
+
+
+
+/* ========================================
+   WHAT'S NEXT
+======================================== */
+
+function updateTrackNextStep(
+  status,
+  request
+) {
+
+  const fixerName =
+    request.technician_name
+      ? request.technician_name
+          .trim()
+          .split(/\s+/)[0]
+      : "Your Fixer";
+
+
+  const nextSteps = {
+
+    requested: {
+
+      title:
+        `Waiting for ${fixerName} to accept`,
+
+      description:
+        `Once ${fixerName} accepts your request, the next service update will appear here.`,
+
+      stage:
+        "Accepted",
+
+      icon:
+        "fa-solid fa-user-check"
+
+    },
+
+
+    accepted: {
+
+      title:
+        `${fixerName} is preparing`,
+
+      description:
+        `The next update will appear when ${fixerName} starts heading to your location.`,
+
+      stage:
+        "On the way",
+
+      icon:
+        "fa-solid fa-route"
+
+    },
+
+
+    on_the_way: {
+
+      title:
+        `${fixerName} is heading your way`,
+
+      description:
+        `The next update will appear when ${fixerName} starts working on your service.`,
+
+      stage:
+        "In progress",
+
+      icon:
+        "fa-solid fa-location-arrow"
+
+    },
+
+
+    in_progress: {
+
+      title:
+        "Service completion",
+
+      description:
+        `Once ${fixerName} finishes the job, you'll be able to leave your review.`,
+
+      stage:
+        "Completed",
+
+      icon:
+        "fa-solid fa-check-double"
+
+    },
+
+
+    completed: {
+
+      title:
+        "Service completed",
+
+      description:
+        `Your service is complete. You can now review ${fixerName} and share your experience.`,
+
+      stage:
+        "Leave a review",
+
+      icon:
+        "fa-solid fa-star"
+
+    }
+
+  };
+
+
+  const info =
+    nextSteps[status] ||
+    nextSteps.requested;
+
+
+  setTrackText(
+    "trackNextTitle",
+    info.title
+  );
+
+
+  setTrackText(
+    "trackNextDescription",
+    info.description
+  );
+
+
+  setTrackText(
+    "trackNextStage",
+    info.stage
+  );
+
+
+  const icon =
+    document.getElementById(
+      "trackNextIcon"
+    );
+
+
+  if (icon) {
+
+    icon.className =
+      info.icon;
+
+  }
+
+}
+
 
 
 /* ========================================
@@ -6789,6 +7123,8 @@ function initializeTrackMap(request) {
     );
 
 
+  /* No saved coordinates */
+
   if (
     !Number.isFinite(latitude) ||
     !Number.isFinite(longitude)
@@ -6802,13 +7138,27 @@ function initializeTrackMap(request) {
           display:flex;
           align-items:center;
           justify-content:center;
+          flex-direction:column;
+          gap:10px;
           color:#7c8b94;
           font-size:12px;
           text-align:center;
           padding:25px;
         "
       >
-        Fixer location is currently unavailable.
+
+        <i
+          class="fa-solid fa-location-dot"
+          style="
+            color:#4faf8f;
+            font-size:22px;
+          "
+        ></i>
+
+        <span>
+          Fixer location is currently unavailable.
+        </span>
+
       </div>
       `;
 
@@ -6817,7 +7167,7 @@ function initializeTrackMap(request) {
   }
 
 
-  /* Remove old map */
+  /* Remove previous map */
 
   if (trackMap) {
 
@@ -6846,14 +7196,17 @@ function initializeTrackMap(request) {
       );
 
 
-  /* Map tiles */
+  /* OpenStreetMap tiles */
 
   L.tileLayer(
     "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
     {
+
       maxZoom: 19,
+
       attribution:
         "&copy; OpenStreetMap contributors"
+
     }
   )
     .addTo(
@@ -6873,19 +7226,28 @@ function initializeTrackMap(request) {
     );
 
 
-  /* Custom animated marker */
+  /* Custom marker */
 
   const fixerIcon =
     L.divIcon({
+
       className:
         "fixer-map-marker-shell",
 
       html:
         `
-        <div class="fixer-map-pulse"></div>
+        <div
+          class="fixer-map-pulse"
+        ></div>
 
-        <div class="fixer-map-marker">
-          <i class="fa-solid fa-screwdriver-wrench"></i>
+        <div
+          class="fixer-map-marker"
+        >
+
+          <i
+            class="fa-solid fa-screwdriver-wrench"
+          ></i>
+
         </div>
         `,
 
@@ -6894,6 +7256,7 @@ function initializeTrackMap(request) {
 
       iconAnchor:
         [26, 26]
+
     });
 
 
@@ -6934,7 +7297,7 @@ function initializeTrackMap(request) {
   );
 
 
-  /* Center button */
+  /* Center map button */
 
   const centerButton =
     document.getElementById(
@@ -6961,7 +7324,11 @@ function initializeTrackMap(request) {
 
         setTimeout(
           () => {
-            trackMarker.openPopup();
+
+            if (trackMarker) {
+              trackMarker.openPopup();
+            }
+
           },
           800
         );
@@ -6973,7 +7340,11 @@ function initializeTrackMap(request) {
 
   setTimeout(
     () => {
-      trackMap.invalidateSize();
+
+      if (trackMap) {
+        trackMap.invalidateSize();
+      }
+
     },
     250
   );
@@ -6981,8 +7352,9 @@ function initializeTrackMap(request) {
 }
 
 
+
 /* ========================================
-   UPDATE MAP POSITION
+   UPDATE MAP LOCATION
 ======================================== */
 
 function updateTrackMapPosition(
@@ -6993,7 +7365,9 @@ function updateTrackMapPosition(
     !trackMap ||
     !trackMarker
   ) {
+
     return;
+
   }
 
 
@@ -7013,7 +7387,9 @@ function updateTrackMapPosition(
     !Number.isFinite(latitude) ||
     !Number.isFinite(longitude)
   ) {
+
     return;
+
   }
 
 
@@ -7050,10 +7426,8 @@ function updateTrackMapPosition(
   }
 
 }
-
-
 /* ========================================
-   REFRESH SERVICE STATUS
+   REFRESH TRACKING
 ======================================== */
 
 async function refreshTrackService(
@@ -7093,10 +7467,16 @@ async function refreshTrackService(
 
     if (response.status === 401) {
 
+      sessionStorage.setItem(
+        "redirectAfterLogin",
+        window.location.href
+      );
+
       window.location.href =
         "login.html";
 
       return;
+
     }
 
 
@@ -7109,7 +7489,9 @@ async function refreshTrackService(
       !data.success ||
       !data.request
     ) {
+
       return;
+
     }
 
 
@@ -7129,10 +7511,14 @@ async function refreshTrackService(
       data.request.status;
 
 
+    /* Refresh all information */
+
     renderTrackService(
       data.request
     );
 
+
+    /* Update marker if location changed */
 
     updateTrackMapPosition(
       data.request
@@ -7147,7 +7533,9 @@ async function refreshTrackService(
     }
 
 
-    /* Show toast when status changes */
+    /* ========================================
+       SHOW STATUS CHANGE TOAST
+    ======================================== */
 
     if (
       oldStatus &&
@@ -7209,11 +7597,17 @@ async function refreshTrackService(
 }
 
 
+
 /* ========================================
    TRACK PAGE INTERACTIONS
 ======================================== */
 
 function setupTrackInteractions() {
+
+  /* Start scroll animations */
+
+  setupTrackScrollReveal();
+
 
   const params =
     new URLSearchParams(
@@ -7227,7 +7621,9 @@ function setupTrackInteractions() {
     );
 
 
-  /* Refresh */
+  /* ========================================
+     REFRESH BUTTON
+  ======================================== */
 
   const refreshButton =
     document.getElementById(
@@ -7250,7 +7646,9 @@ function setupTrackInteractions() {
   }
 
 
-  /* Expand map */
+  /* ========================================
+     EXPAND MAP
+  ======================================== */
 
   const expandButton =
     document.getElementById(
@@ -7306,7 +7704,9 @@ function setupTrackInteractions() {
   }
 
 
-  /* Problem collapse */
+  /* ========================================
+     REQUEST DETAILS COLLAPSE
+  ======================================== */
 
   const collapseButton =
     document.getElementById(
@@ -7328,8 +7728,15 @@ function setupTrackInteractions() {
     collapseButton.onclick =
       () => {
 
-        collapseBody.classList.toggle(
-          "collapsed"
+        const collapsed =
+          collapseBody.classList.toggle(
+            "collapsed"
+          );
+
+
+        collapseButton.setAttribute(
+          "aria-expanded",
+          String(!collapsed)
         );
 
 
@@ -7352,7 +7759,9 @@ function setupTrackInteractions() {
   }
 
 
-  /* Timeline stages */
+  /* ========================================
+     TIMELINE STAGE CLICKS
+  ======================================== */
 
   document
     .querySelectorAll(
@@ -7380,21 +7789,27 @@ function setupTrackInteractions() {
     );
 
 
-  /* Close modal */
+  /* ========================================
+     CLOSE MODAL BUTTON
+  ======================================== */
 
-  const closeModal =
+  const closeModalButton =
     document.getElementById(
       "trackModalClose"
     );
 
 
-  if (closeModal) {
+  if (closeModalButton) {
 
-    closeModal.onclick =
+    closeModalButton.onclick =
       closeTrackStageModal;
 
   }
 
+
+  /* ========================================
+     CLOSE MODAL BY BACKDROP
+  ======================================== */
 
   const modal =
     document.getElementById(
@@ -7422,7 +7837,9 @@ function setupTrackInteractions() {
   }
 
 
-  /* Escape closes modal */
+  /* ========================================
+     ESC KEY
+  ======================================== */
 
   document.addEventListener(
     "keydown",
@@ -7442,8 +7859,104 @@ function setupTrackInteractions() {
 }
 
 
+
 /* ========================================
-   TIMELINE MODAL
+   SCROLL REVEAL
+======================================== */
+
+function setupTrackScrollReveal() {
+
+  const elements =
+    document.querySelectorAll(
+      ".track-scroll-reveal"
+    );
+
+
+  if (!elements.length) {
+    return;
+  }
+
+
+  /* Fallback for older browsers */
+
+  if (
+    !("IntersectionObserver" in window)
+  ) {
+
+    elements.forEach(
+      element => {
+
+        element.classList.add(
+          "visible"
+        );
+
+      }
+    );
+
+    return;
+
+  }
+
+
+  const observer =
+    new IntersectionObserver(
+
+      entries => {
+
+        entries.forEach(
+          entry => {
+
+            if (
+              entry.isIntersecting
+            ) {
+
+              entry.target
+                .classList
+                .add(
+                  "visible"
+                );
+
+
+              observer.unobserve(
+                entry.target
+              );
+
+            }
+
+          }
+        );
+
+      },
+
+      {
+        threshold: 0.15,
+        rootMargin:
+          "0px 0px -30px 0px"
+      }
+
+    );
+
+
+  elements.forEach(
+    (element, index) => {
+
+      element.style.transitionDelay =
+        `${Math.min(
+          index * 70,
+          280
+        )}ms`;
+
+
+      observer.observe(
+        element
+      );
+
+    }
+  );
+
+}
+/* ========================================
+   TIMELINE STAGE MODAL
 ======================================== */
 
 function openTrackStageModal(stage) {
@@ -7459,11 +7972,15 @@ function openTrackStageModal(stage) {
   }
 
 
+  const normalizedStage =
+    normalizeTrackStatus(
+      stage
+    );
+
+
   const info =
     getTrackStatusInfo(
-      normalizeTrackStatus(
-        stage
-      )
+      normalizedStage
     );
 
 
@@ -7515,6 +8032,11 @@ function openTrackStageModal(stage) {
 }
 
 
+
+/* ========================================
+   CLOSE STAGE MODAL
+======================================== */
+
 function closeTrackStageModal() {
 
   const modal =
@@ -7545,8 +8067,10 @@ function closeTrackStageModal() {
 }
 
 
+
 /* ========================================
-   COMPLETED SERVICE
+   REVIEW BUTTON
+   ONLY AFTER COMPLETED
 ======================================== */
 
 function updateTrackCompletedState(
@@ -7565,9 +8089,13 @@ function updateTrackCompletedState(
   }
 
 
-  /* Hide review until service is completed */
+  /* ========================================
+     NOT COMPLETED
+  ======================================== */
 
-  if (status !== "completed") {
+  if (
+    status !== "completed"
+  ) {
 
     reviewButton.hidden = true;
 
@@ -7582,16 +8110,21 @@ function updateTrackCompletedState(
       null;
 
     return;
+
   }
 
 
-  /* Show review only after completion */
+  /* ========================================
+     COMPLETED
+  ======================================== */
 
   reviewButton.hidden =
     false;
 
+
   reviewButton.style.display =
     "inline-flex";
+
 
   reviewButton.classList.add(
     "review-ready"
@@ -7608,13 +8141,6 @@ function updateTrackCompletedState(
 
 }
 
-   else {
-
-    reviewButton.hidden = true;
-
-  }
-
-}
 
 
 /* ========================================
@@ -7674,6 +8200,7 @@ function showTrackError(message) {
 }
 
 
+
 /* ========================================
    TOAST MESSAGE
 ======================================== */
@@ -7712,7 +8239,10 @@ function showTrackToast(message) {
   toast.innerHTML =
     `
     <i class="fa-solid fa-circle-check"></i>
-    <span>${escapeTrackHTML(message)}</span>
+
+    <span>
+      ${escapeTrackHTML(message)}
+    </span>
     `;
 
 
@@ -7741,8 +8271,9 @@ function showTrackToast(message) {
 }
 
 
+
 /* ========================================
-   HELPERS
+   SET TEXT HELPER
 ======================================== */
 
 function setTrackText(
@@ -7766,6 +8297,11 @@ function setTrackText(
 }
 
 
+
+/* ========================================
+   FIXER INITIALS
+======================================== */
+
 function getTrackInitials(name) {
 
   if (!name) {
@@ -7786,6 +8322,11 @@ function getTrackInitials(name) {
 
 }
 
+
+
+/* ========================================
+   FORMAT REQUEST DATE
+======================================== */
 
 function formatTrackDate(dateString) {
 
@@ -7822,38 +8363,59 @@ function formatTrackDate(dateString) {
   return date.toLocaleString(
     "en-US",
     {
-      day: "numeric",
-      month: "short",
-      year: "numeric",
-      hour: "numeric",
-      minute: "2-digit"
+
+      day:
+        "numeric",
+
+      month:
+        "short",
+
+      year:
+        "numeric",
+
+      hour:
+        "numeric",
+
+      minute:
+        "2-digit"
+
     }
   );
 
 }
 
 
+
+/* ========================================
+   ESCAPE HTML
+======================================== */
+
 function escapeTrackHTML(value) {
 
   return String(
     value ?? ""
   )
+
     .replaceAll(
       "&",
       "&amp;"
     )
+
     .replaceAll(
       "<",
       "&lt;"
     )
+
     .replaceAll(
       ">",
       "&gt;"
     )
+
     .replaceAll(
       '"',
       "&quot;"
     )
+
     .replaceAll(
       "'",
       "&#039;"
@@ -7862,224 +8424,32 @@ function escapeTrackHTML(value) {
 }
 
 
+
+/* ========================================
+   CLEANUP WHEN LEAVING PAGE
+======================================== */
+
+window.addEventListener(
+  "beforeunload",
+  () => {
+
+    if (
+      window.trackRefreshInterval
+    ) {
+
+      clearInterval(
+        window.trackRefreshInterval
+      );
+
+    }
+
+  }
+);
+
+
+
 /* ========================================
    START TRACK SERVICE PAGE
 ======================================== */
 
 loadTrackServicePage();
-/* ========================================
-   TRACK SERVICE - WHAT'S NEXT
-======================================== */
-
-function updateTrackNextStep(
-  status,
-  request
-) {
-
-  const fixerName =
-    request.technician_name
-      ? request.technician_name.split(" ")[0]
-      : "Your Fixer";
-
-
-  const nextSteps = {
-
-    requested: {
-
-      title:
-        `Waiting for ${fixerName} to accept`,
-
-      description:
-        `Once ${fixerName} accepts your request, you'll see the next service update here.`,
-
-      stage:
-        "Accepted",
-
-      icon:
-        "fa-solid fa-user-check"
-
-    },
-
-
-    accepted: {
-
-      title:
-        `${fixerName} is preparing`,
-
-      description:
-        `Your request has been accepted. The next update will appear when ${fixerName} starts heading to you.`,
-
-      stage:
-        "On the way",
-
-      icon:
-        "fa-solid fa-route"
-
-    },
-
-
-    on_the_way: {
-
-      title:
-        `${fixerName} is heading your way`,
-
-      description:
-        `Keep an eye on this page. The next update will appear when your Fixer starts the service.`,
-
-      stage:
-        "In progress",
-
-      icon:
-        "fa-solid fa-location-arrow"
-
-    },
-
-
-    in_progress: {
-
-      title:
-        "Service completion",
-
-      description:
-        `Once ${fixerName} finishes the service, you'll be able to leave your review.`,
-
-      stage:
-        "Completed",
-
-      icon:
-        "fa-solid fa-check-double"
-
-    },
-
-
-    completed: {
-
-      title:
-        "Service completed",
-
-      description:
-        `Your service is complete. You can now share your experience and review ${fixerName}.`,
-
-      stage:
-        "Leave a review",
-
-      icon:
-        "fa-solid fa-star"
-
-    }
-
-  };
-
-
-  const info =
-    nextSteps[status] ||
-    nextSteps.requested;
-
-
-  setTrackText(
-    "trackNextTitle",
-    info.title
-  );
-
-
-  setTrackText(
-    "trackNextDescription",
-    info.description
-  );
-
-
-  setTrackText(
-    "trackNextStage",
-    info.stage
-  );
-
-
-  const icon =
-    document.getElementById(
-      "trackNextIcon"
-    );
-
-
-  if (icon) {
-
-    icon.className =
-      info.icon;
-
-  }
-
-}
-
-
-/* ========================================
-   SCROLL REVEAL INTERACTION
-======================================== */
-
-function setupTrackScrollReveal() {
-
-  function setupTrackInteractions() {
-
-  setupTrackScrollReveal();
-
-  const params =
-    new URLSearchParams(
-      window.location.search
-    );
-  const elements =
-    document.querySelectorAll(
-      ".track-scroll-reveal"
-    );
-
-
-  if (!elements.length) {
-    return;
-  }
-
-
-  const observer =
-    new IntersectionObserver(
-
-      entries => {
-
-        entries.forEach(
-          entry => {
-
-            if (
-              entry.isIntersecting
-            ) {
-
-              entry.target
-                .classList
-                .add(
-                  "visible"
-                );
-
-
-              observer.unobserve(
-                entry.target
-              );
-
-            }
-
-          }
-        );
-
-      },
-
-      {
-        threshold: 0.18
-      }
-
-    );
-
-
-  elements.forEach(
-    element => {
-
-      observer.observe(
-        element
-      );
-
-    }
-  );
-
-}
