@@ -4394,11 +4394,20 @@ if (registerForm) {
 
 
       // Get form fields
-      const name =
-        document
-          .getElementById("registerName")
-          .value
-          .trim();
+  const name =
+  document
+    .getElementById("registerName")
+    .value
+    .trim();
+
+const username =
+  document
+    .getElementById("registerUsername")
+    .value
+    .trim()
+    .toLowerCase();
+
+
 
       const email =
         document
@@ -4528,13 +4537,14 @@ if (registerForm) {
                   "application/json"
               },
 
-              body:
-                JSON.stringify({
-                  name,
-                  email,
-                  phone,
-                  password
-                })
+  body:
+  JSON.stringify({
+    name,
+    username,
+    email,
+    phone,
+    password
+  })
             }
           );
 
