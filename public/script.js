@@ -4629,3 +4629,249 @@ if (registerForm) {
   );
 
 }
+// ========================================
+// LOGIN FORM
+// ========================================
+
+const loginForm =
+  document.getElementById("loginForm");
+
+const loginMessage =
+  document.getElementById("loginMessage");
+
+
+if (loginForm) {
+
+  loginForm.addEventListener(
+    "submit",
+    async (event) => {
+
+      event.preventDefault();
+
+
+      // ========================================
+      // GET LOGIN DATA
+      // ========================================
+
+      const username =
+        document
+          .getElementById("loginUsername")
+          .value
+          .trim();
+
+      const password =
+        document
+          .getElementById("loginPassword")
+          .value;
+
+
+      // Clear old message
+      if (loginMessage) {
+
+        loginMessage.textContent = "";
+
+        loginMessage.className =
+          "login-message";
+
+      }
+
+
+      // ========================================
+      // VALIDATION
+      // ========================================
+
+      if (
+        !username ||
+        !password
+      ) {
+
+        if (loginMessage) {
+
+          loginMessage.textContent =
+            "Please enter your username and password.";
+
+          loginMessage.className =
+            "login-message error";
+
+        }
+
+        return;
+      }
+
+
+      // ========================================
+      // LOGIN BUTTON
+      // ========================================
+
+      const submitButton =
+        loginForm.querySelector(
+          'button[type="submit"]'
+        );
+
+
+      const originalButtonHTML =
+        submitButton
+          ? submitButton.innerHTML
+          : "";
+
+
+      if (submitButton) {
+
+        submitButton.disabled = true;
+
+        submitButton.innerHTML = `
+          <span>Logging In...</span>
+          <i class="fa-solid fa-spinner fa-spin"></i>
+        `;
+
+      }
+
+
+      try {
+
+        // ========================================
+        // SEND LOGIN REQUEST
+        // ========================================
+
+        const response =
+          await fetch(
+            "/api/login",
+            {
+              method: "POST",
+
+              headers: {
+                "Content-Type":
+                  "application/json"
+              },
+
+              credentials: "same-origin",
+
+              body:
+                JSON.stringify({
+                  username,
+                  password
+                })
+            }
+          );
+
+
+        const data =
+          await response.json();
+
+
+        // ========================================
+        // LOGIN FAILED
+        // ========================================
+
+        if (!response.ok) {
+
+          throw new Error(
+            data.message ||
+            "Unable to log in."
+          );
+
+        }
+
+
+        // ========================================
+        // LOGIN SUCCESS
+        // ========================================
+
+        if (loginMessage) {
+
+          loginMessage.textContent =
+            "Login successful! Redirecting...";
+
+          loginMessage.className =
+            "login-message success";
+
+        }
+
+
+        // ========================================
+        // REDIRECT
+        // ========================================
+
+        /*
+          If the user tried to open a protected
+          page before logging in, return them
+          to that page after successful login.
+        */
+
+        const redirectAfterLogin =
+          localStorage.getItem(
+            "redirectAfterLogin"
+          );
+
+
+        // Remove the temporary redirect value
+        localStorage.removeItem(
+          "redirectAfterLogin"
+        );
+
+
+        setTimeout(
+          () => {
+
+            if (redirectAfterLogin) {
+
+              window.location.href =
+                redirectAfterLogin;
+
+            } else {
+
+              window.location.href =
+                "index.html";
+
+            }
+
+          },
+          1000
+        );
+
+
+      } catch (error) {
+
+        console.error(
+          "Login error:",
+          error
+        );
+
+
+        // ========================================
+        // SHOW ERROR
+        // ========================================
+
+        if (loginMessage) {
+
+          loginMessage.textContent =
+            error.message ||
+            "Something went wrong. Please try again.";
+
+          loginMessage.className =
+            "login-message error";
+
+        }
+
+
+      } finally {
+
+        // ========================================
+        // RESTORE BUTTON
+        // ========================================
+
+        if (submitButton) {
+
+          submitButton.disabled = false;
+
+          submitButton.innerHTML =
+            originalButtonHTML;
+
+        }
+
+      }
+
+    }
+  );
+
+}
