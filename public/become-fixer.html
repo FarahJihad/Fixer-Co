@@ -28,26 +28,79 @@
 
 
   <!-- =========================
-       TEMPORARY AUTH GUARD
-       Will be replaced with real
-       backend authentication later
+       AUTH GUARD
   ========================== -->
 
   <script>
 
-    const isLoggedIn =
-      localStorage.getItem("loggedIn");
+    async function protectBecomeFixerPage() {
 
-    if (isLoggedIn !== "true") {
+      try {
 
-      localStorage.setItem(
-        "redirectAfterLogin",
-        "become-fixer.html"
-      );
+        const response =
+          await fetch(
+            "/api/me",
+            {
+              method: "GET",
+              credentials: "same-origin"
+            }
+          );
 
-      window.location.replace("login.html");
+        if (!response.ok) {
+
+          localStorage.setItem(
+            "redirectAfterLogin",
+            "become-fixer.html"
+          );
+
+          window.location.replace(
+            "login.html"
+          );
+
+          return;
+        }
+
+        const data =
+          await response.json();
+
+        if (
+          !data.success ||
+          !data.authenticated ||
+          !data.user
+        ) {
+
+          localStorage.setItem(
+            "redirectAfterLogin",
+            "become-fixer.html"
+          );
+
+          window.location.replace(
+            "login.html"
+          );
+
+        }
+
+      } catch (error) {
+
+        console.error(
+          "Authentication check failed:",
+          error
+        );
+
+        localStorage.setItem(
+          "redirectAfterLogin",
+          "become-fixer.html"
+        );
+
+        window.location.replace(
+          "login.html"
+        );
+
+      }
 
     }
+
+    protectBecomeFixerPage();
 
   </script>
 
