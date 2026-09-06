@@ -427,13 +427,16 @@ export async function onRequest(context) {
   }
 
 
-  return jsonResponse(
-    {
-      success: false,
-      message:
-        "Method not allowed."
-    },
-    405
-  );
+ return jsonResponse(
+  {
+    success: false,
+    message:
+      "Something went wrong while creating your account.",
+
+    error:
+      error.message
+  },
+  500
+);
 
 }
