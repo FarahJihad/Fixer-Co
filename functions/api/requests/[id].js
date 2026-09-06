@@ -30,6 +30,10 @@ function getCookie(request, name) {
 }
 
 
+/* ========================================
+   GET CURRENT LOGGED-IN USER
+======================================== */
+
 async function getCurrentUser(request, env) {
 
   const sessionId =
@@ -38,12 +42,13 @@ async function getCurrentUser(request, env) {
       "fixer_session"
     );
 
+
   if (!sessionId) {
     return null;
   }
 
 
-  const session =
+  const user =
     await env.DB
       .prepare(`
         SELECT
@@ -51,50 +56,31 @@ async function getCurrentUser(request, env) {
           users.name,
           users.username,
           users.email,
-          users.phone,
-          sessions.expires_at
+          users.phone
         FROM sessions
         JOIN users
           ON users.id = sessions.user_id
-        WHERE sessions.id = ?
+        WHERE
+          sessions.id = ?
+          AND datetime(sessions.expires_at) > datetime('now')
         LIMIT 1
       `)
       .bind(sessionId)
       .first();
 
 
-  if (!session) {
+  if (!user) {
     return null;
   }
 
 
-  const expiresAt =
-    new Date(
-      session.expires_at
-        .replace(" ", "T") + "Z"
-    );
-
-
-  if (
-    Number.isNaN(expiresAt.getTime()) ||
-    expiresAt <= new Date()
-  ) {
-
-    await env.DB
-      .prepare(`
-        DELETE FROM sessions
-        WHERE id = ?
-      `)
-      .bind(sessionId)
-      .run();
-
-    return null;
-  }
-
-
-  return session;
+  return user;
 }
 
+
+/* ========================================
+   GET ONE SERVICE REQUEST
+======================================== */
 
 export async function onRequestGet(context) {
 
@@ -107,9 +93,9 @@ export async function onRequestGet(context) {
 
   try {
 
-    /* ================================
+    /* ========================================
        CHECK LOGIN
-    ================================= */
+    ======================================== */
 
     const user =
       await getCurrentUser(
@@ -132,9 +118,9 @@ export async function onRequestGet(context) {
     }
 
 
-    /* ================================
-       REQUEST ID
-    ================================= */
+    /* ========================================
+       GET REQUEST ID
+    ======================================== */
 
     const requestId =
       Number(params.id);
@@ -157,9 +143,9 @@ export async function onRequestGet(context) {
     }
 
 
-    /* ================================
-       GET SERVICE REQUEST
-    ================================= */
+    /* ========================================
+       GET REQUEST FROM DATABASE
+    ======================================== */
 
     const serviceRequest =
       await env.DB
@@ -203,9 +189,9 @@ export async function onRequestGet(context) {
         .first();
 
 
-    /* ================================
+    /* ========================================
        REQUEST NOT FOUND
-    ================================= */
+    ======================================== */
 
     if (!serviceRequest) {
 
@@ -221,13 +207,12 @@ export async function onRequestGet(context) {
     }
 
 
-    /* ================================
+    /* ========================================
        SUCCESS
-    ================================= */
+    ======================================== */
 
     return jsonResponse({
       success: true,
-
       request: serviceRequest
     });
 
