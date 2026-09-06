@@ -5782,59 +5782,83 @@ button:hover,
 
 /* =========================================================
    FINAL HOME AI + IMAGE + HERO FIX
-   Keep this block at the END of style.css
 ========================================================= */
 
-/* ---------- HERO ---------- */
+/* =========================
+   HERO
+========================= */
 
 .hero-content {
   display: grid;
-  grid-template-columns: minmax(0, 1.45fr) minmax(300px, 0.55fr);
+  grid-template-columns:
+    minmax(0, 1.45fr)
+    minmax(300px, 0.55fr);
+
   align-items: center;
+
   gap: 64px;
 }
+
 
 .hero-text {
   min-width: 0;
 }
 
+
 .hero-side-card {
   position: relative;
+
   z-index: 2;
+
   width: 100%;
+
   margin: 0;
+
   align-self: center;
 }
 
 
-/* ---------- AI AREA ---------- */
+/* =========================
+   AI AREA
+========================= */
 
 .ai-search-wrapper {
   width: 100%;
   max-width: 760px;
 }
 
+
 .problem-search {
   position: relative;
+
   width: 100%;
   max-width: 760px;
+
   align-items: center;
+
+  gap: 8px;
 }
 
 
-/* ---------- CAMERA BUTTON ---------- */
+/* =========================
+   CAMERA BUTTON
+========================= */
 
 .image-action-wrapper {
   position: relative;
+
   display: flex;
   align-items: center;
+
   flex-shrink: 0;
 }
+
 
 .problem-search .problem-image-button {
   width: 54px;
   height: 54px;
   min-width: 54px;
+
   padding: 0;
 
   display: grid;
@@ -5849,23 +5873,32 @@ button:hover,
   box-shadow: none;
 }
 
+
 .problem-search .problem-image-button:hover {
   background: #dcefe8;
+
   color: var(--green-dark);
+
   transform: none;
 }
 
 
-/* ---------- CAMERA MENU ---------- */
+/* =========================
+   CAMERA MENU
+========================= */
 
 .image-action-menu {
   position: absolute;
+
   top: calc(100% + 9px);
   right: 0;
+
   z-index: 1500;
 
   display: none;
+
   width: 190px;
+
   padding: 7px;
 
   border: 1px solid var(--border);
@@ -5877,19 +5910,25 @@ button:hover,
     0 16px 40px rgba(23, 59, 87, 0.14);
 }
 
+
 .image-action-menu:not([hidden]) {
   display: grid;
+
   gap: 3px;
 }
 
+
 .problem-search .image-action-menu button {
   width: 100%;
+
   min-height: 0;
+
   padding: 10px 11px;
 
   display: flex;
   align-items: center;
   justify-content: flex-start;
+
   gap: 9px;
 
   border: none;
@@ -5900,32 +5939,42 @@ button:hover,
 
   font-size: 11px;
   font-weight: 700;
+
   white-space: nowrap;
   text-align: left;
 
   box-shadow: none;
 }
 
+
 .problem-search .image-action-menu button:hover {
   background: #edf7f3;
+
   color: var(--green-dark);
+
   transform: none;
 }
 
+
 .problem-search .image-action-menu button i {
   width: 16px;
+
   color: var(--green-dark);
+
   text-align: center;
 }
 
 
-/* ---------- IMAGE PREVIEW CARD ---------- */
+/* =========================
+   IMAGE PREVIEW
+========================= */
 
 .problem-image-preview {
   width: 100%;
   max-width: 760px;
 
-  margin-top: 14px;
+  margin-top: 12px;
+
   overflow: hidden;
 
   border: 1px solid var(--border);
@@ -5937,36 +5986,54 @@ button:hover,
     0 10px 28px rgba(23, 59, 87, 0.07);
 }
 
+
 .problem-image-preview[hidden] {
   display: none;
 }
 
+
 .problem-image-preview img {
   display: block;
+
   width: 100%;
-  height: 235px;
+
+  /*
+    Slightly smaller than before
+    so the hero does not become too tall.
+  */
+  height: 205px;
 
   object-fit: cover;
 
   border-radius: 0;
 }
 
+
+/* =========================
+   IMAGE INFO BAR
+========================= */
+
 .problem-image-info {
   display: flex;
   align-items: center;
   justify-content: space-between;
+
   gap: 14px;
 
-  min-height: 48px;
-  padding: 10px 14px;
+  min-height: 44px;
+
+  padding: 9px 14px;
 
   border-top: 1px solid var(--border);
+
   background: var(--white);
 }
+
 
 .problem-image-info > span {
   display: inline-flex;
   align-items: center;
+
   gap: 7px;
 
   color: var(--muted);
@@ -5975,24 +6042,29 @@ button:hover,
   font-weight: 700;
 }
 
+
 .problem-image-info > span i {
   color: var(--green-dark);
 }
 
+
 .problem-image-info button {
   width: auto !important;
+
   min-height: 0 !important;
 
   padding: 6px 9px !important;
 
   display: inline-flex !important;
   align-items: center;
+
   gap: 6px;
 
   border: none !important;
   border-radius: 7px !important;
 
   background: transparent !important;
+
   color: #9a6464 !important;
 
   font-size: 10px !important;
@@ -6001,53 +6073,234 @@ button:hover,
   box-shadow: none !important;
 }
 
+
 .problem-image-info button:hover {
   background: #fff1f1 !important;
+
   transform: none !important;
 }
 
 
-/* ---------- AI RESULT ---------- */
+/* =========================
+   AI RESULT WRAPPER
+========================= */
 
 .ai-diagnosis-result {
   width: 100%;
   max-width: 760px;
 
-  margin-top: 14px;
+  /*
+    Keep the result close to
+    the selected image.
+  */
+  margin-top: 10px;
 }
+
 
 .ai-diagnosis-result[hidden] {
   display: none;
 }
 
-.ai-result-card,
-.ai-result-error,
-.ai-result-loading {
-  border-radius: 14px;
+
+/* =========================
+   AI RESULT CARD
+========================= */
+
+.ai-result-card {
+  width: 100%;
+
+  padding: 18px 20px;
+
+  background: #ffffff;
+
+  border: 1px solid #dce7e3;
+  border-radius: 15px;
+
+  box-shadow:
+    0 10px 28px rgba(23, 59, 87, 0.07);
+
+  animation:
+    aiResultAppear 0.35s ease;
 }
 
 
-/* ---------- SEARCH CATEGORIES SPACING ---------- */
+/* =========================
+   RESULT TOP
+========================= */
+
+.ai-result-top {
+  display: flex;
+
+  align-items: flex-start;
+  justify-content: space-between;
+
+  gap: 18px;
+}
+
+
+.ai-result-label {
+  display: inline-flex;
+  align-items: center;
+
+  gap: 7px;
+
+  margin-bottom: 6px;
+
+  color: #3d987a;
+
+  font-size: 10px;
+  font-weight: 800;
+
+  letter-spacing: 0.08em;
+
+  text-transform: uppercase;
+}
+
+
+.ai-result-top h3 {
+  margin: 0;
+
+  color: #173b57;
+
+  font-size: 22px;
+  font-weight: 800;
+}
+
+
+/* =========================
+   CONFIDENCE
+========================= */
+
+.ai-confidence {
+  flex-shrink: 0;
+
+  padding: 7px 11px;
+
+  background: #edf7f3;
+  color: #3d987a;
+
+  border-radius: 999px;
+
+  font-size: 10px;
+  font-weight: 800;
+}
+
+
+/* =========================
+   EXPLANATION
+========================= */
+
+.ai-result-explanation {
+  margin: 11px 0 13px;
+
+  color: #667985;
+
+  font-size: 12px;
+
+  line-height: 1.6;
+}
+
+
+/* =========================
+   RESULT FOOTER
+========================= */
+
+.ai-result-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 18px;
+
+  padding-top: 12px;
+
+  border-top: 1px solid #edf1ef;
+}
+
+
+.ai-result-footer p {
+  display: flex;
+  align-items: center;
+
+  gap: 7px;
+
+  margin: 0;
+
+  color: #84939c;
+
+  font-size: 9px;
+
+  line-height: 1.5;
+}
+
+
+/* =========================
+   VIEW FIXERS BUTTON
+========================= */
+
+.ai-view-fixers {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 8px;
+
+  flex-shrink: 0;
+
+  padding: 9px 14px;
+
+  background: #173b57;
+  color: #ffffff;
+
+  border-radius: 9px;
+
+  font-size: 10px;
+  font-weight: 800;
+
+  transition: 0.2s ease;
+}
+
+
+.ai-view-fixers:hover {
+  background: #214d6c;
+
+  transform: translateY(-1px);
+}
+
+
+/* =========================
+   CATEGORIES SPACING
+========================= */
 
 .search-categories {
-  margin-top: 22px;
+  /*
+    Keep categories close
+    to the AI result.
+  */
+  margin-top: 16px;
 }
 
 
-/* ---------- AUTH DROPDOWN ---------- */
+/* =========================
+   AUTH DROPDOWN
+========================= */
 
 .auth-user-area {
   position: relative;
+
   flex-shrink: 0;
 }
+
 
 .auth-user-button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+
   gap: 8px;
 
   min-height: 42px;
+
   padding: 9px 13px;
 
   border: 1px solid var(--border);
@@ -6058,31 +6311,44 @@ button:hover,
 
   font-size: 12px;
   font-weight: 700;
+
   white-space: nowrap;
+
   cursor: pointer;
 }
+
 
 .auth-user-button .fa-circle-user {
   color: var(--green-dark);
 }
 
+
 .auth-user-button .fa-chevron-down {
   font-size: 9px;
-  transition: transform 0.2s ease;
+
+  transition:
+    transform 0.2s ease;
 }
 
-.auth-user-button[aria-expanded="true"] .fa-chevron-down {
+
+.auth-user-button[aria-expanded="true"]
+.fa-chevron-down {
   transform: rotate(180deg);
 }
 
+
 .auth-user-menu {
   position: absolute;
+
   top: calc(100% + 10px);
   right: 0;
+
   z-index: 1600;
 
   display: none;
+
   width: 205px;
+
   padding: 7px;
 
   border: 1px solid var(--border);
@@ -6094,18 +6360,23 @@ button:hover,
     0 18px 45px rgba(23, 59, 87, 0.14);
 }
 
+
 .auth-user-menu.show {
   display: grid;
+
   gap: 3px;
 }
+
 
 .auth-user-menu a,
 .auth-user-menu button {
   width: 100%;
+
   padding: 10px 11px;
 
   display: flex;
   align-items: center;
+
   gap: 10px;
 
   border: none;
@@ -6116,26 +6387,62 @@ button:hover,
 
   font-size: 11px;
   font-weight: 700;
+
   text-align: left;
+
   white-space: nowrap;
 }
+
 
 .auth-user-menu a:hover,
 .auth-user-menu button:hover {
   background: #edf7f3;
+
   color: var(--green-dark);
 }
 
+
 .auth-user-menu i {
   width: 16px;
+
   color: var(--green-dark);
+
   text-align: center;
 }
 
 
-/* ---------- TABLET ---------- */
+/* =========================
+   RESULT ANIMATION
+========================= */
 
-@media (min-width: 901px) and (max-width: 1100px) {
+@keyframes aiResultAppear {
+
+  from {
+    opacity: 0;
+
+    transform:
+      translateY(7px);
+  }
+
+
+  to {
+    opacity: 1;
+
+    transform:
+      translateY(0);
+  }
+
+}
+
+
+/* =========================
+   TABLET
+========================= */
+
+@media
+(min-width: 901px)
+and
+(max-width: 1100px) {
 
   .hero-content {
     grid-template-columns:
@@ -6145,6 +6452,7 @@ button:hover,
     gap: 34px;
   }
 
+
   .hero-side-card {
     padding: 28px;
   }
@@ -6152,231 +6460,21 @@ button:hover,
 }
 
 
-/* ---------- MOBILE / SMALL TABLET ---------- */
+/* =========================
+   SMALL TABLET
+========================= */
 
 @media (max-width: 900px) {
 
   .hero-content {
     grid-template-columns: 1fr;
+
     gap: 38px;
   }
 
+
   .hero-side-card {
     margin: 0;
-  }
-
-}
-
-
-@media (max-width: 600px) {
-
-  .ai-search-wrapper,
-  .problem-search,
-  .problem-image-preview,
-  .ai-diagnosis-result {
-    max-width: 100%;
-  }
-
-  .problem-search {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .image-action-wrapper {
-    width: 100%;
-  }
-
-  .problem-search .problem-image-button,
-  .problem-search #aiSearchButton {
-    width: 100%;
-  }
-
-  .image-action-menu {
-    left: 0;
-    right: auto;
-    width: 100%;
-  }
-
-  .problem-image-preview img {
-    height: 190px;
-  }
-
-}
-
-/* =========================================
-   AI RESULT CARD + SEARCH BUTTON SPACING
-========================================= */
-
-/* Add a small space between
-   the camera button and Find My Service */
-.problem-search {
-  gap: 8px;
-}
-
-
-/* =========================
-   AI RESULT CARD
-========================= */
-
-.ai-diagnosis-result {
-  width: 100%;
-  max-width: 760px;
-  margin-top: 16px;
-}
-
-
-/* Main AI result box */
-.ai-result-card {
-  width: 100%;
-  padding: 22px 24px;
-
-  background: #ffffff;
-
-  border: 1px solid #dce7e3;
-  border-radius: 16px;
-
-  box-shadow:
-    0 12px 32px rgba(23, 59, 87, 0.08);
-
-  animation: aiResultAppear 0.35s ease;
-}
-
-
-/* Top section:
-   category on left,
-   confidence on right */
-.ai-result-top {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 20px;
-}
-
-
-/* Small AI label */
-.ai-result-label {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-
-  margin-bottom: 8px;
-
-  color: #3d987a;
-
-  font-size: 11px;
-  font-weight: 800;
-
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
-
-/* Recommended category */
-.ai-result-top h3 {
-  margin: 0;
-
-  color: #173b57;
-
-  font-size: 24px;
-  font-weight: 800;
-}
-
-
-/* Confidence badge */
-.ai-confidence {
-  flex-shrink: 0;
-
-  padding: 8px 12px;
-
-  background: #edf7f3;
-  color: #3d987a;
-
-  border-radius: 999px;
-
-  font-size: 11px;
-  font-weight: 800;
-}
-
-
-/* AI explanation */
-.ai-result-explanation {
-  margin: 14px 0 18px;
-
-  color: #667985;
-
-  font-size: 13px;
-  line-height: 1.7;
-}
-
-
-/* Bottom section */
-.ai-result-footer {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 20px;
-
-  padding-top: 15px;
-
-  border-top: 1px solid #edf1ef;
-}
-
-
-/* AI disclaimer */
-.ai-result-footer p {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-
-  margin: 0;
-
-  color: #84939c;
-
-  font-size: 10px;
-  line-height: 1.5;
-}
-
-
-/* View Fixers button */
-.ai-view-fixers {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-
-  flex-shrink: 0;
-
-  padding: 10px 15px;
-
-  background: #173b57;
-  color: #ffffff;
-
-  border-radius: 9px;
-
-  font-size: 11px;
-  font-weight: 800;
-
-  transition: 0.2s ease;
-}
-
-
-.ai-view-fixers:hover {
-  background: #214d6c;
-  transform: translateY(-1px);
-}
-
-
-/* Result entrance animation */
-@keyframes aiResultAppear {
-
-  from {
-    opacity: 0;
-    transform: translateY(8px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
   }
 
 }
@@ -6388,26 +6486,69 @@ button:hover,
 
 @media (max-width: 600px) {
 
+  .ai-search-wrapper,
+  .problem-search,
+  .problem-image-preview,
+  .ai-diagnosis-result {
+    max-width: 100%;
+  }
+
+
   .problem-search {
+    flex-direction: column;
+    align-items: stretch;
+
     gap: 8px;
   }
 
-  .ai-result-card {
-    padding: 18px;
+
+  .image-action-wrapper {
+    width: 100%;
   }
+
+
+  .problem-search
+  .problem-image-button,
+  .problem-search
+  #aiSearchButton {
+    width: 100%;
+  }
+
+
+  .image-action-menu {
+    left: 0;
+    right: auto;
+
+    width: 100%;
+  }
+
+
+  .problem-image-preview img {
+    height: 180px;
+  }
+
+
+  .ai-result-card {
+    padding: 16px;
+  }
+
 
   .ai-result-top {
     gap: 12px;
   }
 
+
   .ai-result-top h3 {
-    font-size: 21px;
+    font-size: 20px;
   }
+
 
   .ai-result-footer {
     flex-direction: column;
+
     align-items: flex-start;
   }
+
 
   .ai-view-fixers {
     width: 100%;
