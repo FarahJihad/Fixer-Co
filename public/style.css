@@ -5947,3 +5947,41 @@ button:hover,
   }
 }
 
+/* =========================================
+   AI IMAGE PREVIEW - KEEP HERO STABLE
+========================================= */
+
+.ai-search-wrapper {
+  width: 100%;
+  max-width: 760px;
+}
+
+.problem-image-preview {
+  width: 100%;
+  max-width: 760px;
+}
+
+.problem-image-preview img {
+  width: 100%;
+  height: 260px;
+  object-fit: cover;
+  border-radius: 14px 14px 0 0;
+}
+
+.ai-diagnosis-result {
+  width: 100%;
+  max-width: 760px;
+}
+
+/* Keep urgent card in its own column */
+.hero-side-card {
+  position: relative;
+  z-index: 2;
+}
+
+/* Mobile */
+@media (max-width: 700px) {
+  .problem-image-preview img {
+    height: 200px;
+  }
+}
