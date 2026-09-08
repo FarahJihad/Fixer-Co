@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Manrope:wght@400;500;600;700;800&display=swap");
 
 .about-old-page {
   --navy: #173b57;
@@ -819,4 +819,393 @@
 .about-carousel-card.is-prev p,
 .about-carousel-card.is-next p {
   color: var(--muted);
+}
+
+
+/* =========================================================
+   ABOUT HERO — HANDWRITING "SIMPLE"
+   Inspired by hand-writing text: the word reveals as if written.
+========================================================= */
+
+.about-handwrite-word {
+  position: relative;
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: baseline;
+
+  font-family: "Caveat", cursive;
+  font-weight: 700;
+  font-size: 1.1em;
+  letter-spacing: 0;
+
+  color: var(--green-dark) !important;
+  white-space: nowrap;
+
+  clip-path: inset(0 100% 0 0);
+  animation:
+    aboutHandwriteReveal 1.35s
+    0.55s
+    cubic-bezier(0.22, 1, 0.36, 1)
+    forwards;
+}
+
+/* small pen-like stroke that travels with the reveal */
+.about-handwrite-word::after {
+  content: "";
+  position: absolute;
+  right: 100%;
+  bottom: 0.12em;
+
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--green);
+
+  opacity: 0;
+  box-shadow:
+    0 0 0 4px rgba(79, 175, 143, 0.10),
+    0 0 14px rgba(79, 175, 143, 0.28);
+
+  animation:
+    aboutHandwritePen 1.35s
+    0.55s
+    cubic-bezier(0.22, 1, 0.36, 1)
+    forwards;
+}
+
+@keyframes aboutHandwriteReveal {
+  from {
+    clip-path: inset(0 100% 0 0);
+    transform: translateY(5px);
+    opacity: 0.35;
+  }
+
+  to {
+    clip-path: inset(0 0 0 0);
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes aboutHandwritePen {
+  0% {
+    right: 100%;
+    opacity: 0;
+  }
+
+  12% {
+    opacity: 1;
+  }
+
+  88% {
+    opacity: 1;
+  }
+
+  100% {
+    right: -7px;
+    opacity: 0;
+  }
+}
+
+/* RTL: reveal Arabic equivalent from the opposite direction */
+.about-old-page[dir="rtl"] .about-handwrite-word {
+  clip-path: inset(0 0 0 100%);
+  animation-name: aboutHandwriteRevealRTL;
+}
+
+.about-old-page[dir="rtl"] .about-handwrite-word::after {
+  right: auto;
+  left: 100%;
+  animation-name: aboutHandwritePenRTL;
+}
+
+@keyframes aboutHandwriteRevealRTL {
+  from {
+    clip-path: inset(0 0 0 100%);
+    transform: translateY(5px);
+    opacity: 0.35;
+  }
+
+  to {
+    clip-path: inset(0 0 0 0);
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes aboutHandwritePenRTL {
+  0% {
+    left: 100%;
+    opacity: 0;
+  }
+
+  12% {
+    opacity: 1;
+  }
+
+  88% {
+    opacity: 1;
+  }
+
+  100% {
+    left: -7px;
+    opacity: 0;
+  }
+}
+
+
+/* =========================================================
+   ABOUT CTA — MY REQUESTS-LIKE MOTION
+   Same light design, stronger hover/lift, no arrow.
+========================================================= */
+
+.about-cta-motion-card {
+  transition:
+    transform 0.34s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.34s ease,
+    border-color 0.34s ease,
+    background 0.34s ease !important;
+}
+
+.about-cta-motion-card.show:hover {
+  transform: translateY(-5px) !important;
+  border-color: #c5ddd4;
+  box-shadow:
+    0 28px 62px rgba(16, 45, 67, 0.11);
+}
+
+.about-cta-motion-button {
+  min-width: 190px;
+  min-height: 58px;
+  justify-content: center;
+
+  border-radius: 14px;
+  padding: 16px 28px;
+
+  box-shadow:
+    0 10px 22px rgba(16, 45, 67, 0.10);
+
+  transition:
+    transform 0.28s cubic-bezier(0.22, 1, 0.36, 1),
+    background 0.28s ease,
+    box-shadow 0.28s ease !important;
+}
+
+.about-cta-motion-button:hover {
+  transform: translateY(-3px) !important;
+  background: var(--navy-dark);
+  box-shadow:
+    0 16px 32px rgba(16, 45, 67, 0.16);
+}
+
+/* no arrow spacing remains */
+.about-cta-motion-button {
+  gap: 0 !important;
+}
+
+@media (max-width: 600px) {
+  .about-cta-motion-button {
+    min-width: 170px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .about-handwrite-word,
+  .about-handwrite-word::after {
+    animation: none !important;
+    clip-path: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+
+/* =========================================================
+   FIX — HANDWRITING WORD GLYPH CLIPPING
+   Caveat has natural letter overhang, so give it breathing room.
+========================================================= */
+
+.about-handwrite-word {
+  overflow: visible !important;
+  padding-inline: 0.06em 0.16em;
+  margin-inline-end: -0.04em;
+}
+
+/* Keep enough visual room for the final stroke in RTL too */
+.about-old-page[dir="rtl"] .about-handwrite-word {
+  padding-inline: 0.16em 0.06em;
+  margin-inline-end: 0;
+  margin-inline-start: -0.04em;
+}
+
+
+/* =========================================================
+   ABOUT CTA BUTTON — EXACT HOME BUTTON DESIGN + MOTION
+========================================================= */
+
+.about-cta-button.about-home-liquid-button {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+
+  min-width: 255px !important;
+  min-height: 72px !important;
+  padding: 20px 38px !important;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  border: 1px solid rgba(255,255,255,.18) !important;
+  border-radius: 999px !important;
+
+  background:
+    linear-gradient(
+      135deg,
+      #0e2a40 0%,
+      #173b57 46%,
+      #102d43 100%
+    ) !important;
+
+  color: #ffffff !important;
+  font-size: 16px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.1px;
+  text-decoration: none;
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.14),
+    inset 0 -1px 0 rgba(0,0,0,.15),
+    0 12px 28px rgba(16,45,67,.16) !important;
+
+  transition:
+    transform .25s ease,
+    background .25s ease,
+    box-shadow .25s ease !important;
+}
+
+.about-cta-button.about-home-liquid-button::before {
+  content: "";
+  position: absolute;
+  inset: -120%;
+  z-index: -2;
+
+  width: auto;
+  height: auto;
+  top: auto;
+  left: auto;
+
+  transform: none;
+  filter: none;
+
+  background:
+    conic-gradient(
+      from 0deg,
+      transparent 0deg,
+      #a8f1da 42deg,
+      #ffffff 78deg,
+      #71c8ad 112deg,
+      transparent 150deg,
+      transparent 250deg,
+      #c8f7e8 305deg,
+      transparent 360deg
+    ) !important;
+
+  animation: aboutHomeLiquidMetalSpin 4.8s linear infinite !important;
+}
+
+.about-cta-button.about-home-liquid-button::after {
+  content: "";
+  position: absolute;
+  inset: 2px;
+  z-index: -1;
+  border-radius: 999px;
+
+  background:
+    linear-gradient(
+      145deg,
+      #173b57 0%,
+      #102d43 100%
+    );
+}
+
+.about-home-liquid-content {
+  position: relative;
+  z-index: 2;
+  display: inline-flex;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+}
+
+.about-home-liquid-sheen {
+  position: absolute;
+  top: -50%;
+  left: -42%;
+  width: 32%;
+  height: 200%;
+  z-index: 1;
+
+  background:
+    linear-gradient(
+      90deg,
+      transparent,
+      rgba(255,255,255,.32),
+      rgba(125,210,181,.36),
+      transparent
+    );
+
+  transform: skewX(-18deg);
+  transition: left .62s cubic-bezier(.22,1,.36,1);
+}
+
+.about-cta-button.about-home-liquid-button:hover {
+  transform: translateY(-3px) scale(1.02) !important;
+
+  background:
+    linear-gradient(
+      135deg,
+      #173b57 0%,
+      #102d43 100%
+    ) !important;
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.18),
+    0 16px 34px rgba(16,45,67,.22),
+    0 0 26px rgba(79,175,143,.16) !important;
+}
+
+.about-cta-button.about-home-liquid-button:hover
+.about-home-liquid-sheen {
+  left: 118%;
+}
+
+.about-cta-button.about-home-liquid-button:hover::before {
+  animation: aboutHomeLiquidMetalSpin 4.8s linear infinite !important;
+}
+
+@keyframes aboutHomeLiquidMetalSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (max-width: 620px) {
+  .about-cta-button.about-home-liquid-button {
+    min-width: 225px !important;
+    min-height: 66px !important;
+    padding: 18px 32px !important;
+    font-size: 15px !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .about-cta-button.about-home-liquid-button::before {
+    animation: none !important;
+  }
+
+  .about-home-liquid-sheen {
+    transition: none !important;
+  }
 }

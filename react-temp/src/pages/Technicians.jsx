@@ -5,7 +5,6 @@ import {
 } from "react-router-dom";
 import { useLanguage } from "../context/LanguageContext.jsx";
 import "./Technicians.css";
-import Footer from "../components/Footer.jsx";
 
 function Technicians() {
   const navigate = useNavigate();
@@ -581,7 +580,7 @@ function Technicians() {
       className="technicians-page"
     >
       {/* PAGE HERO */}
-      <section className="tech-page-hero">
+      <section className="tech-page-hero tech-page-enter">
         <div className="tech-container">
           <p className="tech-eyebrow">
             {tr(
@@ -592,8 +591,8 @@ function Technicians() {
 
           <h1>
             {tr(
-              "Compare trusted professionals.",
-              "قارن بين الفنيين الموثوقين."
+              "Compare trusted professionals",
+              "قارن بين الفنيين الموثوقين"
             )}
           </h1>
 
@@ -607,7 +606,7 @@ function Technicians() {
       </section>
 
       {/* FIXERS */}
-      <section className="tech-main-section">
+      <section className="tech-main-section tech-page-enter tech-page-enter-delay">
         <div className="tech-container">
 
           {/* FILTERS */}
@@ -1071,7 +1070,93 @@ function Technicians() {
         </div>
       </section>
 
-      <Footer />
+      {/* FOOTER */}
+      <footer className="tech-footer">
+        <div className="tech-container tech-footer-content">
+          <div>
+            <button
+              type="button"
+              onClick={() =>
+                navigate("/")
+              }
+              className="tech-footer-logo"
+            >
+              Fixer
+              <span>.Co</span>
+            </button>
+
+            <p>
+              {tr(
+                "The right fix. Right around you.",
+                "الإصلاح المناسب، بالقرب منك."
+              )}
+            </p>
+          </div>
+
+          <div className="tech-footer-links">
+            <button
+              onClick={() =>
+                navigate("/services")
+              }
+            >
+              {tr(
+                "Services",
+                "الخدمات"
+              )}
+            </button>
+
+            <button
+              onClick={() =>
+                navigate("/technicians")
+              }
+            >
+              {tr(
+                "Find a Fixer",
+                "ابحث عن فني"
+              )}
+            </button>
+
+            <button
+              onClick={() =>
+                navigate("/about")
+              }
+            >
+              {tr(
+                "About Us",
+                "من نحن"
+              )}
+            </button>
+
+            <button
+              onClick={() =>
+                navigate("/contact")
+              }
+            >
+              {tr(
+                "Contact Us",
+                "تواصل معنا"
+              )}
+            </button>
+
+            <button
+              onClick={() =>
+                navigate(
+                  "/become-fixer"
+                )
+              }
+            >
+              {tr(
+                "Become a Fixer",
+                "انضم كفني"
+              )}
+            </button>
+          </div>
+
+          <p className="tech-footer-copy">
+            © 2026 Fixer.Co
+          </p>
+        </div>
+      </footer>
     </main>
   );
 }

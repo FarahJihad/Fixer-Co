@@ -195,40 +195,47 @@
 }
 
 /* =========================
-   ORDERED SCROLL / LOAD REVEAL
-   Nothing moves sideways and the grid never loses alignment.
+   SMOOTH SCROLL REVEAL
+   Keeps every card visually aligned in the grid.
 ========================= */
 
-.services-exact-page .service-reveal,
-.services-exact-page .service-card-reveal {
+.services-exact-page .old-reveal[data-reveal] {
   opacity: 0;
-  transform: translateY(20px);
-}
-
-.services-exact-page .service-reveal {
+  transform: translateY(18px);
   transition:
     opacity 0.55s ease,
     transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.services-exact-page .service-card-reveal {
-  transition:
-    opacity 0.5s ease,
-    transform 0.5s cubic-bezier(0.22, 1, 0.36, 1),
-    background 0.3s ease,
-    border-color 0.3s ease,
-    box-shadow 0.3s ease;
-  transition-delay: var(--motion-delay, 0ms);
-}
-
-.services-exact-page .service-reveal.service-show,
-.services-exact-page .service-card-reveal.service-show {
+.services-exact-page .old-reveal[data-reveal].is-revealed {
   opacity: 1;
   transform: translateY(0);
 }
 
-/* The hover works only after reveal, so it never fights the scroll animation. */
-.services-exact-page .service-card-reveal.service-show:hover {
+.services-exact-page .old-motion-item[data-reveal] {
+  opacity: 0;
+  transform: translateY(18px);
+
+  transition:
+    opacity 0.52s ease,
+    transform 0.52s cubic-bezier(0.22, 1, 0.36, 1),
+    background 0.35s ease,
+    border-color 0.35s ease,
+    box-shadow 0.35s ease;
+
+  transition-delay: var(--motion-delay, 0ms);
+  will-change: opacity, transform;
+}
+
+.services-exact-page
+.old-motion-item[data-reveal].is-revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Hover starts only after the reveal finished. */
+.services-exact-page
+.old-motion-item[data-reveal].is-revealed:hover {
   transform: translateY(-5px);
 }
 
@@ -502,13 +509,525 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .services-exact-page [data-service-reveal],
+  .services-exact-page [data-reveal],
   .old-service-card,
   .old-service-icon,
   .old-cta-button {
     opacity: 1 !important;
     transform: none !important;
     filter: none !important;
+    transition: none !important;
+  }
+}
+
+
+/* =========================================================
+   SERVICES PAGE — FINAL HOME-MATCH UPDATE
+========================================================= */
+
+/* PAGE ENTER MOTION */
+.services-page-enter {
+  animation: servicesPageEnter 0.78s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.services-page-enter-delay {
+  animation-delay: 110ms;
+}
+
+@keyframes servicesPageEnter {
+  from {
+    opacity: 0;
+    transform: translateY(26px);
+    filter: blur(5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+
+
+/* =========================================================
+   SERVICE CARDS — MATCH HOME
+========================================================= */
+
+.old-service-card {
+  isolation: isolate;
+  min-height: 245px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 34px;
+
+  padding: 28px;
+  border-radius: 20px;
+  border: 1px solid #dfe7e4;
+  background: #ffffff;
+  color: #102d43;
+
+  box-shadow: 0 8px 24px rgba(16, 45, 67, 0.035);
+
+  transition:
+    transform 280ms cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 280ms ease,
+    background 280ms ease,
+    border-color 280ms ease,
+    color 280ms ease;
+}
+
+.old-service-card > *:not(.old-service-hover-glow) {
+  position: relative;
+  z-index: 2;
+}
+
+.old-service-hover-glow {
+  position: absolute;
+  z-index: 1;
+  width: 190px;
+  height: 190px;
+  left: var(--mouse-x, 50%);
+  top: var(--mouse-y, 50%);
+  transform: translate(-50%, -50%);
+  border-radius: 999px;
+  pointer-events: none;
+  opacity: 0;
+
+  background: radial-gradient(
+    circle,
+    rgba(151, 218, 198, 0.11) 0%,
+    rgba(79, 175, 143, 0.055) 34%,
+    rgba(79, 175, 143, 0.018) 54%,
+    transparent 72%
+  );
+
+  filter: blur(12px);
+  transition: opacity 220ms ease;
+}
+
+.old-service-card:hover .old-service-hover-glow {
+  opacity: 0.62;
+}
+
+.old-service-card:hover,
+.services-exact-page
+.old-motion-item[data-reveal].is-revealed:hover {
+  transform: translateY(-8px);
+  border-color: rgba(79, 175, 143, 0.26);
+  background:
+    radial-gradient(
+      circle at 12% 10%,
+      rgba(79, 175, 143, 0.10),
+      transparent 34%
+    ),
+    linear-gradient(
+      145deg,
+      #173b57 0%,
+      #102d43 100%
+    );
+
+  box-shadow:
+    0 20px 42px rgba(16, 45, 67, 0.14),
+    0 0 18px rgba(79, 175, 143, 0.025);
+}
+
+.old-service-icon {
+  width: 54px;
+  height: 54px;
+  margin-bottom: 0;
+  border-radius: 15px;
+  background: #edf7f3;
+  color: #3d9276;
+  font-size: 20px;
+
+  transition:
+    transform 280ms cubic-bezier(0.22, 1, 0.36, 1),
+    background 280ms ease,
+    color 280ms ease;
+}
+
+.old-service-card:hover .old-service-icon,
+.services-exact-page[dir="rtl"]
+.old-service-card:hover
+.old-service-icon {
+  transform: translateY(-3px) scale(1.04);
+  background: #4faf8f;
+  color: #ffffff;
+}
+
+.old-service-copy {
+  margin-top: auto;
+}
+
+.old-service-card h3 {
+  margin: 0;
+  color: #102d43;
+  font-size: 18px;
+  font-weight: 650;
+  line-height: 1.35;
+  letter-spacing: -0.25px;
+  transition: color 280ms ease;
+}
+
+.old-service-card > .old-service-copy > p {
+  margin: 9px 0 0;
+  max-width: 95%;
+  color: #66757f;
+  font-size: 13.5px;
+  font-weight: 400;
+  line-height: 1.65;
+  transition: color 280ms ease;
+}
+
+.old-service-card:hover h3 {
+  color: #ffffff;
+}
+
+.old-service-card:hover > .old-service-copy > p {
+  color: rgba(255, 255, 255, 0.68);
+}
+
+/* Old extra text is intentionally removed to match Home cards */
+.old-view-fixers {
+  display: none !important;
+}
+
+
+/* =========================================================
+   BOTTOM CTA — SAME HOME LIQUID BUTTON
+========================================================= */
+
+.old-cta-button.old-liquid-button {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+
+  min-width: 255px;
+  min-height: 72px;
+  padding: 20px 38px;
+
+  justify-content: center;
+  border: 1px solid rgba(255,255,255,.18);
+  border-radius: 999px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #0e2a40 0%,
+      #173b57 46%,
+      #102d43 100%
+    );
+
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 0.1px;
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.14),
+    inset 0 -1px 0 rgba(0,0,0,.15),
+    0 12px 28px rgba(16,45,67,.16);
+
+  transition:
+    transform .25s ease,
+    box-shadow .25s ease;
+}
+
+.old-cta-button.old-liquid-button::before {
+  content: "";
+  position: absolute;
+  inset: -120%;
+  z-index: -2;
+
+  background:
+    conic-gradient(
+      from 0deg,
+      transparent 0deg,
+      #a8f1da 42deg,
+      #ffffff 78deg,
+      #71c8ad 112deg,
+      transparent 150deg,
+      transparent 250deg,
+      #c8f7e8 305deg,
+      transparent 360deg
+    );
+
+  animation: servicesLiquidMetalSpin 4.8s linear infinite;
+}
+
+.old-cta-button.old-liquid-button::after {
+  content: "";
+  position: absolute;
+  inset: 2px;
+  z-index: -1;
+  border-radius: 999px;
+
+  background:
+    linear-gradient(
+      145deg,
+      #173b57 0%,
+      #102d43 100%
+    );
+}
+
+.old-liquid-content {
+  position: relative;
+  z-index: 2;
+  display: inline-flex;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+}
+
+.old-liquid-sheen {
+  position: absolute;
+  top: -50%;
+  left: -42%;
+  width: 32%;
+  height: 200%;
+  z-index: 1;
+
+  background:
+    linear-gradient(
+      90deg,
+      transparent,
+      rgba(255,255,255,.32),
+      rgba(125,210,181,.36),
+      transparent
+    );
+
+  transform: skewX(-18deg);
+  transition: left .62s cubic-bezier(.22,1,.36,1);
+}
+
+.old-cta-button.old-liquid-button:hover {
+  transform: translateY(-3px) scale(1.02);
+
+  background:
+    linear-gradient(
+      135deg,
+      #173b57 0%,
+      #102d43 100%
+    );
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.18),
+    0 16px 34px rgba(16,45,67,.22),
+    0 0 26px rgba(79,175,143,.16);
+}
+
+.old-cta-button.old-liquid-button:hover .old-liquid-sheen {
+  left: 118%;
+}
+
+@keyframes servicesLiquidMetalSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+
+/* RTL */
+.services-exact-page[dir="rtl"] .old-service-card {
+  text-align: right;
+}
+
+.services-exact-page[dir="rtl"] .old-service-icon {
+  margin-right: auto;
+  margin-left: 0;
+}
+
+
+/* Responsive */
+@media (max-width: 620px) {
+  .old-cta-button.old-liquid-button {
+    min-width: 225px;
+    min-height: 66px;
+    padding: 18px 32px;
+    font-size: 15px;
+  }
+}
+
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .services-page-enter,
+  .old-cta-button.old-liquid-button::before {
+    animation: none !important;
+  }
+
+  .old-liquid-sheen {
+    transition: none !important;
+  }
+}
+
+
+/* =========================================================
+   SERVICES CTA BUTTON — EXACT HOME BUTTON DESIGN + MOTION
+========================================================= */
+
+.old-cta-button.services-home-liquid-button {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+
+  min-width: 255px !important;
+  min-height: 72px !important;
+  padding: 20px 38px !important;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  border: 1px solid rgba(255,255,255,.18) !important;
+  border-radius: 999px !important;
+
+  background:
+    linear-gradient(
+      135deg,
+      #0e2a40 0%,
+      #173b57 46%,
+      #102d43 100%
+    ) !important;
+
+  color: #ffffff !important;
+  font-size: 16px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.1px;
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.14),
+    inset 0 -1px 0 rgba(0,0,0,.15),
+    0 12px 28px rgba(16,45,67,.16) !important;
+
+  transition:
+    transform .25s ease,
+    background .25s ease,
+    box-shadow .25s ease !important;
+}
+
+.old-cta-button.services-home-liquid-button::before {
+  content: "";
+  position: absolute;
+  inset: -120%;
+  z-index: -2;
+
+  width: auto;
+  height: auto;
+  top: auto;
+  left: auto;
+
+  transform: none;
+  filter: none;
+
+  background:
+    conic-gradient(
+      from 0deg,
+      transparent 0deg,
+      #a8f1da 42deg,
+      #ffffff 78deg,
+      #71c8ad 112deg,
+      transparent 150deg,
+      transparent 250deg,
+      #c8f7e8 305deg,
+      transparent 360deg
+    ) !important;
+
+  animation: servicesHomeLiquidMetalSpin 4.8s linear infinite !important;
+}
+
+.old-cta-button.services-home-liquid-button::after {
+  content: "";
+  position: absolute;
+  inset: 2px;
+  z-index: -1;
+  border-radius: 999px;
+
+  background:
+    linear-gradient(
+      145deg,
+      #173b57 0%,
+      #102d43 100%
+    );
+}
+
+.services-home-liquid-content {
+  position: relative;
+  z-index: 2;
+  display: inline-flex;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+}
+
+.services-home-liquid-sheen {
+  position: absolute;
+  top: -50%;
+  left: -42%;
+  width: 32%;
+  height: 200%;
+  z-index: 1;
+
+  background:
+    linear-gradient(
+      90deg,
+      transparent,
+      rgba(255,255,255,.32),
+      rgba(125,210,181,.36),
+      transparent
+    );
+
+  transform: skewX(-18deg);
+  transition: left .62s cubic-bezier(.22,1,.36,1);
+}
+
+.old-cta-button.services-home-liquid-button:hover {
+  transform: translateY(-3px) scale(1.02) !important;
+
+  background:
+    linear-gradient(
+      135deg,
+      #173b57 0%,
+      #102d43 100%
+    ) !important;
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.18),
+    0 16px 34px rgba(16,45,67,.22),
+    0 0 26px rgba(79,175,143,.16) !important;
+}
+
+.old-cta-button.services-home-liquid-button:hover
+.services-home-liquid-sheen {
+  left: 118%;
+}
+
+.old-cta-button.services-home-liquid-button:hover::before {
+  animation: servicesHomeLiquidMetalSpin 4.8s linear infinite !important;
+}
+
+@keyframes servicesHomeLiquidMetalSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (max-width: 620px) {
+  .old-cta-button.services-home-liquid-button {
+    min-width: 225px !important;
+    min-height: 66px !important;
+    padding: 18px 32px !important;
+    font-size: 15px !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .old-cta-button.services-home-liquid-button::before {
+    animation: none !important;
+  }
+
+  .services-home-liquid-sheen {
     transition: none !important;
   }
 }

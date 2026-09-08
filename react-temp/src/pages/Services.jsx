@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useLanguage } from "../context/LanguageContext.jsx";
+import ScrollReveal from "../components/ScrollReveal.jsx";
 import "./Services.css";
-import Footer from "../components/Footer.jsx";
 
 function Services() {
   const navigate = useNavigate();
@@ -51,58 +51,25 @@ function Services() {
     loadServices();
   }, [language]);
 
-  useEffect(() => {
-    const elements = Array.from(
-      document.querySelectorAll("[data-service-reveal]")
+  function handleServiceCardMouseMove(event) {
+    const card = event.currentTarget;
+    const rect = card.getBoundingClientRect();
+
+    card.style.setProperty(
+      "--mouse-x",
+      `${event.clientX - rect.left}px`
     );
 
-    if (!("IntersectionObserver" in window)) {
-      elements.forEach((element) =>
-        element.classList.add("service-show")
-      );
-      return;
-    }
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (!entry.isIntersecting) return;
-
-          entry.target.classList.add("service-show");
-          observer.unobserve(entry.target);
-        });
-      },
-      {
-        threshold: 0.08,
-        rootMargin: "0px 0px -30px 0px",
-      }
+    card.style.setProperty(
+      "--mouse-y",
+      `${event.clientY - rect.top}px`
     );
+  }
 
-    elements.forEach((element) => {
-      const rect = element.getBoundingClientRect();
-
-      if (
-        rect.top < window.innerHeight - 10 &&
-        rect.bottom > 0
-      ) {
-        element.classList.add("service-show");
-      } else {
-        observer.observe(element);
-      }
-    });
-
-    // Safety fallback: no content can remain invisible.
-    const fallback = window.setTimeout(() => {
-      elements.forEach((element) =>
-        element.classList.add("service-show")
-      );
-    }, 1600);
-
-    return () => {
-      observer.disconnect();
-      window.clearTimeout(fallback);
-    };
-  }, [services, isLoading]);
+  function handleServiceCardMouseLeave(event) {
+    event.currentTarget.style.removeProperty("--mouse-x");
+    event.currentTarget.style.removeProperty("--mouse-y");
+  }
 
   function openService(serviceId) {
     navigate(`/technicians?service=${serviceId}`);
@@ -113,10 +80,12 @@ function Services() {
       dir={isArabic ? "rtl" : "ltr"}
       className="services-exact-page"
     >
+      <ScrollReveal />
+
       {/* =========================
           PAGE HEADER
       ========================== */}
-      <section className="old-page-hero">
+      <section className="old-page-hero services-page-enter">
         <div className="old-container">
           <p className="old-section-label">
             {tr("OUR SERVICES", "خدماتنا")}
@@ -124,8 +93,8 @@ function Services() {
 
           <h1>
             {tr(
-              "Home services made simple.",
-              "خدمات منزلية بطريقة أبسط."
+              "Home services made simple",
+              "خدمات منزلية بطريقة أبسط"
             )}
           </h1>
 
@@ -141,12 +110,12 @@ function Services() {
       {/* =========================
           SERVICES
       ========================== */}
-      <section className="old-services-page-section">
+      <section className="old-services-page-section services-page-enter services-page-enter-delay">
         <div className="old-container">
 
           <div
-            className="old-section-heading service-reveal"
-            data-service-reveal
+            className="old-section-heading old-reveal"
+            data-reveal="up"
           >
             <div>
               <p className="old-section-label">
@@ -194,27 +163,32 @@ function Services() {
                   key={service.id}
                   type="button"
                   onClick={() => openService(service.id)}
-                  className="old-service-card service-card-reveal"
-                  data-service-reveal
+                  onMouseMove={handleServiceCardMouseMove}
+                  onMouseLeave={handleServiceCardMouseLeave}
+                  className="old-service-card old-motion-item"
+                  data-reveal="up"
                   style={{
-                    "--motion-delay": `${index * 45}ms`,
+                    "--motion-delay": `${index * 80}ms`,
                   }}
                 >
+                  <span
+                    className="old-service-hover-glow"
+                    aria-hidden="true"
+                  ></span>
+
                   <div className="old-service-icon">
                     <i className={getServiceIcon(service.id)}></i>
                   </div>
 
-                  <h3>
-                    {translateServiceName(service.name, language)}
-                  </h3>
+                  <div className="old-service-copy">
+                    <h3>
+                      {translateServiceName(service.name, language)}
+                    </h3>
 
-                  <p>
-                    {getOldServiceDescription(service.name, language)}
-                  </p>
-
-                  <span className="old-view-fixers">
-                    {tr("View Fixers", "عرض الفنيين")}
-                  </span>
+                    <p>
+                      {getOldServiceDescription(service.name, language)}
+                    </p>
+                  </div>
                 </button>
               ))}
             </div>
@@ -243,8 +217,8 @@ function Services() {
       ========================== */}
       <section className="old-service-help">
         <div
-          className="old-container old-service-help-content service-reveal"
-          data-service-reveal
+          className="old-container old-service-help-content old-reveal"
+          data-reveal="up"
         >
           <div>
             <p className="old-section-label">
@@ -271,7 +245,7 @@ function Services() {
 
           <button
             type="button"
-            className="old-cta-button"
+            className="old-cta-button services-home-liquid-button"
             onClick={() => {
               navigate("/");
 
@@ -283,13 +257,14 @@ function Services() {
               }, 50);
             }}
           >
-            {tr("Describe Your Problem", "صف مشكلتك")}
+            <span
+              className="services-home-liquid-sheen"
+              aria-hidden="true"
+            ></span>
 
-            <i
-              className={`fa-solid fa-arrow-right ${
-                isArabic ? "old-arrow-rtl" : ""
-              }`}
-            ></i>
+            <span className="services-home-liquid-content">
+              {tr("Describe Your Problem", "صف مشكلتك")}
+            </span>
           </button>
         </div>
       </section>
@@ -297,7 +272,52 @@ function Services() {
       {/* =========================
           FOOTER
       ========================== */}
-      <Footer />
+      <footer className="old-footer">
+        <div className="old-container old-footer-content">
+          <div>
+            <button
+              type="button"
+              className="old-footer-logo"
+              onClick={() => navigate("/")}
+            >
+              Fixer<span>.Co</span>
+            </button>
+
+            <p>
+              {tr(
+                "The right fix. Right around you.",
+                "الإصلاح المناسب، بالقرب منك."
+              )}
+            </p>
+          </div>
+
+          <div className="old-footer-links">
+            <button onClick={() => navigate("/services")}>
+              {tr("Services", "الخدمات")}
+            </button>
+
+            <button onClick={() => navigate("/technicians")}>
+              {tr("Find a Fixer", "ابحث عن فني")}
+            </button>
+
+            <button onClick={() => navigate("/about")}>
+              {tr("About Us", "من نحن")}
+            </button>
+
+            <button onClick={() => navigate("/contact")}>
+              {tr("Contact Us", "تواصل معنا")}
+            </button>
+
+            <button onClick={() => navigate("/become-fixer")}>
+              {tr("Become a Fixer", "انضم كفني")}
+            </button>
+          </div>
+
+          <p className="old-footer-copy">
+            © 2026 Fixer.Co
+          </p>
+        </div>
+      </footer>
     </main>
   );
 }

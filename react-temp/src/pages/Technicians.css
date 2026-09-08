@@ -264,7 +264,9 @@
   transform: translateY(-5px);
   border-color: #bdd9cf;
   background: #fbfdfc;
-  box-shadow: 0 14px 32px rgba(16, 45, 67, 0.08);
+  box-shadow:
+    0 24px 52px rgba(16, 45, 67, 0.16),
+    0 10px 24px rgba(16, 45, 67, 0.08);
 }
 
 .tech-best-match {
@@ -657,5 +659,38 @@
     opacity: 1 !important;
     transform: none !important;
     transition: none !important;
+  }
+}
+
+
+/* =========================================
+   FIND A FIXER — PAGE ENTER
+========================================= */
+
+.tech-page-enter {
+  animation: techPageEnter 0.78s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.tech-page-enter-delay {
+  animation-delay: 110ms;
+}
+
+@keyframes techPageEnter {
+  from {
+    opacity: 0;
+    transform: translateY(26px);
+    filter: blur(5px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tech-page-enter {
+    animation: none !important;
   }
 }

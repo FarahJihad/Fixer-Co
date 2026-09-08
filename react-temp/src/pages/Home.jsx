@@ -10,6 +10,22 @@ function Home() {
 
   const tr = (en, ar) => (language === "ar" ? ar : en);
 
+  function handleServiceCardMouseMove(event) {
+    const card = event.currentTarget;
+    const rect = card.getBoundingClientRect();
+
+    const x = event.clientX - rect.left;
+    const y = event.clientY - rect.top;
+
+    card.style.setProperty("--mouse-x", `${x}px`);
+    card.style.setProperty("--mouse-y", `${y}px`);
+  }
+
+  function handleServiceCardMouseLeave(event) {
+    event.currentTarget.style.removeProperty("--mouse-x");
+    event.currentTarget.style.removeProperty("--mouse-y");
+  }
+
   const cameraInputRef = useRef(null);
   const uploadInputRef = useRef(null);
 
@@ -27,6 +43,24 @@ const [servicesError, setServicesError] = useState("");
 const [technicians, setTechnicians] = useState([]);
 const [techniciansLoading, setTechniciansLoading] = useState(true);
 const [techniciansError, setTechniciansError] = useState("");
+const [heroWordIndex, setHeroWordIndex] = useState(0);
+
+const heroWords = isArabic
+  ? ["أسهل", "أوثق", "أذكى"]
+  : ["Simple", "Trusted", "Smarter"];
+
+const heroWord = heroWords[heroWordIndex];
+
+  useEffect(() => {
+    setHeroWordIndex(0);
+
+    const timers = [
+      window.setTimeout(() => setHeroWordIndex(1), 1500),
+      window.setTimeout(() => setHeroWordIndex(2), 3000),
+    ];
+
+    return () => timers.forEach((timer) => window.clearTimeout(timer));
+  }, [language]);
 
   const categories = [
     {
@@ -318,9 +352,9 @@ setAiError(
       <ScrollReveal />
 
       {/* HERO */}
-      <section className="py-16 lg:py-[90px]">
+      <section className="py-16 lg:py-[90px]" data-reveal="up">
 
-        <div className="mx-auto grid w-[90%] max-w-[1160px] gap-12 lg:grid-cols-[1.4fr_0.6fr] lg:items-center lg:gap-[70px]">
+        <div className="mx-auto grid w-[90%] max-w-[1160px] gap-12 lg:grid-cols-[1.28fr_0.72fr] lg:items-center lg:gap-[42px]">
 
           {/* LEFT SIDE */}
           <div data-reveal="up">
@@ -331,30 +365,35 @@ setAiError(
 
             <h1
               className="
-                max-w-[760px]
+                home-hero-heading
+                max-w-[780px]
                 text-[40px]
                 font-bold
-                leading-[1.12]
+                leading-[1.08]
                 tracking-[-1.5px]
                 text-[#102d43]
                 sm:text-[46px]
                 md:text-[54px]
-                lg:text-[62px]
+                lg:text-[60px]
                 lg:tracking-[-2px]
               "
             >
-              {tr("What needs fixing?", "ما الذي يحتاج إلى إصلاح؟")}
+              <span className="block">
+                {tr("Home repairs made", "صيانة المنزل أصبحت")}
+              </span>
 
-              <span className="mt-2 block text-[#3d9276]">
-                {tr(
-                  "We’ll help you find the right fixer.",
-                  "سنساعدك في العثور على الفني المناسب."
-                )}
+              <span className="home-hero-word-wrap mt-2 block">
+                <span key={`${language}-${heroWordIndex}`} className="home-hero-word">
+                  {heroWord}
+                </span>
               </span>
             </h1>
 
-            <p className="my-6 max-w-[590px] text-[17px] text-[#66757f]">
-              {tr("Describe your problem or choose a service to discover trusted technicians near you.", "صف المشكلة أو اختر خدمة للعثور على فنيين موثوقين بالقرب منك.")}
+            <p className="my-6 max-w-[720px] whitespace-normal text-[14px] leading-6 text-[#66757f] lg:whitespace-nowrap lg:text-[15px]">
+              {tr(
+                "Describe your problem or choose a service to discover trusted technicians near you.",
+                "صف المشكلة أو اختر خدمة للعثور على فنيين موثوقين بالقرب منك."
+              )}
             </p>
 
             {/* AI LABEL */}
@@ -364,7 +403,7 @@ setAiError(
             </div>
 
             {/* AI SEARCH */}
-            <div className="flex max-w-[680px] items-center gap-2 rounded-[14px] border border-[#e2e9e6] bg-white p-[7px] shadow-[0_12px_35px_rgba(23,59,87,0.08)]">
+            <div className="home-ai-box flex max-w-[680px] items-center gap-2 rounded-[14px] border border-[#e2e9e6] bg-white p-[7px] shadow-[0_12px_35px_rgba(23,59,87,0.08)]">
 
               <input
                 type="text"
@@ -597,7 +636,7 @@ setAiError(
                 {tr("Or choose a category", "أو اختر فئة")}
               </p>
 
-              <div className="flex flex-wrap gap-2">
+              <div className="home-category-row flex items-center gap-2">
 
                 {categories.map((category) => (
                   <button
@@ -606,13 +645,14 @@ setAiError(
                     onClick={() =>
                       openService(category.id)
                     }
-                    className="flex items-center gap-2 rounded-full border border-[#e2e9e6] px-3 py-2 text-xs font-semibold text-[#66757f] transition hover:border-[#4faf8f] hover:bg-white hover:text-[#173b57]"
+                    className="category-pill rounded-full border border-[#e2e9e6] px-4 py-2.5 text-xs font-semibold text-[#66757f]"
                   >
-                    <i
-                      className={`${category.icon} text-[#3d9276]`}
-                    ></i>
-
-                    {category.name}
+                    <span className="category-pill__particle category-pill__particle--one"></span>
+                    <span className="category-pill__particle category-pill__particle--two"></span>
+                    <span className="category-pill__content">
+                      <i className={`${category.icon} category-pill__icon`}></i>
+                      <span>{category.name}</span>
+                    </span>
                   </button>
                 ))}
 
@@ -622,21 +662,25 @@ setAiError(
           </div>
 
           {/* EMERGENCY CARD */}
-          <div data-reveal="left" className="rounded-[22px] border border-[#e2e9e6] bg-white p-[34px] shadow-[0_20px_50px_rgba(23,59,87,0.08)]">
+          <div data-reveal="up" className="home-emergency-card w-full justify-self-end rounded-[24px] lg:translate-x-[24px] border border-[#e2e9e6] bg-white p-[34px] lg:max-w-[460px] lg:p-[40px] shadow-[0_20px_50px_rgba(23,59,87,0.08)]">
+            <span className="emergency-particle emergency-particle--one"></span>
+            <span className="emergency-particle emergency-particle--two"></span>
+            <span className="emergency-particle emergency-particle--three"></span>
+            <span className="emergency-particle emergency-particle--four"></span>
 
-            <div className="mb-7 grid h-12 w-12 place-items-center rounded-xl bg-[#edf7f3] text-xl text-[#3d9276]">
+            <div className="home-emergency-icon mb-7 grid h-12 w-12 place-items-center rounded-xl bg-[#edf7f3] text-xl text-[#3d9276]">
               <i className="fa-solid fa-bolt"></i>
             </div>
 
-            <p className="mb-[10px] text-[11px] font-extrabold tracking-[1.3px] text-[#e9984a]">
+            <p className="home-emergency-label mb-[10px] text-[11px] font-extrabold tracking-[1.3px] text-[#e9984a]">
               {tr("NEED HELP NOW?", "تحتاج مساعدة الآن؟")}
             </p>
 
-            <h2 className="mb-3 text-[25px] font-bold text-[#102d43]">
+            <h2 className="home-emergency-title mb-3 text-[25px] font-bold text-[#102d43]">
               {tr("Urgent problem?", "مشكلة عاجلة؟")}
             </h2>
 
-            <p className="mb-6 text-sm text-[#66757f]">
+            <p className="home-emergency-text mb-6 text-sm text-[#66757f]">
               {tr("Find fixers who are currently available near you.", "اعثر على فنيين متاحين حاليًا بالقرب منك.")}
             </p>
 
@@ -647,13 +691,12 @@ setAiError(
                   "/technicians?available=true"
                 )
               }
-              className="soft-text-link flex items-center gap-2 text-sm font-extrabold text-[#173b57]"
+              className="home-emergency-link soft-text-link text-sm font-extrabold text-[#173b57]"
             >
              {tr(
   "Find Available Fixers",
   "اعثر على فنيين متاحين"
 )}
-              <i className="fa-solid fa-arrow-right"></i>
             </button>
 
           </div>
@@ -662,7 +705,7 @@ setAiError(
       </section>
 
 {/* SERVICES */}
-<section className="border-t border-[#e2e9e6] bg-white py-20">
+<section className="border-t border-[#e2e9e6] bg-white py-20" data-reveal="up">
   <div className="mx-auto w-[90%] max-w-[1160px]">
 
     {/* Section heading */}
@@ -679,7 +722,7 @@ setAiError(
       `}
     >
       <div className={isArabic ? "text-right" : "text-left"}>
-        <p className="mb-2 text-xs font-bold uppercase tracking-[1.5px] text-[#3d9276]">
+        <p className="home-top-fixers-label mb-3 inline-flex rounded-full border border-[#cfe2da] bg-[#e8f4ef] px-3 py-1.5 text-[11px] font-extrabold uppercase tracking-[1.5px] text-[#2f8067]">
           {tr("OUR SERVICES", "خدماتنا")}
         </p>
 
@@ -701,16 +744,6 @@ setAiError(
         className="soft-text-link group flex w-fit items-center gap-2 text-sm font-extrabold text-[#173b57]"
       >
         {tr("View All Services", "عرض جميع الخدمات")}
-
-        <i
-          className={`
-            fa-solid
-            fa-arrow-right
-            transition-transform
-            duration-300
-            ${isArabic ? "rotate-180 group-hover:-translate-x-1" : "group-hover:translate-x-1"}
-          `}
-        ></i>
       </button>
     </div>
 
@@ -733,69 +766,32 @@ setAiError(
     {!servicesLoading &&
       !servicesError &&
       services.length > 0 && (
-        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {services.map((service, index) => (
+        <div className="home-services-grid">
+          {services.slice(0, 6).map((service, index) => (
             <button
-              data-reveal="up"
-              style={{ "--reveal-delay": `${index * 90}ms` }}
               key={service.id}
               type="button"
               onClick={() => openService(service.id)}
+              onMouseMove={handleServiceCardMouseMove}
+              onMouseLeave={handleServiceCardMouseLeave}
               className={`
-                interactive-card
-                group
-                flex
-                min-h-[235px]
-                flex-col
-                rounded-[16px]
-                border
-                border-[#e2e9e6]
-                bg-white
-                p-[27px]
+                home-service-grid-card
                 ${isArabic ? "text-right" : "text-left"}
               `}
             >
-              {/* Icon + arrow */}
-              <div className="flex w-full items-start justify-between gap-4">
-                <div className="card-icon grid h-12 w-12 shrink-0 place-items-center rounded-xl bg-[#edf7f3] text-lg text-[#3d9276]">
-                  <i className={getServiceIcon(service.id)}></i>
-                </div>
+              <span className="home-service-hover-glow" aria-hidden="true"></span>
 
-                <div
-                  className="
-                    card-arrow
-                    grid
-                    h-9
-                    w-9
-                    shrink-0
-                    place-items-center
-                    text-[#3d9276]
-                  "
-                >
-                  <i
-                    className={`
-                      fa-solid
-                      fa-arrow-right
-                      transition-transform
-                      duration-300
-                      ${
-                        isArabic
-                          ? "rotate-180 group-hover:-translate-x-1"
-                          : "group-hover:translate-x-1"
-                      }
-                    `}
-                  ></i>
-                </div>
+              <div className="home-service-grid-icon">
+                <i className={getServiceIcon(service.id)}></i>
               </div>
 
-              {/* Service text */}
-              <div className="mt-auto w-full pt-7">
-                <h3 className="text-[18px] font-bold leading-snug text-[#102d43]">
+              <div>
+                <h3 className="home-service-grid-title">
                   {translateServiceName(service.name, language)}
                 </h3>
 
                 {service.description && (
-                  <p className="mt-3 text-[15px] leading-7 text-[#66757f]">
+                  <p className="home-service-grid-description">
                     {translateServiceDescription(
                       service.description,
                       service.name,
@@ -824,7 +820,7 @@ setAiError(
 </section>
 
 {/* {tr("TOP FIXERS", "أفضل الفنيين")} */}
-<section className="bg-[#f7f9f8] py-20">
+<section className="bg-[#f7f9f8] py-20" data-reveal="up">
 
   <div className="mx-auto w-[90%] max-w-[1160px]">
 
@@ -836,7 +832,7 @@ setAiError(
           {tr("TOP FIXERS", "أفضل الفنيين")}
         </p>
 
-        <h2 className="text-[30px] font-bold tracking-[-1px] text-[#102d43] md:text-[36px]">
+        <h2 className="home-text-shimmer text-[30px] font-bold tracking-[-1px] md:text-[36px]">
           {tr("Trusted by homeowners", "موثوقون لدى أصحاب المنازل")}
         </h2>
 
@@ -851,7 +847,6 @@ setAiError(
         className="soft-text-link flex w-fit items-center gap-2 text-sm font-extrabold text-[#173b57]"
       >
         {tr("View All Fixers", "عرض جميع الفنيين")}
-        <i className="fa-solid fa-arrow-right"></i>
       </button>
 
     </div>
@@ -972,7 +967,6 @@ setAiError(
                   className="flex items-center gap-2 rounded-[10px] bg-[#173b57] px-4 py-3 text-sm font-bold text-white transition hover:bg-[#102d43]"
                 >
                   {tr("View Profile", "عرض الملف")}
-                  <i className="fa-solid fa-arrow-right"></i>
                 </button>
 
               </div>
@@ -996,12 +990,10 @@ setAiError(
 
 </section>
 
-{/* {tr("HOW IT WORKS", "كيف تعمل المنصة")} */}
-<section className="border-t border-[#e2e9e6] bg-white py-20">
+{/* HOW IT WORKS */}
+<section className="border-t border-[#e2e9e6] bg-white py-20" data-reveal="up">
   <div className="mx-auto w-[90%] max-w-[1160px]">
-
-    {/* Heading */}
-    <div className="mx-auto mb-14 max-w-[650px] text-center">
+    <div className="mx-auto mb-12 max-w-[650px] text-center">
       <p className="mb-2 text-xs font-bold uppercase tracking-[1.5px] text-[#3d9276]">
         {tr("HOW IT WORKS", "كيف تعمل المنصة")}
       </p>
@@ -1011,82 +1003,63 @@ setAiError(
       </h2>
 
       <p className="mt-3 text-[#66757f]">
-        {tr("Find the right technician and request your service in just a few simple steps.", "اعثر على الفني المناسب واطلب خدمتك بخطوات بسيطة.")}
+        {tr(
+          "From problem to the right fixer in three clear steps.",
+          "من المشكلة إلى الفني المناسب خلال ثلاث خطوات واضحة."
+        )}
       </p>
     </div>
 
-    {/* Steps */}
-    <div className="grid gap-8 md:grid-cols-3">
+    <div className="home-how-flow">
+      {[
+        {
+          number: "01",
+          icon: "fa-solid fa-message",
+          enTitle: "Describe the problem",
+          arTitle: "صف المشكلة",
+          enText: "Tell us what is wrong, add a photo, or choose a service.",
+          arText: "أخبرنا بالمشكلة أو أضف صورة أو اختر الخدمة.",
+        },
+        {
+          number: "02",
+          icon: "fa-solid fa-user-check",
+          enTitle: "Compare trusted fixers",
+          arTitle: "قارن الفنيين",
+          enText: "Review ratings, availability, location, and starting price.",
+          arText: "راجع التقييم والتوفر والموقع والسعر الابتدائي.",
+        },
+        {
+          number: "03",
+          icon: "fa-solid fa-calendar-check",
+          enTitle: "Request the service",
+          arTitle: "اطلب الخدمة",
+          enText: "Choose your fixer, send the request, and track its status.",
+          arText: "اختر الفني وأرسل الطلب ثم تابع حالته.",
+        },
+      ].map((step, index) => (
+        <article
+          key={step.number}
+          data-reveal="up"
+          style={{ "--reveal-delay": `${index * 110}ms` }}
+          className="home-how-step"
+        >
+          <div className="home-how-step__top">
+            <span className="home-how-step__number">{step.number}</span>
+            <div className="home-how-step__icon">
+              <i className={step.icon}></i>
+            </div>
+          </div>
 
-      {/* STEP 1 */}
-      <div data-reveal="up" style={{ "--reveal-delay": "0ms" }} className="relative text-center">
-        <div className="mx-auto mb-5 grid h-16 w-16 place-items-center rounded-2xl bg-[#edf7f3] text-xl text-[#3d9276]">
-          <i className="fa-solid fa-magnifying-glass"></i>
-        </div>
-
-        <span className="mb-2 block text-xs font-extrabold tracking-[1px] text-[#3d9276]">
-          {tr("STEP 01", "الخطوة 01")}
-        </span>
-
-        <h3 className="text-[18px] font-bold text-[#102d43]">
-          {tr("Tell us what you need", "أخبرنا بما تحتاجه")}
-        </h3>
-
-        <p className="mx-auto mt-3 max-w-[300px] text-sm leading-6 text-[#66757f]">
-          {tr("Describe the problem, upload a photo, or choose the service you need.", "صف المشكلة أو ارفع صورة أو اختر الخدمة التي تحتاجها.")}
-        </p>
-
-        {/* Connecting line */}
-        <div className="absolute left-[70%] top-8 hidden h-px w-[60%] bg-[#dce8e4] md:block"></div>
-      </div>
-
-      {/* STEP 2 */}
-      <div data-reveal="up" style={{ "--reveal-delay": "100ms" }} className="relative text-center">
-        <div className="mx-auto mb-5 grid h-16 w-16 place-items-center rounded-2xl bg-[#edf7f3] text-xl text-[#3d9276]">
-          <i className="fa-solid fa-user-check"></i>
-        </div>
-
-        <span className="mb-2 block text-xs font-extrabold tracking-[1px] text-[#3d9276]">
-          {tr("STEP 02", "الخطوة 02")}
-        </span>
-
-        <h3 className="text-[18px] font-bold text-[#102d43]">
-          {tr("Choose your fixer", "اختر الفني المناسب")}
-        </h3>
-
-        <p className="mx-auto mt-3 max-w-[300px] text-sm leading-6 text-[#66757f]">
-          {tr("Compare trusted technicians by service, rating, availability, and price.", "قارن بين الفنيين الموثوقين حسب الخدمة والتقييم والتوفر والسعر.")}
-        </p>
-
-        {/* Connecting line */}
-        <div className="absolute left-[70%] top-8 hidden h-px w-[60%] bg-[#dce8e4] md:block"></div>
-      </div>
-
-      {/* STEP 3 */}
-      <div data-reveal="up" style={{ "--reveal-delay": "200ms" }} className="text-center">
-        <div className="mx-auto mb-5 grid h-16 w-16 place-items-center rounded-2xl bg-[#edf7f3] text-xl text-[#3d9276]">
-          <i className="fa-solid fa-calendar-check"></i>
-        </div>
-
-        <span className="mb-2 block text-xs font-extrabold tracking-[1px] text-[#3d9276]">
-          {tr("STEP 03", "الخطوة 03")}
-        </span>
-
-        <h3 className="text-[18px] font-bold text-[#102d43]">
-          {tr("Request your service", "اطلب خدمتك")}
-        </h3>
-
-        <p className="mx-auto mt-3 max-w-[300px] text-sm leading-6 text-[#66757f]">
-          {tr("Send your request and keep track of its status from your account.", "أرسل طلبك وتابع حالته من حسابك.")}
-        </p>
-      </div>
-
+          <h3>{tr(step.enTitle, step.arTitle)}</h3>
+          <p>{tr(step.enText, step.arText)}</p>
+        </article>
+      ))}
     </div>
   </div>
 </section>
 
 {/* CTA — OLD FIXER.CO COLORS */}
-<section className="bg-[#eef5f2] py-[92px] md:py-[110px]">
+<section className="bg-[#eef5f2] py-[92px] md:py-[110px]" data-reveal="up">
   <div
     className={`
       mx-auto
@@ -1105,27 +1078,29 @@ setAiError(
         {tr("READY TO GET STARTED?", "جاهز للبدء؟")}
       </p>
 
-      <h2 className="max-w-[760px] text-[36px] font-bold leading-[1.16] tracking-[-1.5px] text-[#102d43] sm:text-[42px] md:text-[48px]">
-        {tr(
-          "Stop searching around. Find the right help in one place.",
-          "توقف عن البحث في كل مكان. اعثر على المساعدة المناسبة في مكان واحد."
-        )}
+      <h2 className="max-w-[760px] text-[36px] font-bold leading-[1.16] tracking-[-1.5px] sm:text-[42px] md:text-[48px]">
+        <span className="block text-[#102d43]">
+          {tr("Stop searching around", "توقف عن البحث في كل مكان")}
+        </span>
+        <span className="mt-1 block text-[#3d9276]">
+          {tr(
+            "Find the right help in one place",
+            "اعثر على المساعدة المناسبة في مكان واحد"
+          )}
+        </span>
       </h2>
     </div>
 
     <button
       type="button"
       onClick={() => navigate("/services")}
-      className="group flex shrink-0 items-center gap-3 rounded-[12px] bg-[#173b57] px-6 py-4 text-sm font-bold text-white transition-all duration-300 ease-out hover:-translate-y-[2px] hover:bg-[#102d43] hover:shadow-[0_10px_24px_rgba(16,45,67,0.14)]"
+      className="home-cta-button home-liquid-button flex shrink-0 items-center justify-center"
     >
-      {tr("Request a Service", "اطلب خدمة")}
-      <i
-        className={`fa-solid fa-arrow-right text-xs transition-transform duration-300 ${
-          isArabic
-            ? "rotate-180 group-hover:-translate-x-1"
-            : "group-hover:translate-x-1"
-        }`}
-      ></i>
+      <span className="home-liquid-sheen" aria-hidden="true"></span>
+
+      <span className="home-liquid-content">
+        {tr("Request a Service", "اطلب خدمة")}
+      </span>
     </button>
   </div>
 </section>

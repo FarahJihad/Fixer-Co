@@ -4,111 +4,156 @@
   background: #102d43;
   color: #ffffff;
   font-family: "Manrope", sans-serif;
-  border-top: 1px solid rgba(255, 255, 255, 0.04);
+  border-top: 1px solid rgba(255,255,255,.05);
 }
 
 .site-footer *,
 .site-footer *::before,
-.site-footer *::after {
-  box-sizing: border-box;
-}
+.site-footer *::after { box-sizing: border-box; }
 
 .site-footer__inner {
   width: min(1160px, 90%);
   margin-inline: auto;
-  padding: 58px 0;
-
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 32px;
+  padding: 34px 0 18px;
 }
 
-.site-footer__brand {
-  min-width: 0;
+.site-footer__top {
+  display: grid;
+  grid-template-columns: minmax(0,1.35fr) minmax(360px,.85fr);
+  gap: 44px;
+  align-items: start;
 }
+
+.site-footer__brand { max-width: 430px; }
 
 .site-footer__logo {
   border: 0;
   background: transparent;
   padding: 0;
-  color: #ffffff;
+  color: #fff;
   font: inherit;
   font-size: 22px;
   font-weight: 800;
-  letter-spacing: -1px;
+  letter-spacing: -1.2px;
   cursor: pointer;
 }
 
-.site-footer__logo span {
-  color: #4faf8f;
-}
+.site-footer__logo span { color: #4faf8f; }
 
-.site-footer__brand p {
-  margin: 10px 0 0;
+.site-footer__brand > p {
+  margin: 8px 0 0;
+  max-width: 360px;
   color: #b8c8d2;
-  font-size: 14px;
-  line-height: 1.6;
+  font-size: 12px;
+  line-height: 1.75;
 }
 
-.site-footer__links {
+.site-footer__trust {
   display: flex;
   flex-wrap: wrap;
-  align-items: center;
-  justify-content: center;
-  gap: 24px;
+  gap: 10px 18px;
+  margin-top: 14px;
 }
 
-.site-footer__links button {
+.site-footer__trust span {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #d5e1e7;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.site-footer__trust i { color: #69bda1; }
+
+.site-footer__columns {
+  display: grid;
+  grid-template-columns: repeat(2,minmax(130px,1fr));
+  gap: 30px;
+}
+
+.site-footer__column {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.site-footer__column h3 {
+  margin: 0 0 5px;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 1.25px;
+  text-transform: uppercase;
+}
+
+.site-footer__column button {
   border: 0;
   background: transparent;
   padding: 0;
-  color: #c2d0d8;
+  color: #b8c8d2;
   font: inherit;
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 500;
   cursor: pointer;
-
-  transition:
-    color 0.22s ease,
-    transform 0.22s ease;
+  text-align: inherit;
+  transition: color .22s ease, transform .22s ease;
 }
 
-.site-footer__links button:hover {
-  color: #ffffff;
+.site-footer__column button:hover {
+  color: #fff;
   transform: translateY(-1px);
 }
 
-.site-footer__copy {
-  flex: 0 0 auto;
+.site-footer__bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  margin-top: 24px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(255,255,255,.09);
+}
+
+.site-footer__bottom p {
   margin: 0;
-  color: #b8c8d2;
+  color: #8fa5b1;
   font-size: 12px;
-  white-space: nowrap;
 }
 
-.site-footer[dir="rtl"] .site-footer__inner {
-  flex-direction: row-reverse;
-}
-
-.site-footer[dir="rtl"] .site-footer__brand {
+.site-footer[dir="rtl"] .site-footer__brand,
+.site-footer[dir="rtl"] .site-footer__column {
   text-align: right;
 }
 
-@media (max-width: 900px) {
-  .site-footer__inner,
-  .site-footer[dir="rtl"] .site-footer__inner {
-    flex-direction: column;
-    align-items: flex-start;
+@media (max-width: 860px) {
+  .site-footer__top {
+    grid-template-columns: 1fr;
+    gap: 42px;
   }
 
-  .site-footer__links {
-    justify-content: flex-start;
+  .site-footer__brand { max-width: none; }
+  .site-footer__columns { max-width: 440px; }
+}
+
+@media (max-width: 560px) {
+  .site-footer__inner { padding-top: 48px; }
+
+  .site-footer__columns {
+    grid-template-columns: 1fr 1fr;
+    gap: 28px;
+  }
+
+  .site-footer__bottom {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .site-footer__links button {
+  .site-footer__column button {
     transform: none !important;
     transition: none !important;
   }

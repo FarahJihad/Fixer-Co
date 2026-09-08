@@ -155,7 +155,9 @@ function About() {
               "Home repairs should be ",
               "صيانة المنزل يجب أن تكون "
             )}
-            <span>{tr("simple.", "بسيطة.")}</span>
+            <span className="about-handwrite-word">
+              {tr("simple", "بسيطة")}
+            </span>
           </h1>
 
           <p
@@ -448,7 +450,7 @@ function About() {
         className="about-cta"
       >
         <div className="about-container">
-          <div className="about-cta-box about-reveal" data-about-reveal>
+          <div className="about-cta-box about-cta-motion-card about-reveal" data-about-reveal>
             <div
               className="about-reveal"
               data-about-reveal
@@ -463,25 +465,26 @@ function About() {
 
               <h2>
                 {tr(
-                  "Find the right fixer today.",
-                  "اعثر على الفني المناسب اليوم."
+                  "Find the right fixer today",
+                  "اعثر على الفني المناسب اليوم"
                 )}
               </h2>
             </div>
 
             <Link
               to="/technicians"
-              className="about-cta-button about-reveal"
+              className="about-cta-button about-home-liquid-button about-reveal"
               data-about-reveal
               style={{ "--about-delay": "110ms" }}
             >
-              {tr("Find a Fixer", "ابحث عن فني")}
+              <span
+                className="about-home-liquid-sheen"
+                aria-hidden="true"
+              ></span>
 
-              <i
-                className={`fa-solid fa-arrow-right ${
-                  isArabic ? "rtl-arrow" : ""
-                }`}
-              ></i>
+              <span className="about-home-liquid-content">
+                {tr("Find a Fixer", "ابحث عن فني")}
+              </span>
             </Link>
           </div>
         </div>
