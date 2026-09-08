@@ -1,0 +1,115 @@
+@import url("https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap");
+
+.site-footer {
+  background: #102d43;
+  color: #ffffff;
+  font-family: "Manrope", sans-serif;
+  border-top: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.site-footer *,
+.site-footer *::before,
+.site-footer *::after {
+  box-sizing: border-box;
+}
+
+.site-footer__inner {
+  width: min(1160px, 90%);
+  margin-inline: auto;
+  padding: 58px 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 32px;
+}
+
+.site-footer__brand {
+  min-width: 0;
+}
+
+.site-footer__logo {
+  border: 0;
+  background: transparent;
+  padding: 0;
+  color: #ffffff;
+  font: inherit;
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -1px;
+  cursor: pointer;
+}
+
+.site-footer__logo span {
+  color: #4faf8f;
+}
+
+.site-footer__brand p {
+  margin: 10px 0 0;
+  color: #b8c8d2;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.site-footer__links {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+}
+
+.site-footer__links button {
+  border: 0;
+  background: transparent;
+  padding: 0;
+  color: #c2d0d8;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+
+  transition:
+    color 0.22s ease,
+    transform 0.22s ease;
+}
+
+.site-footer__links button:hover {
+  color: #ffffff;
+  transform: translateY(-1px);
+}
+
+.site-footer__copy {
+  flex: 0 0 auto;
+  margin: 0;
+  color: #b8c8d2;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.site-footer[dir="rtl"] .site-footer__inner {
+  flex-direction: row-reverse;
+}
+
+.site-footer[dir="rtl"] .site-footer__brand {
+  text-align: right;
+}
+
+@media (max-width: 900px) {
+  .site-footer__inner,
+  .site-footer[dir="rtl"] .site-footer__inner {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .site-footer__links {
+    justify-content: flex-start;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .site-footer__links button {
+    transform: none !important;
+    transition: none !important;
+  }
+}

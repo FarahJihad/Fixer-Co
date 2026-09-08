@@ -1,0 +1,204 @@
+/* =========================================
+   FIXER.CO — SCROLL REVEAL
+   ========================================= */
+
+[data-reveal] {
+  opacity: 0;
+  transition:
+    opacity 0.65s ease,
+    transform 0.65s cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: var(--reveal-delay, 0ms);
+  will-change: opacity, transform;
+}
+
+[data-reveal="up"] {
+  transform: translateY(22px);
+}
+
+[data-reveal="down"] {
+  transform: translateY(-22px);
+}
+
+[data-reveal="left"] {
+  transform: translateX(-22px);
+}
+
+[data-reveal="right"] {
+  transform: translateX(22px);
+}
+
+[data-reveal="fade"] {
+  transform: none;
+}
+
+[data-reveal].is-revealed {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+
+/* =========================================
+   FIXER.CO — OLD-SITE STYLE HOVER
+   The motion below intentionally follows the
+   feel of the original published Fixer.Co UI:
+   soft color change + small lift + light shadow.
+   ========================================= */
+
+.interactive-card {
+  transition:
+    background-color 250ms ease,
+    border-color 250ms ease,
+    transform 250ms ease,
+    box-shadow 250ms ease;
+}
+
+.interactive-card:hover {
+  background-color: #e3f2ec;
+  border-color: #4faf8f;
+  transform: translateY(-4px);
+  box-shadow: 0 14px 30px rgba(16, 45, 67, 0.10);
+}
+
+.interactive-card .card-icon {
+  transition:
+    background-color 250ms ease,
+    transform 250ms ease,
+    color 250ms ease;
+}
+
+.interactive-card:hover .card-icon {
+  background-color: #d9eee6;
+  transform: translateY(-1px);
+}
+
+.interactive-card .card-arrow {
+  transition:
+    color 250ms ease,
+    transform 250ms ease;
+}
+
+.interactive-card:hover .card-arrow {
+  color: #2f8d70;
+}
+
+.interactive-card .card-arrow i {
+  transition: transform 250ms ease;
+}
+
+.interactive-card:hover .card-arrow i {
+  transform: translateX(3px);
+}
+
+/* Keep RTL arrow movement natural. */
+[dir="rtl"] .interactive-card:hover .card-arrow i {
+  transform: rotate(180deg) translateX(3px);
+}
+
+/* Technician cards mimic the old card hover:
+   no background flash, just a gentle lift and shadow. */
+.technician-hover-card {
+  transition:
+    transform 250ms ease,
+    box-shadow 250ms ease,
+    border-color 250ms ease;
+}
+
+.technician-hover-card:hover {
+  transform: translateY(-5px);
+  border-color: #d7e5df;
+  box-shadow: 0 15px 32px rgba(16, 45, 67, 0.10);
+}
+
+/* Old-site style text links */
+.soft-text-link {
+  transition:
+    color 200ms ease,
+    transform 200ms ease;
+}
+
+.soft-text-link:hover {
+  color: #3d9276;
+}
+
+/* CTA: subtle old-style button movement */
+.classic-cta-button {
+  transition:
+    background-color 250ms ease,
+    transform 250ms ease,
+    box-shadow 250ms ease;
+}
+
+.classic-cta-button:hover {
+  background-color: #3d9276;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px rgba(16, 45, 67, 0.14);
+}
+
+/* =========================================
+   ACCESSIBILITY
+   ========================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal],
+  .interactive-card,
+  .interactive-card .card-icon,
+  .interactive-card .card-arrow,
+  .interactive-card .card-arrow i,
+  .technician-hover-card,
+  .soft-text-link,
+  .classic-cta-button {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
+
+
+/* =========================================
+   SERVICES — MATCH ORIGINAL DEPLOYED VERSION
+   ========================================= */
+
+.service-old-card {
+  transition:
+    transform 240ms ease,
+    border-color 240ms ease,
+    box-shadow 240ms ease,
+    background-color 240ms ease;
+}
+
+.service-old-card:hover {
+  transform: translateY(-4px);
+  border-color: #cfe2da;
+  background-color: #ffffff;
+  box-shadow: 0 14px 34px rgba(16, 45, 67, 0.08);
+}
+
+.service-old-icon {
+  transition:
+    transform 240ms ease,
+    background-color 240ms ease,
+    color 240ms ease;
+}
+
+.service-old-card:hover .service-old-icon {
+  transform: translateY(-1px);
+  background-color: #e4f3ed;
+}
+
+.service-old-link {
+  transition:
+    color 200ms ease,
+    transform 200ms ease;
+}
+
+.service-old-card:hover .service-old-link {
+  color: #2f8d70;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .service-old-card,
+  .service-old-icon,
+  .service-old-link {
+    transform: none !important;
+    transition: none !important;
+  }
+}

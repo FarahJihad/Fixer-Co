@@ -1,0 +1,797 @@
+@import url("https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap");
+
+.contact-page {
+  --contact-navy: #173b57;
+  --contact-navy-dark: #102d43;
+  --contact-green: #4faf8f;
+  --contact-green-dark: #3d9276;
+  --contact-bg: #f7f9f8;
+  --contact-muted: #66757f;
+  --contact-border: #e2e9e6;
+
+  min-height: 100vh;
+  background: var(--contact-bg);
+  color: var(--contact-navy-dark);
+  font-family: "Manrope", sans-serif;
+}
+
+.contact-page *,
+.contact-page *::before,
+.contact-page *::after {
+  box-sizing: border-box;
+}
+
+.contact-container {
+  width: min(1160px, 90%);
+  margin-inline: auto;
+}
+
+/* MAIN LAYOUT */
+.contact-main-section {
+  padding: 90px 0 100px;
+  background:
+    linear-gradient(
+      180deg,
+      #f7f9f8 0%,
+      #fbfcfc 100%
+    );
+}
+
+.contact-grid {
+  display: grid;
+  grid-template-columns:
+    minmax(0, 0.95fr)
+    minmax(0, 1.05fr);
+  align-items: start;
+  gap: 84px;
+}
+
+/* LEFT SIDE */
+.contact-label {
+  margin: 0;
+  color: var(--contact-green-dark);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.contact-title {
+  max-width: 690px;
+  margin: 28px 0 0;
+  font-size: clamp(46px, 6vw, 72px);
+  font-weight: 700;
+  line-height: 1.02;
+  letter-spacing: -3px;
+}
+
+.contact-title-line {
+  display: block;
+  color: var(--contact-navy-dark);
+}
+
+.contact-title-accent {
+  margin-top: 10px;
+  color: var(--contact-green-dark);
+}
+
+.contact-intro {
+  max-width: 640px;
+  margin: 30px 0 0;
+  color: var(--contact-muted);
+  font-size: 16px;
+  line-height: 1.85;
+}
+
+/* CONTACT DETAILS */
+.contact-details {
+  display: grid;
+  gap: 22px;
+  margin-top: 42px;
+}
+
+.contact-detail {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.contact-detail-icon {
+  width: 48px;
+  height: 48px;
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  border-radius: 14px;
+  background: #e7f4ef;
+  color: var(--contact-green-dark);
+  font-size: 16px;
+
+  transition:
+    transform 0.28s ease,
+    background 0.28s ease,
+    color 0.28s ease;
+}
+
+.contact-detail:hover .contact-detail-icon {
+  transform: translateY(-3px);
+  background: var(--contact-green-dark);
+  color: white;
+}
+
+.contact-detail p {
+  margin: 0;
+  color: #8a979f;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+}
+
+.contact-detail h3 {
+  margin: 4px 0 0;
+  color: var(--contact-navy-dark);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+/* FORM CARD */
+.contact-form-card {
+  padding: 36px;
+  border: 1px solid var(--contact-border);
+  border-radius: 22px;
+  background: white;
+  box-shadow:
+    0 18px 50px
+    rgba(16, 45, 67, 0.08);
+}
+
+.contact-form-label {
+  margin: 0;
+  color: var(--contact-green-dark);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
+}
+
+.contact-form-card h2 {
+  margin: 10px 0 0;
+  color: var(--contact-navy-dark);
+  font-size: 29px;
+  font-weight: 800;
+  letter-spacing: -1px;
+}
+
+.contact-form-card > div > p:last-child {
+  margin: 10px 0 0;
+  color: var(--contact-muted);
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.contact-form {
+  display: grid;
+  gap: 18px;
+  margin-top: 28px;
+}
+
+.contact-field label {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--contact-navy-dark);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.contact-field input,
+.contact-field textarea {
+  width: 100%;
+  border: 1px solid #dce5e2;
+  border-radius: 13px;
+  background: white;
+  padding: 13px 14px;
+  color: var(--contact-navy-dark);
+  font: inherit;
+  font-size: 13px;
+  outline: none;
+
+  transition:
+    border-color 0.23s ease,
+    box-shadow 0.23s ease,
+    background 0.23s ease;
+}
+
+.contact-field input:focus,
+.contact-field textarea:focus {
+  border-color: var(--contact-green);
+  background: #fbfdfc;
+  box-shadow:
+    0 0 0 4px
+    rgba(79, 175, 143, 0.1);
+}
+
+.contact-field textarea {
+  resize: vertical;
+  min-height: 150px;
+}
+
+.contact-submit {
+  min-height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  border: 0;
+  border-radius: 13px;
+  background: var(--contact-navy);
+  color: white;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+
+  transition:
+    background 0.25s ease,
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.contact-submit:hover:not(:disabled) {
+  background: var(--contact-navy-dark);
+  transform: translateY(-2px);
+  box-shadow:
+    0 10px 22px
+    rgba(16, 45, 67, 0.16);
+}
+
+.contact-submit:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.contact-form-message {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-radius: 12px;
+  padding: 12px 14px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.contact-form-message.success {
+  background: #e7f6f1;
+  color: #27876c;
+}
+
+.contact-form-message.error {
+  background: #fff1f1;
+  color: #c94b4b;
+}
+
+/* =========================================================
+   SCROLL REVEAL
+   Same idea as the animation the user liked:
+   content rises gently and sharpens as it enters view.
+========================================================= */
+
+.contact-page .contact-reveal {
+  opacity: 0;
+  transform: translateY(34px);
+  filter: blur(4px);
+
+  transition:
+    opacity 0.72s ease,
+    transform 0.72s
+      cubic-bezier(
+        0.22,
+        1,
+        0.36,
+        1
+      ),
+    filter 0.72s
+      cubic-bezier(
+        0.22,
+        1,
+        0.36,
+        1
+      );
+
+  transition-delay:
+    var(
+      --contact-delay,
+      0ms
+    );
+}
+
+.contact-page
+.contact-reveal.contact-show {
+  opacity: 1;
+  transform: translateY(0);
+  filter: blur(0);
+}
+
+/* RTL */
+.contact-page[dir="rtl"] {
+  text-align: right;
+}
+
+.contact-page[dir="rtl"]
+.contact-detail {
+  flex-direction: row;
+}
+
+/* RESPONSIVE */
+@media (max-width: 950px) {
+  .contact-grid {
+    grid-template-columns: 1fr;
+    gap: 58px;
+  }
+
+  .contact-title {
+    max-width: 800px;
+  }
+
+  .contact-form-card {
+    max-width: 760px;
+  }
+}
+
+@media (max-width: 600px) {
+  .contact-main-section {
+    padding: 66px 0 74px;
+  }
+
+  .contact-title {
+    font-size: 49px;
+    letter-spacing: -2.4px;
+  }
+
+  .contact-form-card {
+    padding: 26px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .contact-page
+  [data-contact-reveal],
+  .contact-detail-icon,
+  .contact-submit {
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+    transition: none !important;
+  }
+}
+
+
+/* =========================================================
+   OLD CONTACT TITLE CREATIVE ANIMATION — RESTORED
+   Recreated from the original Fixer.Co contact animation.
+========================================================= */
+
+.contact-title-animated {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  column-gap: 0.22em;
+  row-gap: 0.04em;
+  overflow: hidden;
+}
+
+.contact-title-animated .contact-word {
+  display: inline-block;
+  opacity: 0;
+}
+
+.contact-title-animated .contact-love {
+  color: var(--contact-navy-dark);
+  transform: translateY(30px);
+}
+
+.contact-title-animated .contact-hear {
+  color: var(--contact-green-dark);
+  transform:
+    translateY(30px)
+    translateX(-10px);
+  filter: blur(6px);
+}
+
+.contact-title-animated .contact-you {
+  color: var(--contact-green-dark);
+  transform:
+    translateX(35px)
+    scale(0.96);
+}
+
+.contact-title-animated .contact-dot {
+  color: var(--contact-green-dark);
+  display: inline-block;
+}
+
+/* Original play timing */
+.contact-title-animated.contact-play
+.contact-love {
+  animation:
+    contactLove
+    0.65s
+    0.15s
+    forwards;
+}
+
+.contact-title-animated.contact-play
+.contact-hear {
+  animation:
+    contactHear
+    0.85s
+    0.45s
+    forwards;
+}
+
+.contact-title-animated.contact-play
+.contact-you {
+  animation:
+    contactYou
+    0.75s
+    0.9s
+    cubic-bezier(0.22, 1, 0.36, 1)
+    forwards;
+}
+
+.contact-title-animated.contact-play
+.contact-dot {
+  animation:
+    contactDot
+    0.5s
+    1.55s
+    ease
+    forwards;
+}
+
+@keyframes contactLove {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes contactHear {
+  0% {
+    opacity: 0;
+    transform:
+      translateY(30px)
+      translateX(-10px);
+    filter: blur(6px);
+  }
+
+  60% {
+    opacity: 1;
+    transform:
+      translateY(0)
+      translateX(3px);
+    filter: blur(0);
+  }
+
+  80% {
+    transform:
+      translateX(-2px);
+  }
+
+  100% {
+    opacity: 1;
+    transform:
+      translateX(0);
+    filter: blur(0);
+  }
+}
+
+@keyframes contactYou {
+  from {
+    opacity: 0;
+    transform:
+      translateX(35px)
+      scale(0.96);
+  }
+
+  to {
+    opacity: 1;
+    transform:
+      translateX(0)
+      scale(1);
+  }
+}
+
+@keyframes contactDot {
+  0% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(2);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* =========================================================
+   FORM LIFT / SHADOW INTERACTION
+   When the user hovers or starts filling the form,
+   the entire form card feels like it rises toward them.
+========================================================= */
+
+.contact-form-card {
+  position: relative;
+  transform: translateY(0) scale(1);
+  transition:
+    transform 0.34s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.34s ease,
+    border-color 0.34s ease,
+    background 0.34s ease;
+}
+
+.contact-form-card:hover {
+  transform: translateY(-4px);
+  border-color: #c8ddd5;
+  box-shadow:
+    0 24px 58px rgba(16, 45, 67, 0.12);
+}
+
+/* This activates while ANY input/textarea inside has focus */
+.contact-form-card:focus-within {
+  transform: translateY(-8px) scale(1.008);
+  border-color: rgba(79, 175, 143, 0.58);
+  background: #ffffff;
+  box-shadow:
+    0 30px 70px rgba(16, 45, 67, 0.16),
+    0 10px 28px rgba(79, 175, 143, 0.10),
+    0 0 0 1px rgba(79, 175, 143, 0.07);
+}
+
+.contact-form-card:focus-within::before {
+  opacity: 1;
+}
+
+.contact-form-card::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  z-index: -1;
+  border-radius: inherit;
+  background:
+    radial-gradient(
+      circle at 50% 0%,
+      rgba(79, 175, 143, 0.12),
+      transparent 48%
+    );
+  opacity: 0;
+  transition: opacity 0.34s ease;
+  pointer-events: none;
+}
+
+/* Focused field also lifts a tiny bit */
+.contact-field input,
+.contact-field textarea {
+  transition:
+    transform 0.22s ease,
+    border-color 0.23s ease,
+    box-shadow 0.23s ease,
+    background 0.23s ease;
+}
+
+.contact-field input:focus,
+.contact-field textarea:focus {
+  transform: translateY(-1px);
+}
+
+/* RTL: reverse the horizontal entry for the final phrase */
+.contact-page[dir="rtl"]
+.contact-title-animated
+.contact-hear {
+  transform:
+    translateY(30px)
+    translateX(10px);
+}
+
+.contact-page[dir="rtl"]
+.contact-title-animated
+.contact-you {
+  transform:
+    translateX(-35px)
+    scale(0.96);
+}
+
+.contact-page[dir="rtl"]
+.contact-title-animated.contact-play
+.contact-hear {
+  animation-name: contactHearRTL;
+}
+
+.contact-page[dir="rtl"]
+.contact-title-animated.contact-play
+.contact-you {
+  animation-name: contactYouRTL;
+}
+
+@keyframes contactHearRTL {
+  0% {
+    opacity: 0;
+    transform:
+      translateY(30px)
+      translateX(10px);
+    filter: blur(6px);
+  }
+
+  60% {
+    opacity: 1;
+    transform:
+      translateY(0)
+      translateX(-3px);
+    filter: blur(0);
+  }
+
+  80% {
+    transform:
+      translateX(2px);
+  }
+
+  100% {
+    opacity: 1;
+    transform:
+      translateX(0);
+    filter: blur(0);
+  }
+}
+
+@keyframes contactYouRTL {
+  from {
+    opacity: 0;
+    transform:
+      translateX(-35px)
+      scale(0.96);
+  }
+
+  to {
+    opacity: 1;
+    transform:
+      translateX(0)
+      scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .contact-title-animated .contact-word {
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+    animation: none !important;
+  }
+
+  .contact-form-card,
+  .contact-field input,
+  .contact-field textarea {
+    transform: none !important;
+  }
+}
+
+
+/* =========================================================
+   SHINY "YOU" — starts after the original title animation
+========================================================= */
+
+.contact-from {
+  color: var(--contact-green-dark);
+}
+
+.contact-shiny-you {
+  position: relative;
+  display: inline-block;
+
+  /* Base text remains readable before the shine starts */
+  color: #4faf8f;
+
+  background-image:
+    linear-gradient(
+      110deg,
+      #4faf8f 0%,
+      #4faf8f 34%,
+      #b8f3df 46%,
+      #ffffff 50%,
+      #b8f3df 54%,
+      #4faf8f 66%,
+      #4faf8f 100%
+    );
+
+  background-size: 240% 100%;
+  background-position: 120% 0;
+
+  -webkit-background-clip: text;
+  background-clip: text;
+
+  -webkit-text-fill-color: transparent;
+
+  filter:
+    drop-shadow(
+      0 0 0 rgba(79, 175, 143, 0)
+    );
+
+  animation:
+    contactYouShine
+    2.1s
+    1.72s
+    ease-in-out
+    forwards;
+}
+
+/* A very soft glow arrives with the shine */
+.contact-title-animated.contact-play
+.contact-shiny-you {
+  animation:
+    contactYouShine
+    2.1s
+    1.72s
+    ease-in-out
+    forwards;
+}
+
+@keyframes contactYouShine {
+  0% {
+    background-position: 120% 0;
+    filter:
+      drop-shadow(
+        0 0 0 rgba(79, 175, 143, 0)
+      );
+  }
+
+  45% {
+    filter:
+      drop-shadow(
+        0 0 8px rgba(125, 210, 181, 0.22)
+      );
+  }
+
+  100% {
+    background-position: -120% 0;
+    filter:
+      drop-shadow(
+        0 0 4px rgba(79, 175, 143, 0.12)
+      );
+  }
+}
+
+/* Keep the ending refined: no endless looping */
+.contact-title-animated.contact-play
+.contact-you {
+  overflow: visible;
+}
+
+/* Make the title slightly more compact on desktop and mobile */
+@media (min-width: 951px) {
+  .contact-title {
+    max-width: 620px;
+  }
+}
+
+@media (max-width: 600px) {
+  .contact-title {
+    font-size: 43px;
+    letter-spacing: -2px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .contact-shiny-you {
+    animation: none !important;
+    background: none !important;
+    -webkit-text-fill-color: currentColor !important;
+    color: var(--contact-green-dark) !important;
+    filter: none !important;
+  }
+}

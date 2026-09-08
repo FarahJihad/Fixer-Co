@@ -1,0 +1,1577 @@
+@import url("https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap");
+
+.request-page {
+  --rq-navy: #173b57;
+  --rq-navy-dark: #102d43;
+  --rq-green: #4faf8f;
+  --rq-green-dark: #3d9276;
+  --rq-bg: #f7f9f8;
+  --rq-muted: #66757f;
+  --rq-border: #e2e9e6;
+
+  min-height: 100vh;
+  background:
+    linear-gradient(
+      180deg,
+      #f7f9f8 0%,
+      #fbfcfc 100%
+    );
+  color: var(--rq-navy-dark);
+  font-family: "Manrope", sans-serif;
+}
+
+.request-page *,
+.request-page *::before,
+.request-page *::after {
+  box-sizing: border-box;
+}
+
+.request-container {
+  width: min(1160px, 90%);
+  margin-inline: auto;
+}
+
+.request-main-section {
+  padding: 86px 0 96px;
+}
+
+.request-grid {
+  display: grid;
+  grid-template-columns:
+    minmax(0, .86fr)
+    minmax(0, 1.14fr);
+  gap: 70px;
+  align-items: start;
+}
+
+/* COPY */
+.request-label {
+  margin: 0;
+  color: var(--rq-green-dark);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
+}
+
+.request-copy h1 {
+  max-width: 560px;
+  margin: 12px 0 0;
+  color: var(--rq-navy-dark);
+  font-size: clamp(42px, 6vw, 58px);
+  font-weight: 800;
+  line-height: 1.06;
+  letter-spacing: -2.2px;
+}
+
+.request-copy h1 span {
+  color: var(--rq-green-dark);
+}
+
+.request-intro {
+  max-width: 560px;
+  margin: 22px 0 0;
+  color: var(--rq-muted);
+  font-size: 15px;
+  line-height: 1.85;
+}
+
+/* BENEFITS */
+.request-benefits {
+  display: grid;
+  gap: 22px;
+  margin-top: 36px;
+}
+
+.request-benefit {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+}
+
+.request-benefit-icon {
+  width: 46px;
+  height: 46px;
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  border-radius: 13px;
+  background: #eaf4f0;
+  color: var(--rq-green-dark);
+  transition:
+    transform .28s ease,
+    background .28s ease,
+    color .28s ease;
+}
+
+.request-benefit:hover .request-benefit-icon {
+  transform: translateY(-3px);
+  background: var(--rq-green-dark);
+  color: white;
+}
+
+.request-benefit h3 {
+  margin: 0;
+  color: var(--rq-navy-dark);
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.request-benefit p {
+  margin: 5px 0 0;
+  color: var(--rq-muted);
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+/* FORM */
+.request-form-card {
+  position: relative;
+  padding: 34px;
+  border: 1px solid var(--rq-border);
+  border-radius: 24px;
+  background: white;
+  box-shadow:
+    0 18px 50px rgba(23,59,87,.08);
+  transition:
+    transform .34s cubic-bezier(.22,1,.36,1),
+    border-color .34s ease,
+    box-shadow .34s ease;
+}
+
+.request-form-card::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  z-index: -1;
+  border-radius: inherit;
+  background:
+    radial-gradient(
+      circle at 50% 0%,
+      rgba(79,175,143,.12),
+      transparent 48%
+    );
+  opacity: 0;
+  transition: opacity .34s ease;
+}
+
+.request-form-card:hover {
+  transform: translateY(-4px);
+  border-color: #c8ddd5;
+  box-shadow:
+    0 24px 58px rgba(16,45,67,.12);
+}
+
+.request-form-card:focus-within {
+  transform:
+    translateY(-8px)
+    scale(1.008);
+  border-color:
+    rgba(79,175,143,.58);
+  box-shadow:
+    0 30px 70px rgba(16,45,67,.16),
+    0 10px 28px rgba(79,175,143,.10),
+    0 0 0 1px rgba(79,175,143,.07);
+}
+
+.request-form-card:focus-within::before {
+  opacity: 1;
+}
+
+.request-form-heading {
+  margin-bottom: 26px;
+}
+
+.request-form-heading h2 {
+  margin: 9px 0 0;
+  color: var(--rq-navy-dark);
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: -1px;
+}
+
+.request-form-heading > p:last-child {
+  margin: 9px 0 0;
+  color: var(--rq-muted);
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.request-form-card form {
+  display: grid;
+  gap: 18px;
+}
+
+.request-form-grid-two {
+  display: grid;
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.request-form-group label {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--rq-navy-dark);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.request-form-group input,
+.request-form-group select,
+.request-form-group textarea {
+  width: 100%;
+  border: 1px solid #dce5e2;
+  border-radius: 12px;
+  background: var(--rq-bg);
+  padding: 13px 14px;
+  color: var(--rq-navy-dark);
+  font: inherit;
+  font-size: 13px;
+  outline: none;
+  transition:
+    transform .22s ease,
+    border-color .22s ease,
+    box-shadow .22s ease,
+    background .22s ease;
+}
+
+.request-form-group input:focus,
+.request-form-group select:focus,
+.request-form-group textarea:focus {
+  transform: translateY(-1px);
+  border-color: var(--rq-green);
+  background: white;
+  box-shadow:
+    0 0 0 4px
+    rgba(79,175,143,.10);
+}
+
+.request-form-group textarea {
+  resize: vertical;
+  min-height: 145px;
+}
+
+/* PARTICLE SUBMIT */
+.request-submit {
+  position: relative;
+  isolation: isolate;
+  overflow: visible;
+  min-height: 52px;
+  border: 0;
+  border-radius: 999px;
+  background:
+    linear-gradient(
+      145deg,
+      #173b57 0%,
+      #102d43 100%
+    );
+  color: white;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow:
+    0 10px 24px rgba(16,45,67,.14);
+  transition:
+    transform .25s ease,
+    box-shadow .25s ease,
+    background .25s ease;
+}
+
+.request-submit-label {
+  position: relative;
+  z-index: 3;
+}
+
+.request-submit:hover:not(:disabled) {
+  transform:
+    translateY(-3px)
+    scale(1.012);
+  background:
+    linear-gradient(
+      145deg,
+      #102d43 0%,
+      #0c2639 100%
+    );
+  box-shadow:
+    0 16px 34px rgba(16,45,67,.22),
+    0 0 24px rgba(79,175,143,.14);
+}
+
+.request-submit:disabled {
+  opacity: .6;
+  cursor: not-allowed;
+}
+
+.request-particles {
+  position: absolute;
+  inset: -14px;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.request-particles span {
+  position: absolute;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #8bd2bb;
+  opacity: 0;
+  box-shadow:
+    0 0 8px rgba(139,210,187,.55);
+}
+
+.request-particles span:nth-child(1) {
+  top: 50%;
+  left: 8%;
+  --px: -7;
+}
+
+.request-particles span:nth-child(2) {
+  top: 8%;
+  left: 30%;
+  --px: -3;
+}
+
+.request-particles span:nth-child(3) {
+  top: 5%;
+  right: 30%;
+  --px: 3;
+}
+
+.request-particles span:nth-child(4) {
+  top: 50%;
+  right: 6%;
+  --px: 8;
+}
+
+.request-particles span:nth-child(5) {
+  bottom: 5%;
+  right: 30%;
+  --px: 4;
+}
+
+.request-particles span:nth-child(6) {
+  bottom: 8%;
+  left: 28%;
+  --px: -4;
+}
+
+.request-submit:hover:not(:disabled)
+.request-particles span {
+  animation:
+    requestParticleBurst
+    1.15s
+    cubic-bezier(.22,1,.36,1)
+    infinite;
+}
+
+.request-particles span:nth-child(2) {
+  animation-delay: .1s;
+}
+
+.request-particles span:nth-child(3) {
+  animation-delay: .2s;
+}
+
+.request-particles span:nth-child(4) {
+  animation-delay: .3s;
+}
+
+.request-particles span:nth-child(5) {
+  animation-delay: .4s;
+}
+
+.request-particles span:nth-child(6) {
+  animation-delay: .5s;
+}
+
+@keyframes requestParticleBurst {
+  0% {
+    opacity: 0;
+    transform:
+      translate(0,0)
+      scale(.6);
+  }
+
+  25% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+    transform:
+      translate(
+        calc(var(--px) * 1px),
+        -17px
+      )
+      scale(1.2);
+  }
+}
+
+/* MESSAGE */
+.request-message {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  border-radius: 11px;
+  padding: 12px 14px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.request-message.success {
+  background: #edf7f3;
+  color: var(--rq-green-dark);
+}
+
+.request-message.error {
+  border: 1px solid #f2caca;
+  background: #fff1f1;
+  color: #a84949;
+}
+
+/* MODAL */
+.request-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  background: rgba(16,45,67,.48);
+  padding: 20px;
+  backdrop-filter: blur(4px);
+}
+
+.request-modal {
+  width: min(440px, 100%);
+  border-radius: 24px;
+  background: white;
+  padding: 30px;
+  text-align: center;
+  box-shadow:
+    0 28px 70px
+    rgba(16,45,67,.25);
+  animation:
+    requestModalIn
+    .42s
+    cubic-bezier(.22,1,.36,1);
+}
+
+.request-modal-icon {
+  width: 62px;
+  height: 62px;
+  margin: 0 auto;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: #edf7f3;
+  color: var(--rq-green-dark);
+  font-size: 24px;
+}
+
+.request-modal h3 {
+  margin: 17px 0 0;
+  color: var(--rq-navy-dark);
+  font-size: 23px;
+  font-weight: 800;
+}
+
+.request-modal > p {
+  margin: 10px 0 0;
+  color: var(--rq-muted);
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.request-id-chip {
+  display: inline-flex;
+  margin-top: 14px;
+  border-radius: 999px;
+  background: #edf7f3;
+  padding: 7px 11px;
+  color: var(--rq-green-dark);
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.request-modal-question {
+  margin-top: 13px !important;
+}
+
+.request-modal-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 22px;
+}
+
+.request-secondary-button,
+.request-primary-button {
+  border-radius: 11px;
+  padding: 12px 15px;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.request-secondary-button {
+  border: 1px solid #dce5e2;
+  background: white;
+  color: var(--rq-muted);
+}
+
+.request-primary-button {
+  border: 0;
+  background: var(--rq-navy);
+  color: white;
+}
+
+@keyframes requestModalIn {
+  from {
+    opacity: 0;
+    transform:
+      translateY(18px)
+      scale(.97);
+  }
+
+  to {
+    opacity: 1;
+    transform:
+      translateY(0)
+      scale(1);
+  }
+}
+
+/* REVEAL */
+.request-reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  filter: blur(3px);
+  transition:
+    opacity .64s ease,
+    transform .64s cubic-bezier(.22,1,.36,1),
+    filter .64s cubic-bezier(.22,1,.36,1);
+  transition-delay:
+    var(--request-delay,0ms);
+}
+
+.request-reveal.request-show {
+  opacity: 1;
+  transform: translateY(0);
+  filter: blur(0);
+}
+
+/* RTL */
+.request-page[dir="rtl"] {
+  text-align: right;
+}
+
+.request-page[dir="rtl"]
+.request-benefit {
+  direction: rtl;
+}
+
+@media (max-width: 920px) {
+  .request-grid {
+    grid-template-columns: 1fr;
+    gap: 48px;
+  }
+}
+
+@media (max-width: 620px) {
+  .request-main-section {
+    padding: 66px 0 72px;
+  }
+
+  .request-form-grid-two,
+  .request-modal-actions {
+    grid-template-columns: 1fr;
+  }
+
+  .request-form-card {
+    padding: 24px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .request-reveal,
+  .request-form-card,
+  .request-benefit-icon,
+  .request-submit,
+  .request-form-group input,
+  .request-form-group select,
+  .request-form-group textarea {
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+    transition: none !important;
+  }
+
+  .request-particles span,
+  .request-modal {
+    animation: none !important;
+  }
+}
+
+
+/* =========================================================
+   HERO TEXT EFFECT
+   Inspired by ibelick's 21st Text Effect:
+   staggered word reveal with blur + soft upward motion.
+========================================================= */
+
+.request-text-effect-title {
+  max-width: 560px;
+  margin: 12px 0 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 .2em;
+
+  color: var(--rq-navy-dark);
+  font-size: clamp(42px, 6vw, 58px);
+  font-weight: 800;
+  line-height: 1.06;
+  letter-spacing: -2.2px;
+}
+
+.request-text-word {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(22px);
+  filter: blur(7px);
+
+  animation:
+    requestWordIn
+    .72s
+    cubic-bezier(.22,1,.36,1)
+    forwards;
+
+  animation-delay:
+    var(--word-delay, 0ms);
+
+  will-change:
+    opacity,
+    transform,
+    filter;
+}
+
+.request-text-accent {
+  color: var(--rq-green-dark);
+}
+
+@keyframes requestWordIn {
+  0% {
+    opacity: 0;
+    transform: translateY(22px);
+    filter: blur(7px);
+  }
+
+  65% {
+    opacity: 1;
+    filter: blur(1px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+
+/* Arabic reveal keeps the reading direction natural */
+.request-page[dir="rtl"]
+.request-text-effect-title {
+  direction: rtl;
+  justify-content: flex-start;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .request-text-word {
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+    animation: none !important;
+  }
+}
+
+
+/* =========================================================
+   TYPEWRITER HERO TITLE
+   Inspired by the typewriter-text interaction:
+   the full sentence types in smoothly with a blinking caret.
+========================================================= */
+
+.request-typewriter-title {
+  max-width: 620px;
+  margin: 12px 0 0;
+  color: var(--rq-navy-dark);
+  font-size: clamp(42px, 6vw, 58px);
+  font-weight: 800;
+  line-height: 1.08;
+  letter-spacing: -2.2px;
+}
+
+.request-typewriter-line {
+  display: inline;
+  position: relative;
+}
+
+.request-typewriter-text,
+.request-typewriter-accent {
+  display: inline;
+}
+
+.request-typewriter-accent {
+  color: var(--rq-green-dark);
+}
+
+/* mask the whole sentence and reveal it left-to-right */
+.request-typewriter-line {
+  --tw-chars: 26;
+  display: inline-block;
+  overflow: hidden;
+  white-space: nowrap;
+  width: 0;
+  vertical-align: bottom;
+  animation:
+    requestTypewriter
+    2.7s
+    steps(var(--tw-chars))
+    .15s
+    forwards;
+}
+
+.request-typewriter-caret {
+  display: inline-block;
+  width: 2px;
+  height: .95em;
+  margin-inline-start: 4px;
+  vertical-align: -0.08em;
+  border-radius: 999px;
+  background: var(--rq-green-dark);
+  animation:
+    requestCaretBlink
+    .8s
+    steps(1)
+    infinite;
+}
+
+@keyframes requestTypewriter {
+  from {
+    width: 0;
+  }
+
+  to {
+    width: 100%;
+  }
+}
+
+@keyframes requestCaretBlink {
+  0%,
+  48% {
+    opacity: 1;
+  }
+
+  49%,
+  100% {
+    opacity: 0;
+  }
+}
+
+/* Arabic: keep the typewriter direction natural */
+.request-page[dir="rtl"]
+.request-typewriter-title {
+  direction: rtl;
+  text-align: right;
+}
+
+.request-page[dir="rtl"]
+.request-typewriter-line {
+  --tw-chars: 20;
+}
+
+/* =========================================================
+   STANDARD FORM SUBMIT BUTTON
+   Same clean treatment as the other forms, no particles.
+========================================================= */
+
+.request-submit-standard {
+  min-height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  border: 0;
+  border-radius: 13px;
+  background: var(--rq-navy);
+  padding: 13px 20px;
+  color: white;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 800;
+  cursor: pointer;
+  transition:
+    transform .24s ease,
+    background .24s ease,
+    box-shadow .24s ease;
+}
+
+.request-submit-standard:hover:not(:disabled) {
+  transform: translateY(-2px);
+  background: var(--rq-navy-dark);
+  box-shadow:
+    0 10px 24px rgba(16,45,67,.15);
+}
+
+.request-submit-standard:disabled {
+  opacity: .6;
+  cursor: not-allowed;
+}
+
+/* avoid old text-effect animation rules affecting the new title */
+.request-text-effect-title,
+.request-text-word {
+  animation: none !important;
+}
+
+@media (max-width: 620px) {
+  .request-typewriter-title {
+    font-size: 42px;
+    letter-spacing: -1.8px;
+  }
+
+  .request-typewriter-line {
+    white-space: normal;
+    width: auto;
+    overflow: visible;
+    animation: none;
+  }
+
+  .request-typewriter-caret {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .request-typewriter-line,
+  .request-typewriter-caret {
+    animation: none !important;
+  }
+
+  .request-typewriter-line {
+    width: auto !important;
+  }
+}
+
+
+/* =========================================================
+   TYPEWRITER FIX — KEEP TITLE INSIDE ITS COLUMN
+========================================================= */
+
+.request-typewriter-title {
+  width: 100%;
+  max-width: 520px;
+  overflow: visible;
+
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+
+  font-size: clamp(38px, 4.6vw, 52px);
+  line-height: 1.08;
+  letter-spacing: -1.8px;
+}
+
+/* each line owns its own reveal width */
+.request-typewriter-row {
+  display: flex;
+  align-items: baseline;
+  max-width: 100%;
+}
+
+.request-typewriter-mask {
+  display: inline-block;
+  overflow: hidden;
+  white-space: nowrap;
+  width: 0;
+  vertical-align: bottom;
+}
+
+/* first line */
+.request-typewriter-row-1 .request-typewriter-mask {
+  animation:
+    requestTypewriterLineOne
+    1.85s
+    steps(18)
+    .18s
+    forwards;
+}
+
+/* second line starts after the first */
+.request-typewriter-row-2 {
+  margin-top: .04em;
+}
+
+.request-typewriter-row-2 .request-typewriter-mask {
+  animation:
+    requestTypewriterLineTwo
+    .85s
+    steps(7)
+    2.05s
+    forwards;
+}
+
+.request-typewriter-content {
+  display: inline-block;
+}
+
+.request-typewriter-accent {
+  color: var(--rq-green-dark);
+}
+
+.request-typewriter-caret {
+  opacity: 0;
+  flex: 0 0 auto;
+  margin-inline-start: 5px;
+
+  animation:
+    requestCaretShow .01s 2.05s forwards,
+    requestCaretBlink .8s 2.05s steps(1) infinite;
+}
+
+@keyframes requestTypewriterLineOne {
+  from {
+    width: 0;
+  }
+
+  to {
+    width: 100%;
+  }
+}
+
+@keyframes requestTypewriterLineTwo {
+  from {
+    width: 0;
+  }
+
+  to {
+    width: 100%;
+  }
+}
+
+@keyframes requestCaretShow {
+  to {
+    opacity: 1;
+  }
+}
+
+/* neutralize the previous single-line typewriter behavior */
+.request-typewriter-line {
+  width: auto !important;
+  overflow: visible !important;
+  white-space: normal !important;
+  animation: none !important;
+}
+
+/* RTL stays contained and types from the right */
+.request-page[dir="rtl"] .request-typewriter-title {
+  align-items: flex-start;
+  text-align: right;
+}
+
+.request-page[dir="rtl"] .request-typewriter-mask {
+  direction: rtl;
+}
+
+@media (max-width: 920px) {
+  .request-typewriter-title {
+    max-width: 620px;
+  }
+}
+
+@media (max-width: 620px) {
+  .request-typewriter-title {
+    max-width: 100%;
+    font-size: 40px;
+    letter-spacing: -1.4px;
+  }
+
+  .request-typewriter-mask {
+    width: auto;
+    overflow: visible;
+    white-space: normal;
+    animation: none !important;
+  }
+
+  .request-typewriter-caret {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .request-typewriter-mask {
+    width: auto !important;
+    animation: none !important;
+  }
+
+  .request-typewriter-caret {
+    display: none !important;
+  }
+}
+
+
+/* =========================================================
+   STATIC HERO TITLE + DIA-STYLE "FIXING."
+   Main sentence is fixed; only the accent word has motion.
+========================================================= */
+
+.request-static-title {
+  max-width: 560px;
+  margin: 12px 0 0;
+
+  color: var(--rq-navy-dark);
+  font-size: clamp(42px, 6vw, 58px);
+  font-weight: 800;
+  line-height: 1.06;
+  letter-spacing: -2.2px;
+}
+
+/* special accent word */
+.request-dia-text {
+  position: relative;
+  display: inline-block;
+  white-space: nowrap;
+  margin-inline-start: .05em;
+  isolation: isolate;
+}
+
+.request-dia-text-base {
+  position: relative;
+  z-index: 1;
+  color: var(--rq-green-dark);
+}
+
+/*
+  A diagonal luminous layer crosses the word slowly,
+  while the main green text remains visible underneath.
+*/
+.request-dia-text-shine {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+
+  color: transparent;
+
+  background:
+    linear-gradient(
+      118deg,
+      transparent 0%,
+      transparent 33%,
+      rgba(190, 247, 227, .20) 40%,
+      #d8fff1 48%,
+      #ffffff 50%,
+      #b8eedc 53%,
+      rgba(190, 247, 227, .22) 60%,
+      transparent 67%,
+      transparent 100%
+    );
+
+  background-size: 260% 100%;
+  background-position: 130% 0;
+
+  -webkit-background-clip: text;
+  background-clip: text;
+
+  -webkit-text-fill-color: transparent;
+
+  filter:
+    drop-shadow(
+      0 0 0 rgba(79, 175, 143, 0)
+    );
+
+  animation:
+    requestDiaSweep
+    6.8s
+    linear
+    infinite;
+
+  pointer-events: none;
+}
+
+/* soft under-glow gives the word a little depth */
+.request-dia-text::after {
+  content: "";
+  position: absolute;
+  left: 8%;
+  right: 8%;
+  bottom: -.08em;
+  height: .08em;
+
+  border-radius: 999px;
+
+  background:
+    linear-gradient(
+      90deg,
+      transparent,
+      rgba(79,175,143,.30),
+      rgba(125,210,181,.55),
+      rgba(79,175,143,.30),
+      transparent
+    );
+
+  transform: scaleX(.65);
+  opacity: .55;
+  filter: blur(1px);
+
+  animation:
+    requestDiaGlow
+    4.8s
+    ease-in-out
+    infinite;
+}
+
+@keyframes requestDiaSweep {
+  0% {
+    background-position: 135% 0;
+    filter:
+      drop-shadow(
+        0 0 0 rgba(79,175,143,0)
+      );
+  }
+
+  44% {
+    filter:
+      drop-shadow(
+        0 0 5px rgba(125,210,181,.15)
+      );
+  }
+
+  100% {
+    background-position: -135% 0;
+    filter:
+      drop-shadow(
+        0 0 2px rgba(79,175,143,.08)
+      );
+  }
+}
+
+@keyframes requestDiaGlow {
+  0%,
+  100% {
+    opacity: .28;
+    transform: scaleX(.56);
+  }
+
+  50% {
+    opacity: .72;
+    transform: scaleX(.82);
+  }
+}
+
+/* Remove old typewriter behavior from layout entirely */
+.request-typewriter-title,
+.request-typewriter-row,
+.request-typewriter-mask,
+.request-typewriter-line,
+.request-typewriter-caret,
+.request-text-effect-title,
+.request-text-word {
+  animation: none !important;
+}
+
+/* RTL */
+.request-page[dir="rtl"] .request-static-title {
+  text-align: right;
+}
+
+.request-page[dir="rtl"] .request-dia-text {
+  margin-inline-start: .05em;
+}
+
+@media (max-width: 620px) {
+  .request-static-title {
+    max-width: 100%;
+    font-size: 40px;
+    letter-spacing: -1.5px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .request-dia-text-shine,
+  .request-dia-text::after {
+    animation: none !important;
+  }
+}
+
+
+/* =========================================================
+   FINAL FIXING ACCENT
+   No shine — only a clean animated underline.
+========================================================= */
+
+.request-dia-text {
+  position: relative;
+  display: inline-block;
+  white-space: nowrap;
+  margin-inline-start: .05em;
+}
+
+.request-dia-text-base {
+  color: var(--rq-green-dark);
+}
+
+/* remove the previous shiny overlay completely */
+.request-dia-text-shine {
+  display: none !important;
+  animation: none !important;
+}
+
+/* cleaner underline only */
+.request-dia-text::after {
+  content: "";
+  position: absolute;
+  left: 6%;
+  right: 6%;
+  bottom: -.10em;
+  height: .075em;
+  border-radius: 999px;
+
+  background:
+    linear-gradient(
+      90deg,
+      rgba(79,175,143,.18),
+      rgba(79,175,143,.72),
+      rgba(125,210,181,.86),
+      rgba(79,175,143,.72),
+      rgba(79,175,143,.18)
+    );
+
+  transform-origin: center;
+  animation:
+    requestUnderlineBreathe
+    4.8s
+    ease-in-out
+    infinite;
+}
+
+@keyframes requestUnderlineBreathe {
+  0%,
+  100% {
+    opacity: .42;
+    transform: scaleX(.72);
+  }
+
+  50% {
+    opacity: .9;
+    transform: scaleX(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .request-dia-text::after {
+    animation: none !important;
+    opacity: .7;
+    transform: scaleX(1);
+  }
+}
+
+/* ========================================
+   PROFESSIONAL LOGIN REQUIRED MODAL
+   Append this to the END of Request.css
+======================================== */
+
+.login-required-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background:
+    linear-gradient(rgba(12, 34, 50, 0.42), rgba(12, 34, 50, 0.42)),
+    rgba(15, 27, 36, 0.24);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  animation: loginOverlayIn 220ms ease both;
+}
+
+.login-required-modal {
+  position: relative;
+  width: min(100%, 540px);
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.72);
+  border-radius: 30px;
+  padding: 46px 42px 34px;
+  text-align: center;
+  background:
+    radial-gradient(circle at top right, rgba(79, 175, 143, 0.12), transparent 32%),
+    linear-gradient(180deg, #ffffff 0%, #fbfdfc 100%);
+  box-shadow:
+    0 34px 90px rgba(10, 32, 47, 0.25),
+    0 8px 30px rgba(10, 32, 47, 0.10);
+  animation: loginModalIn 520ms cubic-bezier(.16, 1, .3, 1) both;
+}
+
+.login-required-modal::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto auto 0;
+  width: 100%;
+  height: 4px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    #4faf8f 28%,
+    #67c2a4 50%,
+    #173b57 72%,
+    transparent 100%
+  );
+  opacity: 0.9;
+}
+
+.login-required-close {
+  position: absolute;
+  top: 18px;
+  inset-inline-end: 18px;
+  display: grid;
+  width: 38px;
+  height: 38px;
+  place-items: center;
+  border: 1px solid #e4ebe8;
+  border-radius: 50%;
+  background: rgba(247, 249, 248, 0.92);
+  color: #71818b;
+  cursor: pointer;
+  transition:
+    transform 180ms ease,
+    color 180ms ease,
+    background 180ms ease,
+    border-color 180ms ease;
+}
+
+.login-required-close:hover {
+  transform: rotate(5deg) scale(1.05);
+  border-color: rgba(79, 175, 143, 0.45);
+  background: #eef7f3;
+  color: #173b57;
+}
+
+.login-required-icon-wrap {
+  position: relative;
+  width: 94px;
+  height: 94px;
+  margin: 0 auto 22px;
+}
+
+.login-required-icon {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  width: 94px;
+  height: 94px;
+  place-items: center;
+  border: 1px solid rgba(79, 175, 143, 0.18);
+  border-radius: 28px;
+  background:
+    linear-gradient(
+      145deg,
+      rgba(238, 247, 243, 0.98),
+      rgba(226, 241, 235, 0.92)
+    );
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.88),
+    0 14px 32px rgba(79, 175, 143, 0.16);
+  color: #3d9276;
+  font-size: 29px;
+}
+
+.login-required-pulse {
+  position: absolute;
+  inset: 7px;
+  z-index: 1;
+  border: 1px solid rgba(79, 175, 143, 0.22);
+  border-radius: 31px;
+  animation: loginPulse 2.2s ease-out infinite;
+}
+
+.login-required-kicker {
+  margin: 0 0 10px;
+  color: #4faf8f;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+}
+
+.login-required-modal h3 {
+  margin: 0;
+  color: #102d43;
+  font-size: clamp(26px, 4vw, 34px);
+  font-weight: 800;
+  line-height: 1.14;
+  letter-spacing: -0.035em;
+}
+
+.login-required-copy {
+  max-width: 430px;
+  margin: 15px auto 0;
+  color: #71818b;
+  font-size: 15px;
+  line-height: 1.75;
+}
+
+.login-required-note {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  width: fit-content;
+  max-width: 100%;
+  margin: 22px auto 0;
+  padding: 10px 14px;
+  border: 1px solid #e2eee9;
+  border-radius: 999px;
+  background: #f2f8f5;
+  color: #527165;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.login-required-note i {
+  color: #4faf8f;
+}
+
+.login-required-actions {
+  display: grid;
+  grid-template-columns: 0.9fr 1.35fr;
+  gap: 12px;
+  margin-top: 28px;
+}
+
+.login-required-actions button {
+  min-height: 54px;
+  border-radius: 15px;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 800;
+  cursor: pointer;
+  transition:
+    transform 180ms ease,
+    box-shadow 180ms ease,
+    background 180ms ease,
+    border-color 180ms ease;
+}
+
+.login-required-cancel {
+  border: 1px solid #e1e8e5;
+  background: #f4f7f6;
+  color: #6b7b85;
+}
+
+.login-required-cancel:hover {
+  transform: translateY(-2px);
+  border-color: #d5e0dc;
+  background: #edf2f0;
+  color: #173b57;
+}
+
+.login-required-login {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  overflow: hidden;
+  border: 1px solid #173b57;
+  background:
+    linear-gradient(135deg, #173b57 0%, #102d43 100%);
+  color: #ffffff;
+  box-shadow: 0 12px 26px rgba(16, 45, 67, 0.18);
+}
+
+.login-required-login:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 17px 34px rgba(16, 45, 67, 0.24);
+}
+
+.login-required-login i {
+  font-size: 12px;
+  transition: transform 180ms ease;
+}
+
+.login-required-login:hover i {
+  transform: translateX(3px);
+}
+
+[dir="rtl"] .login-required-login:hover i {
+  transform: translateX(-3px);
+}
+
+.login-required-footer {
+  margin: 18px 0 0;
+  color: #98a4aa;
+  font-size: 11px;
+  line-height: 1.6;
+}
+
+@keyframes loginOverlayIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes loginModalIn {
+  from {
+    opacity: 0;
+    transform: translateY(26px) scale(0.97);
+    filter: blur(5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+}
+
+@keyframes loginPulse {
+  0% {
+    opacity: 0.55;
+    transform: scale(1);
+  }
+  70%,
+  100% {
+    opacity: 0;
+    transform: scale(1.32);
+  }
+}
+
+@media (max-width: 620px) {
+  .login-required-overlay {
+    padding: 16px;
+  }
+
+  .login-required-modal {
+    border-radius: 24px;
+    padding: 40px 22px 26px;
+  }
+
+  .login-required-actions {
+    grid-template-columns: 1fr;
+  }
+
+  .login-required-login {
+    order: -1;
+  }
+
+  .login-required-note {
+    border-radius: 14px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .login-required-overlay,
+  .login-required-modal,
+  .login-required-pulse {
+    animation: none;
+  }
+}

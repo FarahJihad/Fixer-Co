@@ -1,0 +1,514 @@
+@import url("https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap");
+
+/* =========================================================
+   SERVICES PAGE — EXACT OLD FIXER.CO DESIGN
+   Values below mirror the original static style.css.
+========================================================= */
+
+.services-exact-page {
+  --old-navy: #173b57;
+  --old-navy-dark: #102d43;
+  --old-green: #4faf8f;
+  --old-green-dark: #3d9276;
+  --old-background: #f7f9f8;
+  --old-white: #ffffff;
+  --old-text: #17252e;
+  --old-muted: #66757f;
+  --old-border: #e2e9e6;
+
+  min-height: 100vh;
+  background: var(--old-background);
+  color: var(--old-text);
+  font-family: "Manrope", sans-serif;
+  line-height: 1.6;
+}
+
+.services-exact-page *,
+.services-exact-page *::before,
+.services-exact-page *::after {
+  box-sizing: border-box;
+}
+
+.services-exact-page button {
+  font: inherit;
+}
+
+.old-container {
+  width: min(1160px, 90%);
+  margin-inline: auto;
+}
+
+/* =========================
+   PAGE HERO
+========================= */
+
+.old-page-hero {
+  padding: 90px 0 70px;
+  background: var(--old-navy);
+  color: white;
+}
+
+.old-section-label {
+  margin: 0 0 10px;
+  color: var(--old-green-dark);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+
+.old-page-hero .old-section-label {
+  color: #80c8b0;
+}
+
+.old-page-hero h1 {
+  max-width: 700px;
+  margin: 0 0 18px;
+  color: white;
+  font-size: clamp(42px, 5vw, 62px);
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -2.5px;
+}
+
+.old-page-hero-description {
+  max-width: 580px;
+  margin: 0;
+  color: #c6d4dc;
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+/* =========================
+   SERVICES SECTION
+========================= */
+
+.old-services-page-section {
+  padding: 95px 0;
+  background: white;
+}
+
+.old-section-heading {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 30px;
+  margin-bottom: 45px;
+}
+
+.old-section-heading h2 {
+  margin: 0;
+  color: var(--old-navy-dark);
+  font-size: clamp(30px, 4vw, 42px);
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: -1.5px;
+}
+
+.old-section-heading > p {
+  max-width: 400px;
+  margin: 0;
+  color: var(--old-muted);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.old-services-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: stretch;
+  gap: 18px;
+}
+
+/* Exact original service-card proportions */
+.old-service-card {
+  position: relative;
+  overflow: hidden;
+  min-height: 242px;
+  height: 100%;
+  padding: 27px;
+  border: 1px solid var(--old-border);
+  border-radius: 16px;
+  background: var(--old-white);
+  color: inherit;
+  text-align: start;
+  cursor: pointer;
+
+  transition:
+    transform 0.35s ease,
+    box-shadow 0.35s ease,
+    border-color 0.35s ease,
+    background 0.35s ease;
+}
+
+/* Final hover state from the old deployed cascade */
+.old-service-card:hover {
+  background: #e7f4ef;
+  border-color: #b9d9ce;
+  transform: translateY(-5px);
+  box-shadow: 0 14px 30px rgba(16, 45, 67, 0.09);
+}
+
+.old-service-icon {
+  width: 46px;
+  height: 46px;
+  display: grid;
+  place-items: center;
+  margin-bottom: 25px;
+  border-radius: 12px;
+  background: #edf7f3;
+  color: var(--old-green-dark);
+  font-size: 21px;
+
+  transition:
+    transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
+    background 0.25s ease,
+    color 0.25s ease;
+}
+
+.old-service-card:hover .old-service-icon {
+  transform: translateY(-1px);
+  background: #dcefe8;
+}
+
+.old-service-card h3 {
+  margin: 0 0 8px;
+  color: var(--old-navy-dark);
+  font-size: 17px;
+  font-weight: 800;
+  line-height: 1.35;
+}
+
+.old-service-card > p {
+  margin: 0;
+  color: var(--old-muted);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.old-view-fixers {
+  display: inline-block;
+  margin-top: 20px;
+  color: var(--old-green-dark);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+/* =========================
+   ORDERED SCROLL / LOAD REVEAL
+   Nothing moves sideways and the grid never loses alignment.
+========================= */
+
+.services-exact-page .service-reveal,
+.services-exact-page .service-card-reveal {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.services-exact-page .service-reveal {
+  transition:
+    opacity 0.55s ease,
+    transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.services-exact-page .service-card-reveal {
+  transition:
+    opacity 0.5s ease,
+    transform 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+    background 0.3s ease,
+    border-color 0.3s ease,
+    box-shadow 0.3s ease;
+  transition-delay: var(--motion-delay, 0ms);
+}
+
+.services-exact-page .service-reveal.service-show,
+.services-exact-page .service-card-reveal.service-show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* The hover works only after reveal, so it never fights the scroll animation. */
+.services-exact-page .service-card-reveal.service-show:hover {
+  transform: translateY(-5px);
+}
+
+/* =========================
+   LOADING / ERROR / EMPTY
+========================= */
+
+.old-loading {
+  min-height: 190px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  color: var(--old-muted);
+  font-size: 14px;
+}
+
+.old-loading i {
+  color: var(--old-green-dark);
+}
+
+.old-error-box,
+.old-empty-box {
+  border: 1px solid var(--old-border);
+  border-radius: 16px;
+  background: white;
+  padding: 27px;
+}
+
+.old-error-box {
+  display: flex;
+  gap: 12px;
+  color: #a33e3e;
+  background: #fff7f7;
+  border-color: #efd3d3;
+}
+
+.old-error-box p,
+.old-empty-box p {
+  margin: 5px 0 0;
+}
+
+.old-empty-box {
+  text-align: center;
+}
+
+.old-empty-box > i {
+  display: block;
+  margin-bottom: 10px;
+  color: var(--old-green-dark);
+  font-size: 22px;
+}
+
+/* =========================
+   HELP SECTION
+========================= */
+
+.old-service-help {
+  padding: 80px 0;
+  background: #eef5f2;
+}
+
+.old-service-help-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 50px;
+}
+
+.old-service-help h2 {
+  margin: 0 0 12px;
+  color: var(--old-navy-dark);
+  font-size: clamp(28px, 4vw, 40px);
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: -1.5px;
+}
+
+.old-service-help-content > div > p:last-child {
+  max-width: 560px;
+  margin: 0;
+  color: var(--old-muted);
+  font-size: 15px;
+}
+
+.old-cta-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  flex-shrink: 0;
+  border: none;
+  border-radius: 10px;
+  background: var(--old-navy);
+  padding: 13px 20px;
+  color: white;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+
+  transition:
+    background 0.25s ease,
+    transform 0.25s ease;
+}
+
+.old-cta-button:hover {
+  background: var(--old-navy-dark);
+  transform: translateY(-2px);
+}
+
+.old-cta-button i {
+  font-size: 11px;
+}
+
+.old-arrow-rtl {
+  transform: rotate(180deg);
+}
+
+/* =========================
+   FOOTER
+========================= */
+
+.old-footer {
+  padding: 38px 0;
+  border-top: 1px solid var(--old-border);
+  background: white;
+}
+
+.old-footer-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 26px;
+}
+
+.old-footer-logo {
+  border: 0;
+  background: transparent;
+  padding: 0;
+  color: var(--old-navy);
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: -1px;
+  cursor: pointer;
+}
+
+.old-footer-logo span {
+  color: var(--old-green);
+}
+
+.old-footer-content > div:first-child > p {
+  margin: 7px 0 0;
+  color: var(--old-muted);
+  font-size: 13px;
+}
+
+.old-footer-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 22px;
+}
+
+.old-footer-links button {
+  border: 0;
+  background: transparent;
+  padding: 0;
+  color: var(--old-muted);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: color 0.25s ease;
+}
+
+.old-footer-links button:hover {
+  color: var(--old-navy);
+}
+
+.old-footer-copy {
+  margin: 0;
+  color: #8a979f;
+  font-size: 12px;
+}
+
+/* =========================
+   RTL
+========================= */
+
+.services-exact-page[dir="rtl"] {
+  text-align: right;
+}
+
+.services-exact-page[dir="rtl"] .old-section-heading {
+  flex-direction: row-reverse;
+}
+
+.services-exact-page[dir="rtl"] .old-section-heading > p {
+  text-align: left;
+}
+
+.services-exact-page[dir="rtl"] .old-service-card {
+  text-align: right;
+}
+
+.services-exact-page[dir="rtl"] .old-service-card:hover .old-service-icon {
+  transform: translateY(-1px);
+}
+
+.services-exact-page[dir="rtl"] .old-service-help-content {
+  flex-direction: row-reverse;
+}
+
+.services-exact-page[dir="rtl"] .old-footer-content {
+  flex-direction: row-reverse;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 900px) {
+  .old-services-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .old-section-heading,
+  .old-service-help-content {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .services-exact-page[dir="rtl"] .old-section-heading,
+  .services-exact-page[dir="rtl"] .old-service-help-content {
+    flex-direction: column;
+  }
+
+  .services-exact-page[dir="rtl"] .old-section-heading > p {
+    text-align: right;
+  }
+
+  .old-footer-content,
+  .services-exact-page[dir="rtl"] .old-footer-content {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+@media (max-width: 600px) {
+  .old-page-hero {
+    padding: 68px 0 58px;
+  }
+
+  .old-page-hero h1 {
+    font-size: 39px;
+    letter-spacing: -1.8px;
+  }
+
+  .old-services-page-section {
+    padding: 70px 0;
+  }
+
+  .old-services-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .old-service-card {
+    padding: 24px;
+  }
+
+  .old-service-help {
+    padding: 65px 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .services-exact-page [data-service-reveal],
+  .old-service-card,
+  .old-service-icon,
+  .old-cta-button {
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+    transition: none !important;
+  }
+}
