@@ -1209,3 +1209,57 @@
     transition: none !important;
   }
 }
+
+
+/* =========================================================
+   FINAL MOBILE RESPONSIVE FIX
+   Mobile only — desktop layout/design remains unchanged.
+========================================================= */
+@media (max-width: 600px) {
+  html,
+  body,
+  #root {
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  .about-old-page {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  .about-container,
+  .about-hero-content,
+  .about-story-grid,
+  .about-story-content {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .about-hero h1 {
+    max-width: 100%;
+    font-size: clamp(40px, 11.5vw, 46px);
+    line-height: 1.06;
+    letter-spacing: -2px;
+    overflow: visible;
+  }
+
+  .about-handwrite-word {
+    max-width: 100%;
+    padding-inline-end: 0.28em !important;
+    margin-inline-end: -0.12em !important;
+  }
+
+  .about-hero-text,
+  .about-story-content > p:not(.section-label) {
+    max-width: 100%;
+    overflow-wrap: anywhere;
+  }
+
+  .about-carousel-stage,
+  .about-process-wrap,
+  .about-cta-box {
+    max-width: 100%;
+  }
+}

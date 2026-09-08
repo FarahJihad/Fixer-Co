@@ -1995,3 +1995,79 @@
   padding-inline: 0.02em 0.10em;
   margin-inline-end: -0.10em;
 }
+
+
+/* =========================================================
+   FINAL MOBILE RESPONSIVE FIX
+   Mobile only — desktop layout/design remains unchanged.
+========================================================= */
+@media (max-width: 620px) {
+  html,
+  body,
+  #root {
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  main {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  /* Hero must never be widened by its flex/grid children. */
+  main > section:first-of-type > div,
+  main > section:first-of-type > div > div {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .home-hero-heading {
+    max-width: 100% !important;
+    font-size: clamp(38px, 11vw, 42px) !important;
+    line-height: 1.08 !important;
+  }
+
+  .home-hero-word-wrap {
+    max-width: 100%;
+    padding-inline-end: 0.14em;
+  }
+
+  .home-ai-box {
+    width: 100%;
+    max-width: 100% !important;
+    min-width: 0;
+    flex-wrap: wrap;
+  }
+
+  .home-ai-box > input {
+    flex: 1 1 190px;
+    min-width: 0;
+  }
+
+  .home-ai-box > button:last-child {
+    flex: 0 0 auto;
+  }
+
+  .home-category-row {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: auto !important;
+    overflow-y: visible;
+    overscroll-behavior-inline: contain;
+  }
+
+  .home-emergency-card {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    transform: none !important;
+  }
+
+  .home-services-grid,
+  .home-service-grid-card {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+  }
+}

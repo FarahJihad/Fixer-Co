@@ -1031,3 +1031,29 @@
     transition: none !important;
   }
 }
+
+
+/* FINAL MOBILE WIDTH SAFETY — mobile only */
+@media (max-width: 620px) {
+  .old-services-page,
+  .old-page-hero,
+  .old-services-page-section {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  .old-services-page * {
+    min-width: 0;
+  }
+
+  .old-services-page .home-services-grid,
+  .old-services-page .home-service-grid-card {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .services-home-liquid-button {
+    max-width: 100%;
+  }
+}

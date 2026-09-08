@@ -694,3 +694,24 @@
     animation: none !important;
   }
 }
+
+
+/* FINAL MOBILE WIDTH SAFETY — mobile only */
+@media (max-width: 620px) {
+  .tech-page,
+  .tech-page-hero,
+  .tech-main-section {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  .tech-page * {
+    min-width: 0;
+  }
+
+  .tech-card,
+  .technician-card {
+    max-width: 100%;
+  }
+}
