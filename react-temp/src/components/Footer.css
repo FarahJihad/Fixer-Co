@@ -158,3 +158,73 @@
     transition: none !important;
   }
 }
+
+/* =========================================
+   FOOTER — SLIDING LINK HOVER
+   ========================================= */
+
+.site-footer__column .site-footer__link {
+  position: relative;
+  display: inline-block;
+  width: fit-content;
+  overflow: hidden;
+  padding: 1px 0 2px;
+  color: #b8c8d2;
+  line-height: 1.35;
+  transform: none;
+}
+
+.site-footer__column .site-footer__link > span {
+  display: block;
+  transition:
+    transform 300ms cubic-bezier(.22, 1, .36, 1),
+    opacity 220ms ease;
+}
+
+.site-footer__column .site-footer__link::after {
+  content: attr(data-label);
+  position: absolute;
+  inset-inline-start: 0;
+  top: 1px;
+  color: #79c7ad;
+  white-space: nowrap;
+  transform: translateY(125%);
+  transition:
+    transform 300ms cubic-bezier(.22, 1, .36, 1);
+}
+
+.site-footer__column .site-footer__link:hover {
+  color: #b8c8d2;
+  transform: none;
+}
+
+.site-footer__column .site-footer__link:hover > span {
+  transform: translateY(-125%);
+  opacity: .15;
+}
+
+.site-footer__column .site-footer__link:hover::after {
+  transform: translateY(0);
+}
+
+.site-footer__column .site-footer__link:focus-visible {
+  outline: 1px solid #79c7ad;
+  outline-offset: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .site-footer__column .site-footer__link > span,
+  .site-footer__column .site-footer__link::after {
+    transition: none !important;
+  }
+
+  .site-footer__column .site-footer__link:hover > span {
+    transform: none !important;
+    opacity: 1 !important;
+    color: #79c7ad;
+  }
+
+  .site-footer__column .site-footer__link::after {
+    display: none;
+  }
+}

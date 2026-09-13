@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useLanguage } from "../context/LanguageContext.jsx";
-import ScrollReveal from "../components/ScrollReveal.jsx";
+import Footer from "../components/Footer.jsx";
 import "./Services.css";
 
 function Services() {
@@ -29,11 +29,11 @@ function Services() {
           );
         }
 
-        const serviceList = Array.isArray(data)
-          ? data
-          : data.services || [];
-
-        setServices(serviceList);
+        setServices(
+          Array.isArray(data)
+            ? data
+            : data.services || []
+        );
       } catch (error) {
         console.error("Services error:", error);
 
@@ -51,286 +51,366 @@ function Services() {
     loadServices();
   }, [language]);
 
-  function handleServiceCardMouseMove(event) {
-    const card = event.currentTarget;
-    const rect = card.getBoundingClientRect();
-
-    card.style.setProperty(
-      "--mouse-x",
-      `${event.clientX - rect.left}px`
+  useEffect(() => {
+    const elements = Array.from(
+      document.querySelectorAll("[data-services-reveal]")
     );
 
-    card.style.setProperty(
-      "--mouse-y",
-      `${event.clientY - rect.top}px`
-    );
-  }
+    if (!elements.length) return;
 
-  function handleServiceCardMouseLeave(event) {
-    event.currentTarget.style.removeProperty("--mouse-x");
-    event.currentTarget.style.removeProperty("--mouse-y");
-  }
+    if (!("IntersectionObserver" in window)) {
+      elements.forEach((element) =>
+        element.classList.add("services-show")
+      );
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+
+          entry.target.classList.add("services-show");
+          observer.unobserve(entry.target);
+        });
+      },
+      {
+        threshold: 0.1,
+        rootMargin: "0px 0px -45px 0px",
+      }
+    );
+
+    elements.forEach((element) => {
+      const rect = element.getBoundingClientRect();
+
+      if (
+        rect.top < window.innerHeight - 20 &&
+        rect.bottom > 0
+      ) {
+        element.classList.add("services-show");
+      } else {
+        observer.observe(element);
+      }
+    });
+
+    return () => observer.disconnect();
+  }, [services, isLoading, language]);
 
   function openService(serviceId) {
     navigate(`/technicians?service=${serviceId}`);
   }
 
+  function goToSmartAssist() {
+    navigate("/");
+
+    window.setTimeout(() => {
+      const aiBox = document.querySelector(
+        ".home-hero-ai-glass"
+      );
+
+      if (aiBox) {
+        aiBox.scrollIntoView({
+          behavior: "smooth",
+          block: "center",
+        });
+      } else {
+        window.scrollTo({
+          top: 0,
+          behavior: "smooth",
+        });
+      }
+    }, 120);
+  }
+
   return (
     <main
       dir={isArabic ? "rtl" : "ltr"}
-      className="services-exact-page"
+      className="services-page"
     >
-      <ScrollReveal />
-
       {/* =========================
-          PAGE HEADER
+          EDITORIAL HERO
       ========================== */}
-      <section className="old-page-hero services-page-enter">
-        <div className="old-container">
-          <p className="old-section-label">
-            {tr("OUR SERVICES", "خدماتنا")}
-          </p>
-
-          <h1>
-            {tr(
-              "Home services made simple",
-              "خدمات منزلية بطريقة أبسط"
-            )}
-          </h1>
-
-          <p className="old-page-hero-description">
-            {tr(
-              "Choose the service you need and find trusted professionals ready to help.",
-              "اختر الخدمة التي تحتاجها واعثر على فنيين موثوقين جاهزين للمساعدة."
-            )}
-          </p>
+      <section className="services-hero">
+        <div
+          className="services-hero__word"
+          aria-hidden="true"
+        >
+          {tr("SERVICES", "خدماتنا")}
         </div>
       </section>
 
       {/* =========================
-          SERVICES
+          MOVING SERVICES TICKER
       ========================== */}
-      <section className="old-services-page-section services-page-enter services-page-enter-delay">
-        <div className="old-container">
+      <section
+        className="services-ticker"
+        aria-label={tr(
+          "Available service categories",
+          "فئات الخدمات المتاحة"
+        )}
+      >
+        <div className="services-ticker__track">
+          {[0, 1].map((copyIndex) => (
+            <div
+              key={copyIndex}
+              className="services-ticker__group"
+              aria-hidden={copyIndex === 1 ? "true" : undefined}
+            >
+              {[
+                tr("AC & COOLING", "التكييف والتبريد"),
+                tr("PLUMBING", "السباكة"),
+                tr("ELECTRICAL", "الكهرباء"),
+                tr("APPLIANCES", "الأجهزة المنزلية"),
+                tr("CARPENTRY & FURNITURE", "النجارة والأثاث"),
+                tr("GENERAL MAINTENANCE", "الصيانة العامة"),
+              ].map((item) => (
+                <span
+                  key={`${copyIndex}-${item}`}
+                  className="services-ticker__item"
+                >
+                  <span className="services-ticker__dot"></span>
+                  <span>{item}</span>
+                </span>
+              ))}
+            </div>
+          ))}
+        </div>
+      </section>
 
+      {/* =========================
+          SERVICES GRID
+      ========================== */}
+      <section className="services-catalog">
+        <div className="services-shell">
           <div
-            className="old-section-heading old-reveal"
-            data-reveal="up"
+            className="services-catalog__head"
+            data-services-reveal
           >
             <div>
-              <p className="old-section-label">
-                {tr("FIND WHAT YOU NEED", "اعثر على ما تحتاجه")}
+              <p className="services-kicker">
+                {tr("WHAT DO YOU NEED?", "ماذا تحتاج؟")}
               </p>
 
               <h2>
-                {tr("Explore our services", "استكشف خدماتنا")}
+                {tr(
+                  "Find the right service for your home",
+                  "اعثر على الخدمة المناسبة لمنزلك"
+                )}
               </h2>
             </div>
 
             <p>
               {tr(
-                "Select a service to view available technicians and compare your options.",
-                "اختر خدمة لعرض الفنيين المتاحين ومقارنة خياراتك."
+                "Explore all available home services and choose the one that best matches your problem.",
+                "استكشف جميع الخدمات المنزلية واختر الخدمة الأقرب إلى مشكلتك."
               )}
             </p>
           </div>
 
           {isLoading && (
-            <div className="old-loading">
+            <div className="services-state">
               <i className="fa-solid fa-spinner fa-spin"></i>
               <span>
-                {tr("Loading services...", "جارٍ تحميل الخدمات...")}
+                {tr(
+                  "Loading services...",
+                  "جارٍ تحميل الخدمات..."
+                )}
               </span>
             </div>
           )}
 
           {!isLoading && error && (
-            <div className="old-error-box">
+            <div className="services-error">
               <i className="fa-solid fa-circle-exclamation"></i>
+
               <div>
                 <strong>
-                  {tr("Could not load services", "تعذر تحميل الخدمات")}
+                  {tr(
+                    "Could not load services",
+                    "تعذر تحميل الخدمات"
+                  )}
                 </strong>
+
                 <p>{error}</p>
               </div>
             </div>
           )}
 
-          {!isLoading && !error && services.length > 0 && (
-            <div className="old-services-grid">
-              {services.map((service, index) => (
-                <button
-                  key={service.id}
-                  type="button"
-                  onClick={() => openService(service.id)}
-                  onMouseMove={handleServiceCardMouseMove}
-                  onMouseLeave={handleServiceCardMouseLeave}
-                  className="old-service-card old-motion-item"
-                  data-reveal="up"
-                  style={{
-                    "--motion-delay": `${index * 80}ms`,
-                  }}
-                >
-                  <span
-                    className="old-service-hover-glow"
-                    aria-hidden="true"
-                  ></span>
+          {!isLoading &&
+            !error &&
+            services.length > 0 && (
+              <div className="services-grid">
+                {services.map((service, index) => (
+                  <button
+                    key={service.id}
+                    type="button"
+                    onClick={() =>
+                      openService(service.id)
+                    }
+                    className="services-card"
+                    data-services-reveal
+                    style={{
+                      "--services-delay": `${index * 90}ms`,
+                    }}
+                  >
+                    <img
+                      src={getServiceImage(service.name)}
+                      alt={translateServiceName(
+                        service.name,
+                        language
+                      )}
+                      className="services-card__image"
+                      style={{
+                        objectPosition:
+                          service.name === "Electrical"
+                            ? "30% center"
+                            : "center",
+                      }}
+                    />
 
-                  <div className="old-service-icon">
-                    <i className={getServiceIcon(service.id)}></i>
-                  </div>
+                    <span
+                      className="services-card__overlay"
+                      aria-hidden="true"
+                    ></span>
 
-                  <div className="old-service-copy">
-                    <h3>
-                      {translateServiceName(service.name, language)}
-                    </h3>
+                    <span className="services-card__number">
+                      {String(index + 1).padStart(2, "0")}
+                    </span>
 
-                    <p>
-                      {getOldServiceDescription(service.name, language)}
-                    </p>
-                  </div>
-                </button>
-              ))}
-            </div>
-          )}
+                    <span className="services-card__content">
+                      <span className="services-card__icon">
+                        <i
+                          className={getServiceIcon(
+                            service.id
+                          )}
+                        ></i>
+                      </span>
 
-          {!isLoading && !error && services.length === 0 && (
-            <div className="old-empty-box">
-              <i className="fa-solid fa-screwdriver-wrench"></i>
-              <strong>
-                {tr("No services available", "لا توجد خدمات متاحة")}
-              </strong>
-              <p>
-                {tr(
-                  "Please check again later.",
-                  "يرجى التحقق مرة أخرى لاحقًا."
-                )}
-              </p>
-            </div>
-          )}
+                      <span className="services-card__title">
+                        {translateServiceName(
+                          service.name,
+                          language
+                        )}
+                      </span>
 
+                      <span className="services-card__description">
+                        {getServiceDescription(
+                          service.name,
+                          language
+                        )}
+                      </span>
+                    </span>
+                  </button>
+                ))}
+              </div>
+            )}
+
+          {!isLoading &&
+            !error &&
+            services.length === 0 && (
+              <div className="services-state">
+                <i className="fa-solid fa-screwdriver-wrench"></i>
+                <span>
+                  {tr(
+                    "No services are available right now.",
+                    "لا توجد خدمات متاحة حاليًا."
+                  )}
+                </span>
+              </div>
+            )}
         </div>
       </section>
 
       {/* =========================
-          HELP SECTION
+          SMART ASSIST CTA
       ========================== */}
-      <section className="old-service-help">
+      <section className="services-assist">
         <div
-          className="old-container old-service-help-content old-reveal"
-          data-reveal="up"
+          className="services-shell services-assist__inner"
+          data-services-reveal
         >
           <div>
-            <p className="old-section-label">
+            <p className="services-kicker">
               {tr(
-                "NOT SURE WHAT YOU NEED?",
-                "لست متأكدًا مما تحتاجه؟"
+                "NOT SURE WHICH SERVICE?",
+                "لست متأكدًا من الخدمة؟"
               )}
             </p>
 
-            <h2>
-              {tr(
-                "Describe the problem instead.",
-                "صف المشكلة بدلًا من ذلك."
+            <h2 className="services-assist__title">
+              {isArabic ? (
+                <>
+                  <span>صف المشكلة</span>
+                  <span>وسنساعدك في تحديد الخدمة</span>
+                </>
+              ) : (
+                <>
+                  <span>Describe the problem</span>
+                  <span>We’ll guide you</span>
+                </>
               )}
             </h2>
 
             <p>
               {tr(
-                "Tell us what is happening and we’ll help match you with the right type of fixer.",
-                "أخبرنا بما يحدث وسنساعدك في الوصول إلى نوع الفني المناسب."
+                "Use Smart Assist on the home page to describe what is wrong or add a photo.",
+                "استخدم المساعد الذكي في الصفحة الرئيسية لوصف المشكلة أو إضافة صورة."
               )}
             </p>
           </div>
 
           <button
             type="button"
-            className="old-cta-button services-home-liquid-button"
-            onClick={() => {
-              navigate("/");
-
-              setTimeout(() => {
-                window.scrollTo({
-                  top: 0,
-                  behavior: "smooth",
-                });
-              }, 50);
-            }}
+            onClick={goToSmartAssist}
+            className="services-assist__button"
           >
-            <span
-              className="services-home-liquid-sheen"
-              aria-hidden="true"
-            ></span>
-
-            <span className="services-home-liquid-content">
-              {tr("Describe Your Problem", "صف مشكلتك")}
-            </span>
+            {tr(
+              "Try Smart Assist",
+              "جرّب المساعد الذكي"
+            )}
           </button>
         </div>
       </section>
 
-      {/* =========================
-          FOOTER
-      ========================== */}
-      <footer className="old-footer">
-        <div className="old-container old-footer-content">
-          <div>
-            <button
-              type="button"
-              className="old-footer-logo"
-              onClick={() => navigate("/")}
-            >
-              Fixer<span>.Co</span>
-            </button>
-
-            <p>
-              {tr(
-                "The right fix. Right around you.",
-                "الإصلاح المناسب، بالقرب منك."
-              )}
-            </p>
-          </div>
-
-          <div className="old-footer-links">
-            <button onClick={() => navigate("/services")}>
-              {tr("Services", "الخدمات")}
-            </button>
-
-            <button onClick={() => navigate("/technicians")}>
-              {tr("Find a Fixer", "ابحث عن فني")}
-            </button>
-
-            <button onClick={() => navigate("/about")}>
-              {tr("About Us", "من نحن")}
-            </button>
-
-            <button onClick={() => navigate("/contact")}>
-              {tr("Contact Us", "تواصل معنا")}
-            </button>
-
-            <button onClick={() => navigate("/become-fixer")}>
-              {tr("Become a Fixer", "انضم كفني")}
-            </button>
-          </div>
-
-          <p className="old-footer-copy">
-            © 2026 Fixer.Co
-          </p>
-        </div>
-      </footer>
+      <Footer />
     </main>
   );
 }
 
-/* Same service icon mapping as the old static version. */
+function getServiceImage(serviceName) {
+  const images = {
+    "AC & Cooling":
+      "/media/services/ac-cooling.png",
+    Plumbing:
+      "/media/services/plumbing.png",
+    Electrical:
+      "/media/services/electrical.png",
+    Appliances:
+      "/media/services/appliances.png",
+    Furniture:
+      "/media/services/carpentry-furniture.png",
+    "Carpentry & Furniture":
+      "/media/services/carpentry-furniture.png",
+    General:
+      "/media/services/general-maintenance.png",
+    "General Maintenance":
+      "/media/services/general-maintenance.png",
+  };
+
+  return (
+    images[serviceName] ||
+    "/media/services/general-maintenance.png"
+  );
+}
+
 function getServiceIcon(serviceId) {
   const icons = {
     1: "fa-solid fa-snowflake",
     2: "fa-solid fa-droplet",
     3: "fa-solid fa-bolt",
-    4: "fa-solid fa-screwdriver-wrench",
-    5: "fa-solid fa-hammer",
-    6: "fa-solid fa-house",
+    4: "fa-solid fa-tv",
+    5: "fa-solid fa-couch",
+    6: "fa-solid fa-screwdriver-wrench",
   };
 
   return (
@@ -356,55 +436,49 @@ function translateServiceName(name, language) {
   return names[name] || name;
 }
 
-function getOldServiceDescription(serviceName, language) {
+function getServiceDescription(serviceName, language) {
   const english = {
     "AC & Cooling":
-      "Find trusted professionals for AC & cooling.",
+      "Cooling, AC repair and maintenance.",
     Plumbing:
-      "Find trusted professionals for plumbing.",
+      "Plumbing and water repair services.",
     Electrical:
-      "Find trusted professionals for electrical.",
+      "Electrical repair and maintenance services.",
     Appliances:
-      "Find trusted professionals for appliances.",
+      "Home appliance repair services.",
     Furniture:
-      "Find trusted professionals for furniture.",
+      "Furniture repair and maintenance.",
     "Carpentry & Furniture":
-      "Find trusted professionals for carpentry & furniture.",
+      "Carpentry and furniture repair services.",
     General:
-      "Find trusted professionals for general maintenance.",
+      "General home repair and maintenance.",
     "General Maintenance":
-      "Find trusted professionals for general maintenance.",
+      "General home repair and maintenance.",
   };
 
   const arabic = {
     "AC & Cooling":
-      "اعثر على فنيين موثوقين لخدمات التكييف والتبريد.",
+      "إصلاح وصيانة أنظمة التكييف والتبريد.",
     Plumbing:
-      "اعثر على فنيين موثوقين لخدمات السباكة.",
+      "خدمات السباكة وإصلاح مشاكل المياه.",
     Electrical:
-      "اعثر على فنيين موثوقين لخدمات الكهرباء.",
+      "خدمات إصلاح وصيانة الكهرباء.",
     Appliances:
-      "اعثر على فنيين موثوقين لصيانة الأجهزة.",
+      "خدمات إصلاح الأجهزة المنزلية.",
     Furniture:
-      "اعثر على فنيين موثوقين لإصلاح الأثاث.",
+      "إصلاح وصيانة الأثاث.",
     "Carpentry & Furniture":
-      "اعثر على فنيين موثوقين للنجارة والأثاث.",
+      "خدمات النجارة وإصلاح الأثاث.",
     General:
-      "اعثر على فنيين موثوقين للصيانة العامة.",
+      "إصلاحات وصيانة منزلية عامة.",
     "General Maintenance":
-      "اعثر على فنيين موثوقين للصيانة العامة.",
+      "إصلاحات وصيانة منزلية عامة.",
   };
 
-  if (language === "ar") {
-    return (
-      arabic[serviceName] ||
-      "اعثر على فنيين موثوقين لهذه الخدمة."
-    );
-  }
-
   return (
-    english[serviceName] ||
-    "Find trusted professionals for this service."
+    (language === "ar" ? arabic : english)[
+      serviceName
+    ] || ""
   );
 }
 

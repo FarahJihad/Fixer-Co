@@ -45,16 +45,16 @@ function Footer() {
           <div className="site-footer__columns">
             <div className="site-footer__column">
               <h3>{tr("Explore", "استكشف")}</h3>
-              <button type="button" onClick={() => go("/services")}>{tr("Services", "الخدمات")}</button>
-              <button type="button" onClick={() => go("/technicians")}>{tr("Find a Fixer", "ابحث عن فني")}</button>
-              <button type="button" onClick={() => go("/become-fixer")}>{tr("Become a Fixer", "انضم كفني")}</button>
+              <button type="button" onClick={() => go("/services")} className="site-footer__link" data-label={tr("Services", "الخدمات")}><span>{tr("Services", "الخدمات")}</span></button>
+              <button type="button" onClick={() => go("/technicians")} className="site-footer__link" data-label={tr("Find a Fixer", "ابحث عن فني")}><span>{tr("Find a Fixer", "ابحث عن فني")}</span></button>
+              <button type="button" onClick={() => go("/become-fixer")} className="site-footer__link" data-label={tr("Become a Fixer", "انضم كفني")}><span>{tr("Become a Fixer", "انضم كفني")}</span></button>
             </div>
 
             <div className="site-footer__column">
               <h3>{tr("Company", "الشركة")}</h3>
-              <button type="button" onClick={() => go("/about")}>{tr("About Us", "من نحن")}</button>
-              <button type="button" onClick={() => go("/contact")}>{tr("Contact Us", "تواصل معنا")}</button>
-              <button type="button" onClick={() => go("/privacy")}>{tr("Privacy", "الخصوصية")}</button>
+              <button type="button" onClick={() => go("/about")} className="site-footer__link" data-label={tr("About Us", "من نحن")}><span>{tr("About Us", "من نحن")}</span></button>
+              <button type="button" onClick={() => go("/contact")} className="site-footer__link" data-label={tr("Contact Us", "تواصل معنا")}><span>{tr("Contact Us", "تواصل معنا")}</span></button>
+              <button type="button" onClick={() => go("/privacy")} className="site-footer__link" data-label={tr("Privacy", "الخصوصية")}><span>{tr("Privacy", "الخصوصية")}</span></button>
             </div>
           </div>
         </div>

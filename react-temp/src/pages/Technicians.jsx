@@ -4,6 +4,7 @@ import {
   useSearchParams,
 } from "react-router-dom";
 import { useLanguage } from "../context/LanguageContext.jsx";
+import Footer from "../components/Footer.jsx";
 import "./Technicians.css";
 
 function Technicians() {
@@ -574,34 +575,81 @@ function Technicians() {
     navigate(url);
   }
 
+  function handleHeroMove(event) {
+    const rect =
+      event.currentTarget.getBoundingClientRect();
+
+    const x =
+      ((event.clientX - rect.left) /
+        rect.width) *
+      100;
+
+    const y =
+      ((event.clientY - rect.top) /
+        rect.height) *
+      100;
+
+    event.currentTarget.style.setProperty(
+      "--hero-x",
+      `${x}%`
+    );
+
+    event.currentTarget.style.setProperty(
+      "--hero-y",
+      `${y}%`
+    );
+  }
+
+  function handleHeroLeave(event) {
+    event.currentTarget.style.removeProperty(
+      "--hero-x"
+    );
+
+    event.currentTarget.style.removeProperty(
+      "--hero-y"
+    );
+  }
+
   return (
     <main
       dir={isArabic ? "rtl" : "ltr"}
       className="technicians-page"
     >
+
       {/* PAGE HERO */}
-      <section className="tech-page-hero tech-page-enter">
-        <div className="tech-container">
-          <p className="tech-eyebrow">
-            {tr(
-              "FIND A FIXER",
-              "ابحث عن فني"
-            )}
-          </p>
+      <section
+        className="tech-find-hero-v2 tech-page-enter"
+        onMouseMove={handleHeroMove}
+        onMouseLeave={handleHeroLeave}
+      >
+        <div className="tech-find-hero-v2__line" aria-hidden="true"></div>
 
-          <h1>
-            {tr(
-              "Compare trusted professionals",
-              "قارن بين الفنيين الموثوقين"
-            )}
-          </h1>
+        <div className="tech-container tech-find-hero-v2__inner">
+          <div className="tech-find-hero-v2__copy">
+            <p className="tech-find-hero-v2__kicker">
+              {tr("FIND A FIXER", "ابحث عن فني")}
+            </p>
 
-          <p className="tech-hero-copy">
-            {tr(
-              "Browse Fixers by service, rating, distance, availability and price.",
-              "تصفح الفنيين حسب الخدمة والتقييم والمسافة والتوفر والسعر."
-            )}
-          </p>
+            <h1>
+              {isArabic ? (
+                <>
+                  <span>اعثر على فني</span>
+                  <span>يمكنك الوثوق به</span>
+                </>
+              ) : (
+                <>
+                  <span>Find someone you</span>
+                  <span>can trust</span>
+                </>
+              )}
+            </h1>
+          </div>
+
+          <div className="tech-find-hero-v2__meta">
+            <span>{tr("TRUSTED", "موثوق")}</span>
+            <span>{tr("LOCAL", "محلي")}</span>
+            <span>{tr("READY", "جاهز")}</span>
+          </div>
         </div>
       </section>
 
@@ -780,7 +828,8 @@ function Technicians() {
           {/* LOCATION STATUS */}
           {locationStatus && (
             <div
-              className={`tech-location-status ${locationStatusType}`}
+              className={`tech-location-status tech-reveal ${locationStatusType}`}
+            data-technician-reveal
             >
               <i
                 className={
@@ -836,14 +885,14 @@ function Technicians() {
 
           {/* ERROR */}
           {error && !isLoading && (
-            <div className="tech-error-box">
+            <div className="tech-error-box tech-reveal" data-technician-reveal>
               {error}
             </div>
           )}
 
           {/* LOADING */}
           {isLoading && (
-            <div className="tech-loading">
+            <div className="tech-loading tech-reveal" data-technician-reveal>
               <i className="fa-solid fa-spinner fa-spin"></i>
               {tr(
                 "Loading Fixers...",
@@ -857,7 +906,7 @@ function Technicians() {
             !error &&
             filteredTechnicians.length ===
               0 && (
-              <div className="tech-empty">
+              <div className="tech-empty tech-reveal" data-technician-reveal>
                 <div className="tech-empty-icon">
                   <i className="fa-solid fa-magnifying-glass"></i>
                 </div>
@@ -1070,93 +1119,12 @@ function Technicians() {
         </div>
       </section>
 
-      {/* FOOTER */}
-      <footer className="tech-footer">
-        <div className="tech-container tech-footer-content">
-          <div>
-            <button
-              type="button"
-              onClick={() =>
-                navigate("/")
-              }
-              className="tech-footer-logo"
-            >
-              Fixer
-              <span>.Co</span>
-            </button>
-
-            <p>
-              {tr(
-                "The right fix. Right around you.",
-                "الإصلاح المناسب، بالقرب منك."
-              )}
-            </p>
-          </div>
-
-          <div className="tech-footer-links">
-            <button
-              onClick={() =>
-                navigate("/services")
-              }
-            >
-              {tr(
-                "Services",
-                "الخدمات"
-              )}
-            </button>
-
-            <button
-              onClick={() =>
-                navigate("/technicians")
-              }
-            >
-              {tr(
-                "Find a Fixer",
-                "ابحث عن فني"
-              )}
-            </button>
-
-            <button
-              onClick={() =>
-                navigate("/about")
-              }
-            >
-              {tr(
-                "About Us",
-                "من نحن"
-              )}
-            </button>
-
-            <button
-              onClick={() =>
-                navigate("/contact")
-              }
-            >
-              {tr(
-                "Contact Us",
-                "تواصل معنا"
-              )}
-            </button>
-
-            <button
-              onClick={() =>
-                navigate(
-                  "/become-fixer"
-                )
-              }
-            >
-              {tr(
-                "Become a Fixer",
-                "انضم كفني"
-              )}
-            </button>
-          </div>
-
-          <p className="tech-footer-copy">
-            © 2026 Fixer.Co
-          </p>
-        </div>
-      </footer>
+      <div
+        className="tech-footer-reveal tech-reveal"
+        data-technician-reveal
+      >
+        <Footer />
+      </div>
     </main>
   );
 }

@@ -77,7 +77,9 @@ function Profile() {
     );
 
     if (!("IntersectionObserver" in window)) {
-      items.forEach((item) => item.classList.add("profile-show"));
+      items.forEach((item) =>
+        item.classList.add("profile-show")
+      );
       return;
     }
 
@@ -92,7 +94,7 @@ function Profile() {
       },
       {
         threshold: 0.08,
-        rootMargin: "0px 0px -45px 0px",
+        rootMargin: "0px 0px -42px 0px",
       }
     );
 
@@ -132,24 +134,52 @@ function Profile() {
     navigate(`/request?${query.toString()}`);
   }
 
+  const isAvailable =
+    Number(technician?.available) === 1;
+
+  const reviews = [
+    {
+      initials: "SA",
+      name: tr("Sarah Ahmed", "سارة أحمد"),
+      text: tr(
+        "Very professional and arrived on time. The issue was fixed quickly and everything was explained clearly.",
+        "فني محترف ووصل في الوقت المحدد. تم حل المشكلة بسرعة وشرح كل شيء بوضوح."
+      ),
+    },
+    {
+      initials: "MK",
+      name: tr("Mohammed Khalid", "محمد خالد"),
+      text: tr(
+        "Great service and fair price. I would definitely request this fixer again.",
+        "خدمة ممتازة وسعر مناسب. بالتأكيد سأطلب هذا الفني مرة أخرى."
+      ),
+    },
+  ];
+
   return (
     <main
-      dir={isArabic ? "rtl" : "ltr"}
       className="profile-page"
+      dir={isArabic ? "rtl" : "ltr"}
     >
-      <section className="profile-section">
+      <section className="profile-shell">
         <div className="profile-container">
           <button
             type="button"
             onClick={goBack}
-            className="profile-back profile-reveal"
-            data-profile-reveal
+            className="profile-back"
           >
-            {tr("Back to Fixers", "العودة إلى الفنيين")}
+            <i
+              className={`fa-solid ${
+                isArabic
+                  ? "fa-arrow-right"
+                  : "fa-arrow-left"
+              }`}
+            ></i>
+            {tr("Back to Fixers", "العودة للفنيين")}
           </button>
 
           {isLoading && (
-            <div className="profile-state-card">
+            <div className="profile-state">
               <i className="fa-solid fa-spinner fa-spin"></i>
               {tr(
                 "Loading fixer profile...",
@@ -159,47 +189,32 @@ function Profile() {
           )}
 
           {!isLoading && error && (
-            <div className="profile-error-card">
-              <div className="profile-error-icon">
-                <i className="fa-solid fa-circle-exclamation"></i>
-              </div>
-
-              <h1>
-                {tr(
-                  "Fixer not found",
-                  "لم يتم العثور على الفني"
-                )}
-              </h1>
-
-              <p>{error}</p>
-
-              <button
-                type="button"
-                onClick={() => navigate("/technicians")}
-              >
-                {tr(
-                  "Browse Fixers",
-                  "تصفح الفنيين"
-                )}
-              </button>
+            <div className="profile-state profile-state-error">
+              <i className="fa-solid fa-circle-exclamation"></i>
+              {error}
             </div>
           )}
 
           {!isLoading && !error && technician && (
-            <article className="profile-shell">
-              {/* PROFILE TOP */}
+            <>
+              {/* HERO */}
               <section
-                className="profile-top profile-reveal"
+                className="profile-hero"
                 data-profile-reveal
               >
-                <div className="profile-top-main">
+                <div className="profile-hero-glow"></div>
+
+                <div className="profile-identity">
                   <div className="profile-avatar">
                     {getInitials(technician.name)}
                   </div>
 
-                  <div className="profile-main-info">
-                    <p className="profile-label">
-                      {tr("FIXER PROFILE", "ملف الفني")}
+                  <div className="profile-identity-copy">
+                    <p className="profile-kicker">
+                      {tr(
+                        "FIXER PROFILE",
+                        "ملف الفني"
+                      )}
                     </p>
 
                     <div className="profile-name-row">
@@ -216,93 +231,123 @@ function Profile() {
                       )}
                     </div>
 
-                    <p className="profile-service">
-                      {translateServiceName(
-                        technician.service_name,
-                        language
-                      )}
+                    <p className="profile-specialty">
+                      {technician.service_name}
                     </p>
-
-                    <div className="profile-meta">
-                      <span>
-                        <i className="fa-solid fa-star profile-star"></i>
-                        {Number(technician.rating).toFixed(1)}{" "}
-                        {tr("Rating", "التقييم")}
-                      </span>
-
-                      <span>
-                        <i className="fa-solid fa-location-dot"></i>
-                        {technician.location}
-                      </span>
-
-                      <span
-                        className={
-                          Number(technician.available) === 1
-                            ? "profile-available"
-                            : "profile-unavailable"
-                        }
-                      >
-                        <i className="fa-solid fa-circle"></i>
-                        {Number(technician.available) === 1
-                          ? tr(
-                              "Available now",
-                              "متاح الآن"
-                            )
-                          : tr(
-                              "Currently unavailable",
-                              "غير متاح حاليًا"
-                            )}
-                      </span>
-
-                      <span className="profile-price-inline">
-                        <i className="fa-solid fa-tag"></i>
-                        {tr("From", "ابتداءً من")}{" "}
-                        {Number(
-                          technician.price ??
-                            technician.starting_price
-                        ).toFixed(0)}{" "}
-                        {tr("SAR", "ر.س")}
-                      </span>
-                    </div>
                   </div>
+                </div>
+
+                <div className="profile-meta-grid">
+                  <MetaItem
+                    icon="fa-solid fa-star"
+                    label={tr("Rating", "التقييم")}
+                    value={`${Number(
+                      technician.rating || 0
+                    ).toFixed(1)} / 5`}
+                    accent="star"
+                  />
+
+                  <MetaItem
+                    icon="fa-solid fa-location-dot"
+                    label={tr("Location", "الموقع")}
+                    value={
+                      technician.location ||
+                      tr("Not specified", "غير محدد")
+                    }
+                  />
+
+                  <MetaItem
+                    icon="fa-solid fa-circle"
+                    label={tr(
+                      "Availability",
+                      "التوفر"
+                    )}
+                    value={
+                      isAvailable
+                        ? tr(
+                            "Available now",
+                            "متاح الآن"
+                          )
+                        : tr(
+                            "Currently unavailable",
+                            "غير متاح حاليًا"
+                          )
+                    }
+                    accent={
+                      isAvailable
+                        ? "available"
+                        : "muted"
+                    }
+                  />
+
+                  <MetaItem
+                    icon="fa-solid fa-tag"
+                    label={tr(
+                      "Starting from",
+                      "يبدأ من"
+                    )}
+                    value={`${Number(
+                      technician.price ??
+                        technician.starting_price ??
+                        0
+                    ).toFixed(0)} ${tr(
+                      "SAR",
+                      "ر.س"
+                    )}`}
+                  />
                 </div>
               </section>
 
               {/* ABOUT */}
               <section
-                className="profile-about profile-reveal"
+                className="profile-about"
                 data-profile-reveal
               >
-                <h2>
-                  {tr(
-                    "About this Fixer",
-                    "عن هذا الفني"
-                  )}
-                </h2>
+                <div>
+                  <p className="profile-section-label">
+                    {tr(
+                      "ABOUT THE FIXER",
+                      "عن الفني"
+                    )}
+                  </p>
 
-                <p>
+                  <h2 className="profile-about-title">
+                    {isArabic ? (
+                      <>
+                        <span>خبرة</span>
+                        <span>موثوقية</span>
+                        <span>جاهز للمساعدة</span>
+                      </>
+                    ) : (
+                      <>
+                        <span>Experienced</span>
+                        <span>Reliable</span>
+                        <span>Ready to help</span>
+                      </>
+                    )}
+                  </h2>
+                </div>
+
+                <p className="profile-about-text">
                   {technician.bio ||
                     tr(
-                      `Experienced professional specializing in ${technician.service_name.toLowerCase()}. Provides reliable home maintenance services with a focus on quality and customer satisfaction.`,
-                      `فني محترف متخصص في ${translateServiceName(
-                        technician.service_name,
-                        language
-                      )} ويقدم خدمات صيانة منزلية موثوقة مع التركيز على الجودة ورضا العملاء.`
+                      `Experienced professional specializing in ${technician.service_name}. Provides reliable home maintenance services with a focus on quality and customer satisfaction.`,
+                      `فني محترف متخصص في ${technician.service_name} ويقدم خدمات صيانة منزلية موثوقة مع التركيز على الجودة ورضا العملاء.`
                     )}
                 </p>
               </section>
 
               {/* REVIEWS */}
               <section
-                className="profile-reviews profile-reveal"
+                className="profile-reviews"
                 data-profile-reveal
               >
-                <div className="reviews-heading">
+                <div className="profile-section-head">
                   <div>
-                    <p className="profile-label">
+                    <p className="profile-section-label">
                       {tr(
                         "CUSTOMER REVIEWS",
-                        "مراجعات العملاء"
+                        "آراء العملاء"
                       )}
                     </p>
 
@@ -314,53 +359,78 @@ function Profile() {
                     </h2>
                   </div>
 
-                  <span className="review-score">
+                  <div className="profile-review-score">
                     <i className="fa-solid fa-star"></i>
-                    {Number(technician.rating).toFixed(1)}
-                  </span>
+                    {Number(
+                      technician.rating || 0
+                    ).toFixed(1)}
+                  </div>
                 </div>
 
-                <div className="reviews-grid profile-hover-focus-group">
-                  <ReviewCard
-                    initials="SA"
-                    name={tr("Sarah Ahmed", "سارة أحمد")}
-                    text={tr(
-                      "Very professional and arrived on time. The issue was fixed quickly and everything was explained clearly.",
-                      "فني محترف جدًا ووصل في الوقت المحدد. تم إصلاح المشكلة بسرعة وشرح كل شيء بوضوح."
-                    )}
-                    role={tr(
-                      "Verified customer",
-                      "عميلة موثّقة"
-                    )}
-                    delay="0ms"
-                  />
+                <div className="profile-review-grid">
+                  {reviews.map((review, index) => (
+                    <article
+                      key={review.name}
+                      className="profile-review-card"
+                      data-profile-reveal
+                      style={{
+                        "--profile-delay": `${
+                          index * 90
+                        }ms`,
+                      }}
+                    >
+                      <div className="profile-review-stars">
+                        {[0, 1, 2, 3, 4].map(
+                          (star) => (
+                            <i
+                              key={star}
+                              className="fa-solid fa-star"
+                            ></i>
+                          )
+                        )}
+                      </div>
 
-                  <ReviewCard
-                    initials="MK"
-                    name={tr(
-                      "Mohammed Khalid",
-                      "محمد خالد"
-                    )}
-                    text={tr(
-                      "Great service and fair price. I would definitely request this fixer again.",
-                      "خدمة ممتازة وسعر عادل. بالتأكيد سأطلب هذا الفني مرة أخرى."
-                    )}
-                    role={tr(
-                      "Verified customer",
-                      "عميل موثّق"
-                    )}
-                    delay="80ms"
-                  />
+                      <p className="profile-review-text">
+                        “{review.text}”
+                      </p>
+
+                      <div
+                        className="profile-review-quote"
+                        aria-hidden="true"
+                      >
+                        “
+                      </div>
+
+                      <div className="profile-review-person">
+                        <div className="profile-review-avatar">
+                          {review.initials}
+                        </div>
+
+                        <div>
+                          <span className="profile-review-name">
+                            {review.name}
+                          </span>
+
+                          <span className="profile-review-verified">
+                            {tr(
+                              "Verified customer",
+                              "عميل موثّق"
+                            )}
+                          </span>
+                        </div>
+                      </div>
+                    </article>
+                  ))}
                 </div>
               </section>
 
-              {/* REQUEST AREA */}
+              {/* CTA */}
               <section
-                className="profile-request-area profile-reveal"
+                className="profile-cta"
                 data-profile-reveal
               >
                 <div>
-                  <p>
+                  <p className="profile-cta-kicker">
                     {tr(
                       "Need this service?",
                       "تحتاج هذه الخدمة؟"
@@ -370,53 +440,30 @@ function Profile() {
                   <h2>
                     {tr(
                       `Request ${technician.name}`,
-                      `اطلب ${technician.name}`
+                      `اطلب خدمة ${technician.name}`
                     )}
                   </h2>
+
+                  <p>
+                    {tr(
+                      "Send your request and continue with the service details.",
+                      "أرسل طلبك وأكمل تفاصيل الخدمة."
+                    )}
+                  </p>
                 </div>
 
                 <button
                   type="button"
                   onClick={requestService}
-                  disabled={
-                    Number(technician.available) !== 1
-                  }
-                  className="profile-request-cta profile-particle-button"
+                  className="profile-cta-button"
                 >
-                  {Number(technician.available) === 1 && (
-                    <span
-                      className="profile-particles"
-                      aria-hidden="true"
-                    >
-                      <span></span>
-                      <span></span>
-                      <span></span>
-                      <span></span>
-                      <span></span>
-                      <span></span>
-                      <span></span>
-                      <span></span>
-                    </span>
-                  )}
-
-                  <span className="profile-particle-label">
-                    {Number(technician.available) === 1
-                      ? tr(
-                          "Request This Fixer",
-                          "اطلب هذا الفني"
-                        )
-                      : tr(
-                          "Currently Unavailable",
-                          "غير متاح حاليًا"
-                        )}
-                  </span>
-
-                  {Number(technician.available) !== 1 && (
-                    <i className="fa-solid fa-clock"></i>
+                  {tr(
+                    "Request This Fixer",
+                    "اطلب هذا الفني"
                   )}
                 </button>
               </section>
-            </article>
+            </>
           )}
         </div>
       </section>
@@ -426,81 +473,36 @@ function Profile() {
   );
 }
 
-function ReviewCard({
-  initials,
-  name,
-  text,
-  role,
-  delay,
+function MetaItem({
+  icon,
+  label,
+  value,
+  accent = "",
 }) {
   return (
-    <article
-      className="review-card profile-focus-item profile-reveal"
-      data-profile-reveal
-      style={{
-        "--profile-delay": delay,
-      }}
-    >
-      <div className="review-card-topline">
-        <div className="review-stars">
-          {[1, 2, 3, 4, 5].map((star) => (
-            <i
-              key={star}
-              className="fa-solid fa-star"
-            ></i>
-          ))}
-        </div>
-
-        <i
-          className="fa-solid fa-quote-right review-quote"
-          aria-hidden="true"
-        ></i>
+    <div className={`profile-meta-item ${accent}`}>
+      <div className="profile-meta-icon">
+        <i className={icon}></i>
       </div>
 
-      <p className="review-text">{text}</p>
-
-      <div className="review-person">
-        <div className="review-avatar">
-          {initials}
-        </div>
-
-        <div>
-          <h3>{name}</h3>
-          <span>{role}</span>
-        </div>
+      <div>
+        <span>{label}</span>
+        <strong>{value}</strong>
       </div>
-    </article>
+    </div>
   );
 }
 
 function getInitials(name) {
-  if (!name) return "F";
+  if (!name) return "FX";
 
   return name
     .split(" ")
+    .filter(Boolean)
+    .slice(0, 2)
     .map((word) => word[0])
     .join("")
-    .substring(0, 2)
     .toUpperCase();
-}
-
-function translateServiceName(name, language) {
-  if (language !== "ar") return name;
-
-  const names = {
-    "AC & Cooling": "التكييف والتبريد",
-    Plumbing: "السباكة",
-    Electrical: "الكهرباء",
-    Appliances: "الأجهزة المنزلية",
-    Furniture: "الأثاث",
-    "Carpentry & Furniture":
-      "النجارة والأثاث",
-    General: "الصيانة العامة",
-    "General Maintenance":
-      "الصيانة العامة",
-  };
-
-  return names[name] || name;
 }
 
 export default Profile;
