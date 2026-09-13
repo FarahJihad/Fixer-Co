@@ -4763,6 +4763,102 @@
   word-spacing: 0.055em !important;
 }
 
+/* =========================================================
+   ARABIC-ONLY FIXES
+   IMPORTANT: English/current desktop layout stays untouched.
+   No global spacing overrides are added here.
+   ========================================================= */
+
+/* Keep Arabic content on the same LEFT/light side of the hero image
+   while text itself remains RTL. */
+[dir="rtl"] .home-hero-editorial-inner {
+  direction: ltr;
+  justify-content: flex-start;
+}
+
+[dir="rtl"] .home-hero-editorial-content {
+  direction: rtl;
+  text-align: right;
+}
+
+/* Arabic typography only */
+[dir="rtl"] .home-hero-editorial-heading {
+  max-width: 650px !important;
+  font-size: clamp(40px, 4.55vw, 61px) !important;
+  line-height: 1.12 !important;
+  letter-spacing: 0 !important;
+  word-spacing: normal !important;
+}
+
+[dir="rtl"] .home-hero-word {
+  letter-spacing: 0 !important;
+  word-spacing: normal !important;
+  line-height: 1.08 !important;
+}
+
+[dir="rtl"] .home-hero-editorial-copy {
+  max-width: 570px !important;
+  margin-inline-start: auto;
+  margin-inline-end: 0;
+  line-height: 1.85 !important;
+}
+
+/* Smart Assist Arabic alignment only — dimensions/spacing remain original */
+[dir="rtl"] .home-hero-ai-glass {
+  margin-inline-start: auto;
+  margin-inline-end: 0;
+}
+
+[dir="rtl"] .home-hero-ai-head,
+[dir="rtl"] .home-hero-ai-examples {
+  text-align: right;
+}
+
+[dir="rtl"] .home-hero-ai-row {
+  direction: rtl;
+}
+
+[dir="rtl"] .home-hero-ai-input {
+  text-align: right;
+}
+
+[dir="rtl"] .home-hero-ai-examples {
+  justify-content: flex-start;
+}
+
+/* Keep slider controls visually conventional in RTL */
+[dir="rtl"] .home-services-story-controls {
+  direction: ltr;
+}
+
+/* Arabic responsive only */
+@media (max-width: 900px) {
+  [dir="rtl"] .home-hero-editorial-content {
+    width: min(650px, 72%) !important;
+  }
+
+  [dir="rtl"] .home-hero-editorial-heading {
+    font-size: clamp(38px, 5.7vw, 54px) !important;
+  }
+}
+
+@media (max-width: 700px) {
+  [dir="rtl"] .home-hero-editorial-content {
+    width: 100% !important;
+  }
+
+  [dir="rtl"] .home-hero-editorial-heading {
+    max-width: 100% !important;
+    font-size: clamp(34px, 10.2vw, 45px) !important;
+    line-height: 1.15 !important;
+  }
+
+  [dir="rtl"] .home-hero-editorial-copy {
+    max-width: 100% !important;
+    font-size: 13.5px !important;
+  }
+}
+
 /* =========================================
    HOW IT WORKS — CLEAN CONNECTED STEPS
    ========================================= */
@@ -5049,168 +5145,272 @@
   }
 }
 
-/* =========================================
-   HOME — FINAL CTA
-   ========================================= */
+/* =========================================================
+   HOME — ARABIC + SLIDER + MOBILE FIX
+   English desktop layout remains untouched.
+   ========================================================= */
 
-.home-final-cta {
-  padding: 88px 0 92px;
-  background: #eaf2ee;
-  border-top: 1px solid rgba(16, 45, 67, .05);
+/* ---------- ARABIC HERO ---------- */
+
+[dir="rtl"] .home-hero-editorial-inner {
+  direction: ltr;
+  justify-content: flex-start;
 }
 
-.home-final-cta__inner {
-  width: min(90%, 1160px);
-  margin: 0 auto;
-
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 64px;
+[dir="rtl"] .home-hero-editorial-content {
+  direction: rtl;
+  text-align: right;
 }
 
-.home-final-cta__copy {
-  max-width: 720px;
+[dir="rtl"] .home-hero-editorial-heading {
+  max-width: 640px !important;
+  font-size: clamp(40px, 4.4vw, 60px) !important;
+  line-height: 1.14 !important;
+  letter-spacing: 0 !important;
+  word-spacing: normal !important;
 }
 
-.home-final-cta__kicker {
-  margin: 0 0 14px;
-  color: #3d9276;
-  font-family: "Plus Jakarta Sans", sans-serif;
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: .17em;
-  text-transform: uppercase;
+[dir="rtl"] .home-hero-word {
+  letter-spacing: 0 !important;
+  line-height: 1.08 !important;
 }
 
-.home-final-cta__title {
-  margin: 0;
-  color: #102d43;
-  font-family: "Plus Jakarta Sans", sans-serif;
-  font-size: clamp(34px, 4.2vw, 54px);
-  font-weight: 600;
-  line-height: 1.06;
-  letter-spacing: -.025em;
+[dir="rtl"] .home-hero-editorial-copy {
+  max-width: 560px !important;
+  margin-inline-start: auto;
+  margin-inline-end: 0;
+  line-height: 1.85 !important;
 }
 
-.home-final-cta__text {
-  max-width: 610px;
-  margin: 16px 0 0;
-  color: #66757f;
-  font-family: "Plus Jakarta Sans", sans-serif;
-  font-size: 15px;
-  line-height: 1.7;
+[dir="rtl"] .home-hero-ai-glass {
+  margin-inline-start: auto;
+  margin-inline-end: 0;
 }
 
-.home-final-cta__button {
-  position: relative;
-  flex: 0 0 auto;
-
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 16px;
-
-  min-width: 220px;
-  min-height: 62px;
-  padding: 18px 26px;
-
-  border: 1px solid rgba(255,255,255,.16);
-  border-radius: 999px;
-
-  background: #102d43;
-  color: #ffffff;
-
-  font-family: "Plus Jakarta Sans", sans-serif;
-  font-size: 14px;
-  font-weight: 600;
-
-  box-shadow: 0 14px 30px rgba(16,45,67,.14);
-  cursor: pointer;
-
-  transition:
-    transform 260ms cubic-bezier(.22,1,.36,1),
-    background-color 220ms ease,
-    box-shadow 260ms ease;
+[dir="rtl"] .home-hero-ai-head,
+[dir="rtl"] .home-hero-ai-examples {
+  text-align: right;
 }
 
-.home-final-cta__arrow {
-  display: inline-block;
-  font-size: 18px;
-  transition: transform 260ms cubic-bezier(.22,1,.36,1);
+[dir="rtl"] .home-hero-ai-row {
+  direction: rtl;
 }
 
-.home-final-cta__button:hover {
-  transform: translateY(-3px);
-  background: #173b57;
-  box-shadow: 0 20px 38px rgba(16,45,67,.20);
+[dir="rtl"] .home-hero-ai-input {
+  text-align: right;
 }
 
-.home-final-cta__button:hover .home-final-cta__arrow {
-  transform: translateX(5px);
+/* ---------- ARABIC SERVICE SLIDER ---------- */
+
+/* Keep arrows visually intuitive:
+   left arrow on left, right arrow on right.
+   Scroll logic in JSX is still RTL-aware. */
+[dir="rtl"] .home-services-story-controls {
+  direction: ltr;
 }
 
-[dir="rtl"] .home-final-cta__kicker,
-[dir="rtl"] .home-final-cta__title,
-[dir="rtl"] .home-final-cta__text,
-[dir="rtl"] .home-final-cta__button {
-  font-family: "IBM Plex Sans Arabic", sans-serif;
+[dir="rtl"] .home-services-story-nav-prev {
+  left: auto !important;
+  right: auto !important;
 }
 
-[dir="rtl"] .home-final-cta__button:hover .home-final-cta__arrow {
-  transform: translateX(-5px);
+[dir="rtl"] .home-services-story-nav-next {
+  left: auto !important;
+  right: auto !important;
 }
 
-@media (max-width: 800px) {
-  .home-final-cta {
-    padding: 76px 0 80px;
+/* When controls are in the bottom centered layout,
+   make sure Arabic doesn't reverse their visual order. */
+[dir="rtl"] .home-services-story-controls {
+  flex-direction: row !important;
+}
+
+[dir="rtl"] .home-services-story-dots {
+  direction: ltr;
+}
+
+/* ---------- TABLET ---------- */
+
+@media (max-width: 900px) {
+  [dir="rtl"] .home-hero-editorial-content {
+    width: min(650px, 76%) !important;
   }
 
-  .home-final-cta__inner {
+  [dir="rtl"] .home-hero-editorial-heading {
+    font-size: clamp(38px, 6vw, 52px) !important;
+  }
+
+  .home-services-story-controls {
+    gap: 14px !important;
+  }
+
+  .home-services-story-nav {
+    font-size: 30px !important;
+    line-height: 1 !important;
+  }
+}
+
+/* ---------- MOBILE ---------- */
+
+@media (max-width: 700px) {
+  [dir="rtl"] .home-hero-editorial-inner {
+    direction: ltr;
     align-items: flex-start;
-    flex-direction: column;
-    gap: 34px;
+  }
+
+  [dir="rtl"] .home-hero-editorial-content {
+    direction: rtl;
+    width: 100% !important;
+    text-align: right;
+  }
+
+  [dir="rtl"] .home-hero-editorial-heading {
+    max-width: 100% !important;
+    font-size: clamp(33px, 10vw, 43px) !important;
+    line-height: 1.16 !important;
+  }
+
+  [dir="rtl"] .home-hero-editorial-copy {
+    max-width: 100% !important;
+    font-size: 13px !important;
+    line-height: 1.8 !important;
+  }
+
+  [dir="rtl"] .home-hero-ai-glass {
+    width: 100% !important;
+  }
+
+  [dir="rtl"] .home-hero-ai-row {
+    direction: rtl;
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    align-items: center !important;
+  }
+
+  [dir="rtl"] .home-hero-ai-input {
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
+    text-align: right;
+  }
+
+  [dir="rtl"] .home-hero-ai-examples {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    justify-content: flex-start !important;
+    gap: 6px !important;
+  }
+
+  /* Slider mobile: swipe-first + compact controls */
+  .home-services-story-wrap {
+    padding-bottom: 42px !important;
+  }
+
+  .home-services-story-track {
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .home-service-story-card {
+    scroll-snap-align: start;
+  }
+
+  .home-services-story-controls {
+    position: relative !important;
+    bottom: auto !important;
+    left: auto !important;
+    right: auto !important;
+
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+
+    width: 100% !important;
+    margin-top: 18px !important;
+
+    gap: 12px !important;
+  }
+
+  .home-services-story-dots {
+    position: static !important;
+    transform: none !important;
+
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+
+    gap: 7px !important;
+  }
+
+  .home-services-story-nav {
+    position: static !important;
+
+    width: 30px !important;
+    height: 30px !important;
+
+    display: grid !important;
+    place-items: center !important;
+
+    transform: none !important;
+
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+
+    color: #173b57 !important;
+
+    font-size: 27px !important;
+    font-weight: 400 !important;
+    line-height: 1 !important;
+  }
+
+  .home-services-story-nav:hover {
+    transform: none !important;
+    background: transparent !important;
+  }
+
+  .home-services-story-nav.is-hidden {
+    opacity: 0 !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+    transform: none !important;
+  }
+
+  .home-services-story-dot {
+    width: 7px !important;
+    height: 7px !important;
+  }
+
+  .home-services-story-dot.is-active {
+    width: 34px !important;
+    height: 7px !important;
   }
 }
 
-@media (max-width: 620px) {
-  .home-final-cta__title {
-    font-size: clamp(30px, 9vw, 40px);
+/* ---------- SMALL MOBILE ---------- */
+
+@media (max-width: 480px) {
+  [dir="rtl"] .home-hero-editorial-heading {
+    font-size: clamp(30px, 9.8vw, 38px) !important;
   }
 
-  .home-final-cta__button {
-    width: 100%;
+  .home-services-story-controls {
+    gap: 9px !important;
   }
-}
 
-/* =========================================
-   FINAL CTA — TWO TONE TITLE / NO ARROW
-   ========================================= */
+  .home-services-story-nav {
+    width: 28px !important;
+    height: 28px !important;
+    font-size: 25px !important;
+  }
 
-.home-final-cta__title {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
+  .home-services-story-dot {
+    width: 6px !important;
+    height: 6px !important;
+  }
 
-.home-final-cta__title-main,
-.home-final-cta__title-accent {
-  display: block;
-}
-
-.home-final-cta__title-main {
-  color: #102d43;
-}
-
-.home-final-cta__title-accent {
-  color: #3d9276;
-}
-
-.home-final-cta__button {
-  gap: 0 !important;
-  min-width: 205px;
-}
-
-.home-final-cta__arrow {
-  display: none !important;
+  .home-services-story-dot.is-active {
+    width: 30px !important;
+    height: 6px !important;
+  }
 }

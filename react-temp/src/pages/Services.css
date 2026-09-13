@@ -1433,3 +1433,79 @@
   top: 50% !important;
   transform: translate(-50%, -50%) !important;
 }
+
+/* =========================================================
+   SERVICES — MOBILE ONLY FIX
+   Desktop/tablet original design is untouched.
+   ========================================================= */
+
+@media (max-width: 700px) {
+  .services-hero {
+    min-height: 360px !important;
+    padding: 38px 0 30px !important;
+  }
+
+  .services-hero__word {
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+
+    width: 100% !important;
+    max-width: 100% !important;
+
+    padding-inline: 18px !important;
+
+    font-size: clamp(58px, 18vw, 82px) !important;
+    line-height: .92 !important;
+    letter-spacing: -.055em !important;
+
+    text-align: center !important;
+    white-space: nowrap !important;
+
+    overflow: visible !important;
+  }
+
+  .services-ticker__track {
+    padding: 13px 0 !important;
+    animation-duration: 26s !important;
+  }
+
+  .services-ticker__item {
+    gap: 10px !important;
+    padding-inline: 16px !important;
+    font-size: 10px !important;
+    letter-spacing: .09em !important;
+  }
+
+  .services-ticker__dot {
+    width: 5px !important;
+    height: 5px !important;
+  }
+
+  .services-ticker::before,
+  .services-ticker::after {
+    width: 24px !important;
+  }
+
+  .services-catalog {
+    padding-top: 56px !important;
+  }
+}
+
+/* Very small phones */
+@media (max-width: 430px) {
+  .services-hero {
+    min-height: 320px !important;
+  }
+
+  .services-hero__word {
+    padding-inline: 14px !important;
+    font-size: clamp(50px, 17.5vw, 68px) !important;
+    letter-spacing: -.06em !important;
+  }
+
+  .services-ticker__item {
+    padding-inline: 13px !important;
+    font-size: 9.5px !important;
+  }
+}

@@ -748,7 +748,7 @@ setAiError(
             onClick={() => scrollServices(isArabic ? 1 : -1)}
             aria-label={tr("Previous services", "الخدمات السابقة")}
           >
-            <span aria-hidden="true">{isArabic ? "›" : "‹"}</span>
+            <span aria-hidden="true">‹</span>
           </button>
 
           <div
@@ -774,7 +774,7 @@ setAiError(
             onClick={() => scrollServices(isArabic ? -1 : 1)}
             aria-label={tr("Next services", "الخدمات التالية")}
           >
-            <span aria-hidden="true">{isArabic ? "‹" : "›"}</span>
+            <span aria-hidden="true">›</span>
           </button>
         </div>
       </div>
@@ -1010,53 +1010,51 @@ setAiError(
   </div>
 </section>
 
-{/* CTA */}
-<section className="home-final-cta" data-reveal="up">
-  <div className="home-final-cta__inner" data-reveal="up">
-
-    <div className="home-final-cta__copy">
-      <p className="home-final-cta__kicker">
-        {tr("READY WHEN YOU ARE", "جاهزون عندما تكون جاهزًا")}
+{/* CTA — OLD FIXER.CO COLORS */}
+<section className="home-cta-section" data-reveal="up">
+  <div
+    data-reveal="up"
+    className={`
+      mx-auto
+      flex
+      w-[90%]
+      max-w-[1160px]
+      flex-col
+      justify-between
+      gap-10
+      md:items-center
+      ${isArabic ? "md:flex-row-reverse" : "md:flex-row"}
+    `}
+  >
+    <div className={isArabic ? "text-right" : "text-left"}>
+      <p className="mb-5 text-xs font-bold uppercase tracking-[1.6px] text-[#3d9276]">
+        {tr("READY TO GET STARTED?", "جاهز للبدء؟")}
       </p>
 
-      <h2 className="home-final-cta__title">
-        {isArabic ? (
-          <>
-            <span className="home-final-cta__title-main">
-              هل هناك شيء يحتاج إلى إصلاح
-            </span>
-            <span className="home-final-cta__title-accent">
-              في منزلك؟
-            </span>
-          </>
-        ) : (
-          <>
-            <span className="home-final-cta__title-main">
-              Need something fixed at
-            </span>
-            <span className="home-final-cta__title-accent">
-              home?
-            </span>
-          </>
-        )}
+      <h2 className="max-w-[760px] text-[36px] font-bold leading-[1.16] tracking-[-1.5px] sm:text-[42px] md:text-[48px]">
+        <span className="block text-[#102d43]">
+          {tr("Stop searching around", "توقف عن البحث في كل مكان")}
+        </span>
+        <span className="mt-1 block text-[#3d9276]">
+          {tr(
+            "Find the right help in one place",
+            "اعثر على المساعدة المناسبة في مكان واحد"
+          )}
+        </span>
       </h2>
-
-      <p className="home-final-cta__text">
-        {tr(
-          "Find the right technician and send your service request in just a few steps.",
-          "اعثر على الفني المناسب وأرسل طلب الخدمة خلال خطوات بسيطة."
-        )}
-      </p>
     </div>
 
     <button
       type="button"
       onClick={() => navigate("/services")}
-      className="home-final-cta__button"
+      className="home-cta-button home-liquid-button flex shrink-0 items-center justify-center"
     >
-      <span>{tr("Find a Fixer", "ابحث عن فني")}</span>
-    </button>
+      <span className="home-liquid-sheen" aria-hidden="true"></span>
 
+      <span className="home-liquid-content">
+        {tr("Request a Service", "اطلب خدمة")}
+      </span>
+    </button>
   </div>
 </section>
 
