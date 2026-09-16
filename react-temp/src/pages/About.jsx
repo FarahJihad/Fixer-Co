@@ -206,81 +206,74 @@ function About() {
       className="about-page"
       dir={isArabic ? "rtl" : "ltr"}
     >
-      {/* HERO */}
-      <section className="about-hero">
-        <div className="about-container about-hero-grid">
-          <div
-            className="about-hero-copy"
-            data-about-reveal
-          >
-            <p className="about-eyebrow">
-              {tr("ABOUT FIXER.CO", "عن FIXER.CO")}
-            </p>
+      {/* HERO — TEXT MOTION */}
+      <section className="about-hero about-hero-motion">
+        <div className="about-motion-marquee about-motion-marquee-top" aria-hidden="true">
+          <div className="about-motion-track">
+            <span>{tr("CLEAR SERVICES", "خدمات واضحة")}</span>
+            <i></i>
+            <span>{tr("TRUSTED FIXERS", "فنيون موثوقون")}</span>
+            <i></i>
+            <span>{tr("SIMPLE REQUESTS", "طلبات أبسط")}</span>
+            <i></i>
+            <span>{tr("CLEAR SERVICES", "خدمات واضحة")}</span>
+            <i></i>
+            <span>{tr("TRUSTED FIXERS", "فنيون موثوقون")}</span>
+            <i></i>
+            <span>{tr("SIMPLE REQUESTS", "طلبات أبسط")}</span>
+          </div>
+        </div>
 
-            <h1>
-              {tr(
-                "A simpler way to take care of your home.",
-                "طريقة أبسط للعناية بمنزلك."
-              )}
-            </h1>
-
-            <p className="about-hero-text">
-              {tr(
-                "Fixer.Co brings home maintenance into one clear experience — from understanding the problem to finding and requesting the right professional.",
-                "تجمع Fixer.Co صيانة المنزل في تجربة واضحة واحدة، من فهم المشكلة إلى العثور على الفني المناسب وإرسال طلب الخدمة."
-              )}
-            </p>
+        <div className="about-container about-motion-shell">
+          <div className="about-motion-index" data-about-reveal>
+            <span>01</span>
+            <i></i>
+            <p>{tr("ABOUT FIXER.CO", "عن FIXER.CO")}</p>
           </div>
 
-          <div
-            className="about-hero-media"
-            data-about-reveal
-          >
-            <div className="about-hero-image-main">
-              <img
-                src="/media/about/about-main.png"
-                alt={tr(
-                  "Home maintenance professional",
-                  "فني صيانة منزلية"
-                )}
-              />
-            </div>
+          <div className="about-motion-copy" data-about-reveal>
+            <h1>
+              <span>{tr("Home maintenance,", "صيانة المنزل،")}</span>
+              <span className="about-motion-accent">
+                {tr("made simpler.", "بشكل أبسط.")}
+              </span>
+            </h1>
 
-            <div className="about-hero-image-small">
-              <img
-                src="/media/about/about-small.png"
-                alt={tr(
-                  "Home maintenance service",
-                  "خدمة صيانة منزلية"
+            <div className="about-motion-bottom-row">
+              <p>
+                {tr(
+                  "Fixer.Co brings the whole maintenance journey into one clear place  understand the problem, find the right service, compare trusted fixers, and send your request.",
+                  "تجمع Fixer.Co رحلة الصيانة في مكان واحد واضح — افهم المشكلة، اعثر على الخدمة المناسبة، قارن الفنيين الموثوقين، ثم أرسل طلبك."
                 )}
-              />
-            </div>
+              </p>
 
-            <div className="about-hero-badge">
-              <span>Fixer.Co</span>
-              <strong>{tr("Home services, made clearer", "خدمات منزلية أوضح")}</strong>
+              <div className="about-motion-signature" aria-hidden="true">
+                <span>Fixer</span>
+                <strong>.Co</strong>
+              </div>
             </div>
+          </div>
+        </div>
+
+        <div className="about-motion-marquee about-motion-marquee-bottom" aria-hidden="true">
+          <div className="about-motion-track about-motion-track-reverse">
+            <span>{tr("LOCAL HELP", "مساعدة محلية")}</span>
+            <i></i>
+            <span>{tr("LESS SEARCHING", "بحث أقل")}</span>
+            <i></i>
+            <span>{tr("MORE CLARITY", "وضوح أكثر")}</span>
+            <i></i>
+            <span>{tr("LOCAL HELP", "مساعدة محلية")}</span>
+            <i></i>
+            <span>{tr("LESS SEARCHING", "بحث أقل")}</span>
+            <i></i>
+            <span>{tr("MORE CLARITY", "وضوح أكثر")}</span>
           </div>
         </div>
       </section>
 
       {/* INTRO STRIP */}
-      <section className="about-intro-strip">
-        <div className="about-container about-intro-grid">
-          <div>
-            <span>{tr("01", "٠١")}</span>
-            <strong>{tr("One clear platform", "منصة واحدة واضحة")}</strong>
-          </div>
-          <div>
-            <span>{tr("02", "٠٢")}</span>
-            <strong>{tr("Six service categories", "ست فئات للخدمات")}</strong>
-          </div>
-          <div>
-            <span>{tr("03", "٠٣")}</span>
-            <strong>{tr("Trusted fixer", "فني موثوق")}</strong>
-          </div>
-        </div>
-      </section>
+     
 
       {/* WHY FIXER.CO — TEXT ONLY */}
       <section className="about-story about-story-text-only">
