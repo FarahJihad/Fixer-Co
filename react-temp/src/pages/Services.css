@@ -1509,3 +1509,478 @@
     font-size: 9.5px !important;
   }
 }
+
+/* =========================================================
+   SERVICES HERO — PLAIN TITLE
+   Match the typography direction of Find a Fixer.
+   ========================================================= */
+
+.services-hero {
+  min-height: 330px !important;
+  display: flex !important;
+  align-items: flex-end !important;
+  padding: 82px 0 52px !important;
+}
+
+.services-hero__word {
+  display: none !important;
+}
+
+.services-hero__plain {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+}
+
+.services-hero__plain-kicker {
+  margin: 0 0 12px;
+  color: #79c7ad;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: .17em;
+  text-transform: uppercase;
+}
+
+.services-hero__plain-title {
+  max-width: 730px;
+  margin: 0;
+  color: #fff;
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: clamp(42px, 5.6vw, 72px);
+  font-weight: 500;
+  line-height: .98;
+  letter-spacing: -.045em;
+}
+
+.services-page[dir="rtl"] .services-hero__plain-title {
+  font-family: "IBM Plex Sans Arabic", sans-serif;
+  letter-spacing: 0;
+}
+
+.services-page[dir="rtl"] .services-hero__plain {
+  text-align: right;
+}
+
+@media (max-width: 700px) {
+  .services-hero {
+    min-height: 270px !important;
+    padding: 72px 0 38px !important;
+  }
+
+  .services-hero__plain-title {
+    font-size: clamp(38px, 12vw, 54px);
+  }
+}
+
+/* =========================================================
+   SERVICES HERO — FIXED ALIGNMENT + FIND-A-FIXER FEEL
+   ========================================================= */
+
+.services-hero {
+  min-height: 250px !important;
+  display: flex !important;
+  align-items: center !important;
+  padding: 46px 0 42px !important;
+  background:
+    linear-gradient(
+      110deg,
+      #0d283b 0%,
+      #12364f 55%,
+      #173f5d 100%
+    ) !important;
+}
+
+.services-hero__plain {
+  width: min(90%, 1180px) !important;
+  margin: 0 auto !important;
+  padding: 0 !important;
+  position: relative !important;
+  z-index: 2 !important;
+}
+
+.services-hero__plain-kicker {
+  margin: 0 0 10px !important;
+  color: #72c5a8 !important;
+  font-size: 10px !important;
+  font-weight: 700 !important;
+  letter-spacing: .16em !important;
+  text-transform: uppercase !important;
+}
+
+.services-hero__plain-title {
+  margin: 0 !important;
+  max-width: none !important;
+  color: #ffffff !important;
+  font-family: "Plus Jakarta Sans", sans-serif !important;
+  font-size: clamp(44px, 5vw, 66px) !important;
+  font-weight: 500 !important;
+  line-height: 1 !important;
+  letter-spacing: -.04em !important;
+}
+
+.services-page[dir="rtl"] .services-hero__plain {
+  text-align: right !important;
+}
+
+.services-page[dir="rtl"] .services-hero__plain-title {
+  font-family: "IBM Plex Sans Arabic", sans-serif !important;
+  letter-spacing: 0 !important;
+}
+
+@media (max-width: 700px) {
+  .services-hero {
+    min-height: 210px !important;
+    padding: 38px 0 34px !important;
+  }
+
+  .services-hero__plain {
+    width: min(90%, 1180px) !important;
+  }
+
+  .services-hero__plain-title {
+    font-size: clamp(38px, 11vw, 52px) !important;
+  }
+}
+
+/* =========================================================
+   SERVICES — FORCED LARGE TITLE
+   New unique class so old title rules cannot keep it small.
+   ========================================================= */
+
+.services-page .services-hero .services-title-giant {
+  font-size: clamp(110px, 10vw, 175px) !important;
+  line-height: .86 !important;
+  font-weight: 500 !important;
+  letter-spacing: -.07em !important;
+}
+
+.services-page[dir="rtl"] .services-hero .services-title-giant {
+  letter-spacing: 0 !important;
+}
+
+@media (max-width: 900px) {
+  .services-page .services-hero .services-title-giant {
+    font-size: clamp(82px, 13vw, 125px) !important;
+  }
+}
+
+@media (max-width: 700px) {
+  .services-page .services-hero .services-title-giant {
+    font-size: clamp(60px, 18vw, 90px) !important;
+    line-height: .92 !important;
+  }
+}
+
+/* =========================================================
+   SERVICES HERO — MATCH FIND A FIXER PAGE
+   ========================================================= */
+
+.services-page .services-hero-match {
+  min-height: 418px !important;
+  width: 100% !important;
+  display: flex !important;
+  align-items: center !important;
+  padding: 0 !important;
+  background:
+    linear-gradient(
+      112deg,
+      #0d2a3e 0%,
+      #12364f 56%,
+      #173f5d 100%
+    ) !important;
+  overflow: hidden !important;
+}
+
+.services-hero-match__inner {
+  width: min(82.5%, 1280px);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 1.55fr) minmax(250px, .75fr);
+  align-items: end;
+  gap: 56px;
+}
+
+.services-hero-match__copy {
+  min-width: 0;
+}
+
+.services-hero-match__kicker-row {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  width: min(100%, 650px);
+  margin-bottom: 20px;
+}
+
+.services-hero-match__kicker {
+  flex: 0 0 auto;
+  color: #78c8ad;
+  font-size: 10px;
+  font-weight: 750;
+  line-height: 1;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+}
+
+.services-hero-match__line {
+  height: 1px;
+  flex: 1 1 auto;
+  background: rgba(120, 200, 173, .25);
+}
+
+.services-hero-match__title {
+  margin: 0;
+  color: #fff;
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: clamp(88px, 7.25vw, 112px);
+  font-weight: 500;
+  line-height: .92;
+  letter-spacing: .015em;
+}
+
+.services-hero-match__meta {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 18px;
+  padding-bottom: 15px;
+  color: rgba(255,255,255,.48);
+  font-size: 9px;
+  font-weight: 750;
+  letter-spacing: .12em;
+  white-space: nowrap;
+}
+
+.services-hero-match__meta i {
+  width: 5px;
+  height: 5px;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  background: #54b594;
+  box-shadow: 0 0 0 4px rgba(84,181,148,.04);
+}
+
+.services-page[dir="rtl"] .services-hero-match__inner {
+  direction: rtl;
+}
+
+.services-page[dir="rtl"] .services-hero-match__kicker-row {
+  flex-direction: row;
+}
+
+.services-page[dir="rtl"] .services-hero-match__title {
+  font-family: "IBM Plex Sans Arabic", sans-serif;
+  letter-spacing: .01em;
+}
+
+.services-page[dir="rtl"] .services-hero-match__meta {
+  justify-content: flex-start;
+  direction: rtl;
+}
+
+@media (max-width: 900px) {
+  .services-page .services-hero-match {
+    min-height: 360px !important;
+  }
+
+  .services-hero-match__inner {
+    width: min(88%, 1180px);
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+
+  .services-hero-match__title {
+    font-size: clamp(72px, 12vw, 96px);
+  }
+
+  .services-hero-match__meta {
+    justify-content: flex-start;
+    padding-bottom: 0;
+  }
+
+  .services-page[dir="rtl"] .services-hero-match__meta {
+    justify-content: flex-start;
+  }
+}
+
+@media (max-width: 700px) {
+  .services-page .services-hero-match {
+    min-height: 300px !important;
+  }
+
+  .services-hero-match__inner {
+    width: min(88%, 1180px);
+    gap: 22px;
+  }
+
+  .services-hero-match__kicker-row {
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+
+  .services-hero-match__kicker {
+    font-size: 9px;
+  }
+
+  .services-hero-match__title {
+    font-size: clamp(58px, 17vw, 82px);
+    line-height: .95;
+  }
+
+  .services-hero-match__meta {
+    gap: 10px;
+    font-size: 8px;
+  }
+}
+
+/* =========================================================
+   SERVICES HERO — CLEAN CENTERED VERSION
+   Only the title remains, centered like the original layout.
+   ========================================================= */
+
+.services-page .services-hero-clean {
+  min-height: 420px !important;
+  width: 100% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0 !important;
+  background:
+    linear-gradient(
+      112deg,
+      #0d2a3e 0%,
+      #12364f 56%,
+      #173f5d 100%
+    ) !important;
+}
+
+.services-hero-clean__inner {
+  width: min(90%, 1180px);
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.services-hero-clean__title {
+  margin: 0;
+  color: #fff;
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: clamp(96px, 8.2vw, 132px);
+  font-weight: 500;
+  line-height: .92;
+  letter-spacing: .015em;
+  text-align: center;
+}
+
+.services-page[dir="rtl"] .services-hero-clean__title {
+  font-family: "IBM Plex Sans Arabic", sans-serif;
+  letter-spacing: 0;
+}
+
+@media (max-width: 900px) {
+  .services-page .services-hero-clean {
+    min-height: 360px !important;
+  }
+
+  .services-hero-clean__title {
+    font-size: clamp(80px, 12vw, 108px);
+  }
+}
+
+@media (max-width: 700px) {
+  .services-page .services-hero-clean {
+    min-height: 290px !important;
+  }
+
+  .services-hero-clean__title {
+    font-size: clamp(58px, 17vw, 82px);
+    line-height: .95;
+  }
+}
+
+/* =========================================================
+   SERVICES — HARD OVERRIDE FOR HERO TITLE
+   Unique ID prevents older CSS from keeping the title small.
+   ========================================================= */
+
+#services-hero-title-v2 {
+  font-size: clamp(155px, 18vw, 290px) !important;
+  line-height: 0.84 !important;
+  font-weight: 500 !important;
+  letter-spacing: -0.035em !important;
+  white-space: nowrap !important;
+  text-align: center !important;
+  transform: none !important;
+  max-width: none !important;
+  width: auto !important;
+}
+
+.services-page[dir="rtl"] #services-hero-title-v2 {
+  letter-spacing: 0 !important;
+}
+
+@media (max-width: 1100px) {
+  #services-hero-title-v2 {
+    font-size: clamp(120px, 17vw, 210px) !important;
+  }
+}
+
+@media (max-width: 700px) {
+  #services-hero-title-v2 {
+    font-size: clamp(68px, 19vw, 108px) !important;
+    line-height: 0.92 !important;
+    white-space: normal !important;
+  }
+}
+
+/* =========================================================
+   SERVICES — BALANCED SIZE + MORE LETTER SPACING
+   ========================================================= */
+
+#services-hero-title-v2 {
+  font-size: clamp(108px, 11vw, 170px) !important;
+  line-height: .9 !important;
+  font-weight: 500 !important;
+  letter-spacing: .018em !important;
+  white-space: nowrap !important;
+  text-align: center !important;
+}
+
+.services-page[dir="rtl"] #services-hero-title-v2 {
+  letter-spacing: .01em !important;
+}
+
+@media (max-width: 1100px) {
+  #services-hero-title-v2 {
+    font-size: clamp(88px, 12vw, 132px) !important;
+  }
+}
+
+@media (max-width: 700px) {
+  #services-hero-title-v2 {
+    font-size: clamp(58px, 16vw, 84px) !important;
+    line-height: .94 !important;
+    letter-spacing: .01em !important;
+    white-space: normal !important;
+  }
+}
+
+/* =========================================================
+   SERVICES — TIGHTER LETTER SPACING
+   Keep the current title size; only improve word spacing.
+   ========================================================= */
+
+#services-hero-title-v2 {
+  letter-spacing: -0.025em !important;
+}
+
+.services-page[dir="rtl"] #services-hero-title-v2 {
+  letter-spacing: 0 !important;
+}
+
+@media (max-width: 700px) {
+  #services-hero-title-v2 {
+    letter-spacing: -0.018em !important;
+  }
+}

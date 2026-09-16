@@ -130,12 +130,11 @@ function Services() {
       {/* =========================
           EDITORIAL HERO
       ========================== */}
-      <section className="services-hero">
-        <div
-          className="services-hero__word"
-          aria-hidden="true"
-        >
-          {tr("SERVICES", "خدماتنا")}
+      <section className="services-hero services-hero-clean">
+        <div className="services-hero-clean__inner">
+          <h1 id="services-hero-title-v2" className="services-hero-clean__title">
+            {tr("Services", "الخدمات")}
+          </h1>
         </div>
       </section>
 

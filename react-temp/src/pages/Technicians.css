@@ -1777,3 +1777,258 @@
     line-height: 1.14 !important;
   }
 }
+
+/* =========================================================
+   FIND A FIXER — CLEAN HERO
+   Remove mouse-follow hover effect + improve title spacing
+   ========================================================= */
+
+/* Keep a subtle static glow only; no mouse-follow hover. */
+.tech-find-hero-v2::before {
+  background:
+    radial-gradient(
+      circle at 78% 18%,
+      rgba(79,175,143,.12),
+      transparent 26%
+    ) !important;
+
+  opacity: 1 !important;
+  transition: none !important;
+}
+
+.tech-find-hero-v2::after {
+  display: none !important;
+}
+
+/* Add breathing room between:
+   "Find someone you" / "can trust" */
+.tech-find-hero-v2 h1 {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.tech-find-hero-v2 h1 span {
+  display: block;
+}
+
+@media (max-width: 700px) {
+  .tech-find-hero-v2 h1 {
+    gap: 6px;
+  }
+}
+
+/* =========================================================
+   FIND A FIXER — REMOVE INITIAL LOAD "ZOOM/GROW" FEEL
+   Keep scroll reveals below; only page-entry animation is disabled.
+   ========================================================= */
+
+.tech-page-enter,
+.tech-page-enter-delay {
+  animation: none !important;
+  animation-delay: 0s !important;
+
+  opacity: 1 !important;
+  transform: none !important;
+  filter: none !important;
+}
+
+/* =========================================================
+   FIND A FIXER — ARABIC DESKTOP MATCH ENGLISH
+   Desktop/laptop only. Mobile remains untouched.
+   ========================================================= */
+
+@media (min-width: 821px) {
+  /* Hide the old full-width line in Arabic desktop */
+  .technicians-page[dir="rtl"] .tech-find-hero-v2__line {
+    display: none !important;
+  }
+
+  /* Mirror the English kicker + line treatment */
+  .technicians-page[dir="rtl"] .tech-find-hero-v2__kicker {
+    display: flex !important;
+    align-items: center !important;
+    gap: 14px !important;
+    width: 100% !important;
+    direction: rtl !important;
+  }
+
+  .technicians-page[dir="rtl"] .tech-find-hero-v2__kicker::after {
+    content: "";
+    flex: 1 1 auto;
+    height: 1px;
+    background:
+      linear-gradient(
+        270deg,
+        rgba(121,199,173,.34),
+        rgba(255,255,255,.07)
+      );
+  }
+
+  /* Keep the whole desktop hero as a clean mirror of English */
+  .technicians-page[dir="rtl"] .tech-find-hero-v2__inner {
+    direction: rtl !important;
+    align-items: flex-end !important;
+    justify-content: space-between !important;
+  }
+
+  .technicians-page[dir="rtl"] .tech-find-hero-v2__copy {
+    width: min(760px, 62vw) !important;
+    max-width: 760px !important;
+    text-align: right !important;
+  }
+
+  /* Same visual scale as English */
+  .technicians-page[dir="rtl"] .tech-find-hero-v2 h1 {
+    max-width: 730px !important;
+    margin: 0 !important;
+
+    font-size: clamp(42px, 5.6vw, 72px) !important;
+    font-weight: 500 !important;
+    line-height: 1.08 !important;
+    letter-spacing: 0 !important;
+
+    text-align: right !important;
+  }
+
+  .technicians-page[dir="rtl"] .tech-find-hero-v2 h1 span {
+    display: block !important;
+  }
+
+  /* Meta stays opposite the title, like English */
+  .technicians-page[dir="rtl"] .tech-find-hero-v2__meta {
+    direction: rtl !important;
+    justify-content: flex-start !important;
+    padding-bottom: 8px !important;
+  }
+}
+
+/* =========================================================
+   FIND A FIXER — ARABIC DESKTOP FULL MIRROR
+   Laptop/Desktop Arabic only.
+   Mobile + English stay untouched.
+   ========================================================= */
+
+@media (min-width: 821px) {
+
+  /* Results header:
+     title on the RIGHT, count on the LEFT */
+  .technicians-page[dir="rtl"] .tech-results-heading {
+    direction: rtl !important;
+    flex-direction: row !important;
+  }
+
+  .technicians-page[dir="rtl"] .tech-results-heading > div:first-child {
+    text-align: right !important;
+  }
+
+  .technicians-page[dir="rtl"] .tech-results-count {
+    margin-left: 0 !important;
+    margin-right: auto !important;
+  }
+
+  /* Cards flow from right to left */
+  .technicians-page[dir="rtl"] .tech-grid {
+    direction: rtl !important;
+  }
+
+  .technicians-page[dir="rtl"] .tech-card {
+    direction: rtl !important;
+    text-align: right !important;
+  }
+
+  /* Mirror the top identity area inside each card */
+  .technicians-page[dir="rtl"] .tech-card__top,
+  .technicians-page[dir="rtl"] .tech-card__identity,
+  .technicians-page[dir="rtl"] .tech-card__name-row {
+    direction: rtl !important;
+  }
+
+  .technicians-page[dir="rtl"] .tech-card__identity {
+    flex-direction: row !important;
+    text-align: right !important;
+  }
+
+  .technicians-page[dir="rtl"] .tech-card__name-row {
+    justify-content: flex-start !important;
+  }
+
+  /* Mirror rating/location/availability rows */
+  .technicians-page[dir="rtl"] .tech-card__meta,
+  .technicians-page[dir="rtl"] .tech-card__meta-row {
+    direction: rtl !important;
+    text-align: right !important;
+  }
+
+  /* Mirror card bottom row: price on right, button on left */
+  .technicians-page[dir="rtl"] .tech-card__footer {
+    direction: rtl !important;
+    flex-direction: row !important;
+  }
+
+  /* Filters already read RTL, keep physical order mirrored */
+  .technicians-page[dir="rtl"] .tech-filter-panel {
+    direction: rtl !important;
+  }
+}
+
+/* =========================================================
+   FIND A FIXER — ARABIC MOBILE KICKER POSITION
+   Put "ابحث عن فني" at the RTL beginning (RIGHT),
+   with the decorative line extending to the LEFT.
+   English + desktop stay untouched.
+   ========================================================= */
+
+@media (max-width: 700px) {
+  .technicians-page[dir="rtl"] .tech-find-hero-v2__kicker {
+    direction: rtl !important;
+    flex-direction: row !important;
+    justify-content: flex-start !important;
+    text-align: right !important;
+  }
+
+  .technicians-page[dir="rtl"] .tech-find-hero-v2__kicker::after {
+    background:
+      linear-gradient(
+        90deg,
+        rgba(255,255,255,.08),
+        rgba(121,199,173,.34)
+      ) !important;
+  }
+}
+
+/* =========================================================
+   FIND A FIXER — NATURAL SINGLE DOCUMENT SCROLL
+   No nested page scrollbar. The browser/document owns scrolling.
+   ========================================================= */
+
+html:has(.technicians-page) {
+  height: auto !important;
+  min-height: 100% !important;
+  max-height: none !important;
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+}
+
+body:has(.technicians-page) {
+  height: auto !important;
+  min-height: 100% !important;
+  max-height: none !important;
+  overflow-x: hidden !important;
+  overflow-y: visible !important;
+}
+
+#root:has(.technicians-page) {
+  height: auto !important;
+  min-height: 100% !important;
+  max-height: none !important;
+  overflow: visible !important;
+}
+
+.technicians-page,
+.tech-main-section {
+  height: auto !important;
+  max-height: none !important;
+  overflow-y: visible !important;
+}
+

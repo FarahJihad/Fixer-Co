@@ -87,19 +87,17 @@ function Profile() {
       (entries) => {
         entries.forEach((entry) => {
           if (!entry.isIntersecting) return;
-
           entry.target.classList.add("profile-show");
           observer.unobserve(entry.target);
         });
       },
       {
         threshold: 0.08,
-        rootMargin: "0px 0px -42px 0px",
+        rootMargin: "0px 0px -40px 0px",
       }
     );
 
     items.forEach((item) => observer.observe(item));
-
     return () => observer.disconnect();
   }, [technician, isLoading, language]);
 
@@ -122,7 +120,6 @@ function Profile() {
     if (!technician) return;
 
     const query = new URLSearchParams();
-
     query.set("technician", technician.id);
     query.set("service", technician.service_id);
 
@@ -134,8 +131,7 @@ function Profile() {
     navigate(`/request?${query.toString()}`);
   }
 
-  const isAvailable =
-    Number(technician?.available) === 1;
+  const isAvailable = Number(technician?.available) === 1;
 
   const reviews = [
     {
@@ -197,242 +193,216 @@ function Profile() {
 
           {!isLoading && !error && technician && (
             <>
-              {/* HERO */}
               <section
-                className="profile-hero"
+                className="profile-sheet"
                 data-profile-reveal
               >
-                <div className="profile-hero-glow"></div>
-
-                <div className="profile-identity">
-                  <div className="profile-avatar">
+                <aside className="profile-sheet-identity">
+                  <div className="profile-sheet-orb">
                     {getInitials(technician.name)}
                   </div>
 
-                  <div className="profile-identity-copy">
-                    <p className="profile-kicker">
-                      {tr(
-                        "FIXER PROFILE",
-                        "ملف الفني"
-                      )}
-                    </p>
-
-                    <div className="profile-name-row">
-                      <h1>{technician.name}</h1>
-
-                      {Number(technician.verified) === 1 && (
-                        <i
-                          className="fa-solid fa-circle-check profile-verified"
-                          title={tr(
-                            "Verified Fixer",
-                            "فني موثّق"
-                          )}
-                        ></i>
-                      )}
-                    </div>
-
-                    <p className="profile-specialty">
-                      {technician.service_name}
-                    </p>
-                  </div>
-                </div>
-
-                <div className="profile-meta-grid">
-                  <MetaItem
-                    icon="fa-solid fa-star"
-                    label={tr("Rating", "التقييم")}
-                    value={`${Number(
-                      technician.rating || 0
-                    ).toFixed(1)} / 5`}
-                    accent="star"
-                  />
-
-                  <MetaItem
-                    icon="fa-solid fa-location-dot"
-                    label={tr("Location", "الموقع")}
-                    value={
-                      technician.location ||
-                      tr("Not specified", "غير محدد")
-                    }
-                  />
-
-                  <MetaItem
-                    icon="fa-solid fa-circle"
-                    label={tr(
-                      "Availability",
-                      "التوفر"
-                    )}
-                    value={
-                      isAvailable
-                        ? tr(
-                            "Available now",
-                            "متاح الآن"
-                          )
-                        : tr(
-                            "Currently unavailable",
-                            "غير متاح حاليًا"
-                          )
-                    }
-                    accent={
-                      isAvailable
-                        ? "available"
-                        : "muted"
-                    }
-                  />
-
-                  <MetaItem
-                    icon="fa-solid fa-tag"
-                    label={tr(
-                      "Starting from",
-                      "يبدأ من"
-                    )}
-                    value={`${Number(
-                      technician.price ??
-                        technician.starting_price ??
-                        0
-                    ).toFixed(0)} ${tr(
-                      "SAR",
-                      "ر.س"
-                    )}`}
-                  />
-                </div>
-              </section>
-
-              {/* ABOUT */}
-              <section
-                className="profile-about"
-                data-profile-reveal
-              >
-                <div>
-                  <p className="profile-section-label">
-                    {tr(
-                      "ABOUT THE FIXER",
-                      "عن الفني"
-                    )}
+                  <p className="profile-kicker">
+                    {tr("FIXER PROFILE", "ملف الفني")}
                   </p>
 
-                  <h2 className="profile-about-title">
-                    {isArabic ? (
-                      <>
-                        <span>خبرة</span>
-                        <span>موثوقية</span>
-                        <span>جاهز للمساعدة</span>
-                      </>
-                    ) : (
-                      <>
-                        <span>Experienced</span>
-                        <span>Reliable</span>
-                        <span>Ready to help</span>
-                      </>
-                    )}
-                  </h2>
-                </div>
+                  <div className="profile-name-row">
+                    <h1>{technician.name}</h1>
 
-                <p className="profile-about-text">
-                  {technician.bio ||
-                    tr(
-                      `Experienced professional specializing in ${technician.service_name}. Provides reliable home maintenance services with a focus on quality and customer satisfaction.`,
-                      `فني محترف متخصص في ${technician.service_name} ويقدم خدمات صيانة منزلية موثوقة مع التركيز على الجودة ورضا العملاء.`
-                    )}
-                </p>
-              </section>
-
-              {/* REVIEWS */}
-              <section
-                className="profile-reviews"
-                data-profile-reveal
-              >
-                <div className="profile-section-head">
-                  <div>
-                    <p className="profile-section-label">
-                      {tr(
-                        "CUSTOMER REVIEWS",
-                        "آراء العملاء"
-                      )}
-                    </p>
-
-                    <h2>
-                      {tr(
-                        "What customers say",
-                        "ماذا يقول العملاء"
-                      )}
-                    </h2>
-                  </div>
-
-                  <div className="profile-review-score">
-                    <i className="fa-solid fa-star"></i>
-                    {Number(
-                      technician.rating || 0
-                    ).toFixed(1)}
-                  </div>
-                </div>
-
-                <div className="profile-review-grid">
-                  {reviews.map((review, index) => (
-                    <article
-                      key={review.name}
-                      className="profile-review-card"
-                      data-profile-reveal
-                      style={{
-                        "--profile-delay": `${
-                          index * 90
-                        }ms`,
-                      }}
-                    >
-                      <div className="profile-review-stars">
-                        {[0, 1, 2, 3, 4].map(
-                          (star) => (
-                            <i
-                              key={star}
-                              className="fa-solid fa-star"
-                            ></i>
-                          )
+                    {Number(technician.verified) === 1 && (
+                      <i
+                        className="fa-solid fa-circle-check profile-verified"
+                        title={tr(
+                          "Verified Fixer",
+                          "فني موثّق"
                         )}
-                      </div>
+                      ></i>
+                    )}
+                  </div>
 
-                      <p className="profile-review-text">
-                        “{review.text}”
+                  <p className="profile-specialty">
+                    {technician.service_name}
+                  </p>
+
+                  <div className="profile-identity-rule"></div>
+
+                  <div className="profile-mini-facts">
+                    <MiniFact
+                      label={tr("Rating", "التقييم")}
+                      value={`${Number(
+                        technician.rating || 0
+                      ).toFixed(1)} / 5`}
+                    />
+                    <MiniFact
+                      label={tr("Starting from", "يبدأ من")}
+                      value={`${Number(
+                        technician.price ??
+                          technician.starting_price ??
+                          0
+                      ).toFixed(0)} ${tr("SAR", "ر.س")}`}
+                    />
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={requestService}
+                    className="profile-request-button"
+                  >
+                    {tr(
+                      "Request This Fixer",
+                      "اطلب هذا الفني"
+                    )}
+                  </button>
+                </aside>
+
+                <div className="profile-sheet-content">
+                  <section className="profile-block profile-block-about">
+                    <div className="profile-block-head">
+                      <p className="profile-section-label">
+                        {tr("ABOUT", "نبذة")}
                       </p>
 
-                      <div
-                        className="profile-review-quote"
-                        aria-hidden="true"
+                      <span
+                        className={`profile-status ${
+                          isAvailable
+                            ? "is-available"
+                            : "is-unavailable"
+                        }`}
                       >
-                        “
-                      </div>
+                        <i className="fa-solid fa-circle"></i>
+                        {isAvailable
+                          ? tr("Available now", "متاح الآن")
+                          : tr(
+                              "Currently unavailable",
+                              "غير متاح حاليًا"
+                            )}
+                      </span>
+                    </div>
 
-                      <div className="profile-review-person">
-                        <div className="profile-review-avatar">
-                          {review.initials}
-                        </div>
+                    <p className="profile-about-text">
+                      {technician.bio ||
+                        tr(
+                          `Experienced professional specializing in ${technician.service_name}. Provides reliable home maintenance services with a focus on quality and customer satisfaction.`,
+                          `فني محترف متخصص في ${technician.service_name} ويقدم خدمات صيانة منزلية موثوقة مع التركيز على الجودة ورضا العملاء.`
+                        )}
+                    </p>
+                  </section>
 
-                        <div>
+                  <section className="profile-info-grid">
+                    <InfoBox
+                      icon="fa-solid fa-location-dot"
+                      label={tr("LOCATION", "الموقع")}
+                      value={
+                        technician.location ||
+                        tr("Not specified", "غير محدد")
+                      }
+                    />
+
+                    <InfoBox
+                      icon="fa-solid fa-screwdriver-wrench"
+                      label={tr("SERVICE", "الخدمة")}
+                      value={technician.service_name}
+                    />
+
+                    <InfoBox
+                      icon="fa-solid fa-circle-check"
+                      label={tr("STATUS", "الحالة")}
+                      value={
+                        Number(technician.verified) === 1
+                          ? tr(
+                              "Verified fixer",
+                              "فني موثّق"
+                            )
+                          : tr(
+                              "Profile not verified",
+                              "الملف غير موثّق"
+                            )
+                      }
+                    />
+
+                    <InfoBox
+                      icon="fa-solid fa-clock"
+                      label={tr("AVAILABILITY", "التوفر")}
+                      value={
+                        isAvailable
+                          ? tr(
+                              "Available to receive requests",
+                              "متاح لاستقبال الطلبات"
+                            )
+                          : tr(
+                              "Currently unavailable",
+                              "غير متاح حاليًا"
+                            )
+                      }
+                    />
+                  </section>
+
+                  <section className="profile-block profile-reviews-compact">
+                    <div className="profile-block-head">
+                      <p className="profile-section-label">
+                        {tr(
+                          "CUSTOMER REVIEWS",
+                          "آراء العملاء"
+                        )}
+                      </p>
+
+                      <span className="profile-review-score">
+                        <i className="fa-solid fa-star"></i>
+                        {Number(
+                          technician.rating || 0
+                        ).toFixed(1)}
+                      </span>
+                    </div>
+
+                    <div className="profile-review-grid">
+                      {reviews.map((review, index) => (
+                        <article
+                          key={review.name}
+                          className="profile-review-card"
+                          data-profile-reveal
+                          style={{
+                            "--profile-delay": `${index * 80}ms`,
+                          }}
+                        >
+                          <div className="profile-review-top">
+                            <div className="profile-review-stars">
+                              {[0, 1, 2, 3, 4].map(
+                                (star) => (
+                                  <i
+                                    key={star}
+                                    className="fa-solid fa-star"
+                                  ></i>
+                                )
+                              )}
+                            </div>
+
+                            <span className="profile-review-initials">
+                              {review.initials}
+                            </span>
+                          </div>
+
+                          <p className="profile-review-text">
+                            “{review.text}”
+                          </p>
+
                           <span className="profile-review-name">
                             {review.name}
                           </span>
-
-                          <span className="profile-review-verified">
-                            {tr(
-                              "Verified customer",
-                              "عميل موثّق"
-                            )}
-                          </span>
-                        </div>
-                      </div>
-                    </article>
-                  ))}
+                        </article>
+                      ))}
+                    </div>
+                  </section>
                 </div>
               </section>
 
-              {/* CTA */}
               <section
-                className="profile-cta"
+                className="profile-bottom-cta"
                 data-profile-reveal
               >
                 <div>
                   <p className="profile-cta-kicker">
                     {tr(
-                      "Need this service?",
+                      "NEED THIS SERVICE?",
                       "تحتاج هذه الخدمة؟"
                     )}
                   </p>
@@ -443,13 +413,6 @@ function Profile() {
                       `اطلب خدمة ${technician.name}`
                     )}
                   </h2>
-
-                  <p>
-                    {tr(
-                      "Send your request and continue with the service details.",
-                      "أرسل طلبك وأكمل تفاصيل الخدمة."
-                    )}
-                  </p>
                 </div>
 
                 <button
@@ -458,8 +421,8 @@ function Profile() {
                   className="profile-cta-button"
                 >
                   {tr(
-                    "Request This Fixer",
-                    "اطلب هذا الفني"
+                    "Continue to Request",
+                    "متابعة الطلب"
                   )}
                 </button>
               </section>
@@ -473,15 +436,19 @@ function Profile() {
   );
 }
 
-function MetaItem({
-  icon,
-  label,
-  value,
-  accent = "",
-}) {
+function MiniFact({ label, value }) {
   return (
-    <div className={`profile-meta-item ${accent}`}>
-      <div className="profile-meta-icon">
+    <div className="profile-mini-fact">
+      <span>{label}</span>
+      <strong>{value}</strong>
+    </div>
+  );
+}
+
+function InfoBox({ icon, label, value }) {
+  return (
+    <div className="profile-info-box">
+      <div className="profile-info-icon">
         <i className={icon}></i>
       </div>
 

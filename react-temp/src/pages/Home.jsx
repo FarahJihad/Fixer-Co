@@ -453,128 +453,153 @@ setAiError(
               )}
             </p>
 
-            {/* FIXER AI */}
-            <div className="home-hero-ai-glass">
-              <div className="home-hero-ai-head">
-                <p className="home-hero-ai-kicker">
-                  {tr("SMART ASSIST", "مساعد ذكي")}
+            {/* SMART SERVICE FINDER */}
+            <div className="home-service-finder">
+              <div className="home-service-finder-head">
+                <p className="home-service-finder-label">
+                  {tr(
+                    "Not sure what service you need?",
+                    "غير متأكد من الخدمة التي تحتاجها؟"
+                  )}
                 </p>
 
-                <h3 className="home-hero-ai-heading">
-                  {tr("Describe your issue", "صف مشكلتك")}
-                </h3>
+                <span className="home-service-finder-note">
+                  {tr(
+                    "Describe the problem or add a photo.",
+                    "صف المشكلة أو أضف صورة."
+                  )}
+                </span>
               </div>
 
-              <div className="home-hero-ai-shell">
-                <div className="home-hero-ai-row">
-<input
-                    type="text"
-                    maxLength="500"
-                    placeholder={tr(
-                      "Describe what you need fixed...",
-                      "صف الشيء الذي يحتاج إصلاح..."
-                    )}
-                    value={problem}
-                    onChange={(event) => setProblem(event.target.value)}
-                    onKeyDown={(event) => {
-                      if (event.key === "Enter") handleAISearch();
-                    }}
-                    className="home-hero-ai-input"
+              <div className="home-service-finder-bar">
+                <input
+                  type="text"
+                  maxLength="500"
+                  placeholder={tr(
+                    "Describe what’s wrong...",
+                    "صف المشكلة..."
+                  )}
+                  value={problem}
+                  onChange={(event) => setProblem(event.target.value)}
+                  onKeyDown={(event) => {
+                    if (event.key === "Enter") handleAISearch();
+                  }}
+                  className="home-service-finder-input"
+                />
+
+                <div className="home-service-finder-photo-wrap">
+                  <input
+                    ref={cameraInputRef}
+                    type="file"
+                    accept="image/*"
+                    capture="environment"
+                    hidden
+                    onChange={handleImageSelected}
                   />
 
-                  <div className="relative">
-                    <input
-                      ref={cameraInputRef}
-                      type="file"
-                      accept="image/*"
-                      capture="environment"
-                      hidden
-                      onChange={handleImageSelected}
-                    />
-
-                    <input
-                      ref={uploadInputRef}
-                      type="file"
-                      accept="image/*"
-                      hidden
-                      onChange={handleImageSelected}
-                    />
-
-                    <button
-                      type="button"
-                      aria-label={tr("Add a photo", "إضافة صورة")}
-                      onClick={() => setShowImageMenu((current) => !current)}
-                      className="home-hero-ai-camera"
-                    >
-                      <i className="fa-solid fa-camera"></i>
-                    </button>
-
-                    {showImageMenu && (
-                      <div className="home-hero-ai-menu">
-                        <button
-                          type="button"
-                          onClick={() => {
-                            setShowImageMenu(false);
-                            cameraInputRef.current?.click();
-                          }}
-                        >
-                          <i className="fa-solid fa-camera"></i>
-                          {tr("Take a Photo", "التقاط صورة")}
-                        </button>
-
-                        <button
-                          type="button"
-                          onClick={() => {
-                            setShowImageMenu(false);
-                            uploadInputRef.current?.click();
-                          }}
-                        >
-                          <i className="fa-regular fa-image"></i>
-                          {tr("Upload Image", "رفع صورة")}
-                        </button>
-                      </div>
-                    )}
-                  </div>
+                  <input
+                    ref={uploadInputRef}
+                    type="file"
+                    accept="image/*"
+                    hidden
+                    onChange={handleImageSelected}
+                  />
 
                   <button
                     type="button"
-                    onClick={handleAISearch}
-                    disabled={isAnalyzing}
-                    className="home-hero-ai-submit"
-                    aria-label={tr("Find my service", "اعثر على خدمتي")}
+                    aria-label={tr("Add a photo", "إضافة صورة")}
+                    onClick={() =>
+                      setShowImageMenu((current) => !current)
+                    }
+                    className="home-service-finder-photo"
                   >
-                    {isAnalyzing ? (
+                    <i className="fa-regular fa-image"></i>
+                    <span>
+                      {tr("Photo", "صورة")}
+                    </span>
+                  </button>
+
+                  {showImageMenu && (
+                    <div className="home-service-finder-menu">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setShowImageMenu(false);
+                          cameraInputRef.current?.click();
+                        }}
+                      >
+                        <i className="fa-solid fa-camera"></i>
+                        {tr("Take a Photo", "التقاط صورة")}
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setShowImageMenu(false);
+                          uploadInputRef.current?.click();
+                        }}
+                      >
+                        <i className="fa-regular fa-image"></i>
+                        {tr("Upload Image", "رفع صورة")}
+                      </button>
+                    </div>
+                  )}
+                </div>
+
+                <button
+                  type="button"
+                  onClick={handleAISearch}
+                  disabled={isAnalyzing}
+                  className="home-service-finder-submit"
+                >
+                  {isAnalyzing ? (
+                    <>
                       <i className="fa-solid fa-spinner fa-spin"></i>
-                    ) : (
-                      <i className={`fa-solid ${isArabic ? "fa-arrow-left" : "fa-arrow-right"}`}></i>
-                    )}
-                  </button>
-                </div>
+                      <span>{tr("Checking...", "جارٍ التحقق...")}</span>
+                    </>
+                  ) : (
+                    <>
+                      <span>{tr("Find service", "اعثر على الخدمة")}</span>
+                    </>
+                  )}
+                </button>
+              </div>
 
-                <div className="home-hero-ai-examples">
-                  <span>{tr("Try:", "جرّب:")}</span>
+              <div className="home-service-finder-examples">
+                <span>{tr("Common issues", "مشاكل شائعة")}</span>
 
-                  <button
-                    type="button"
-                    onClick={() => setProblem(tr("Leaking faucet", "تسريب صنبور"))}
-                  >
-                    {tr("Leaking faucet", "تسريب صنبور")}
-                  </button>
+                <button
+                  type="button"
+                  onClick={() =>
+                    setProblem(
+                      tr("Leaking faucet", "تسريب صنبور")
+                    )
+                  }
+                >
+                  {tr("Leaking faucet", "تسريب صنبور")}
+                </button>
 
-                  <button
-                    type="button"
-                    onClick={() => setProblem(tr("AC not cooling", "المكيف لا يبرد"))}
-                  >
-                    {tr("AC not cooling", "المكيف لا يبرد")}
-                  </button>
+                <button
+                  type="button"
+                  onClick={() =>
+                    setProblem(
+                      tr("AC not cooling", "المكيف لا يبرد")
+                    )
+                  }
+                >
+                  {tr("AC not cooling", "المكيف لا يبرد")}
+                </button>
 
-                  <button
-                    type="button"
-                    onClick={() => setProblem(tr("Electrical issue", "مشكلة كهربائية"))}
-                  >
-                    {tr("Electrical issue", "مشكلة كهربائية")}
-                  </button>
-                </div>
+                <button
+                  type="button"
+                  onClick={() =>
+                    setProblem(
+                      tr("Electrical issue", "مشكلة كهربائية")
+                    )
+                  }
+                >
+                  {tr("Electrical issue", "مشكلة كهربائية")}
+                </button>
               </div>
             </div>
 
@@ -641,6 +666,19 @@ setAiError(
                 )}
               </div>
             )}
+          </div>
+
+          <div className="home-hero-visual" data-reveal="up" aria-hidden="true">
+            <div className="home-hero-visual-mint home-hero-visual-mint-one"></div>
+            <div className="home-hero-visual-mint home-hero-visual-mint-two"></div>
+
+            <div className="home-hero-visual-frame">
+              <img
+                src="/media/hero/fixer-hero-card.png"
+                alt=""
+                className="home-hero-visual-image"
+              />
+            </div>
           </div>
         </div>
       </section>

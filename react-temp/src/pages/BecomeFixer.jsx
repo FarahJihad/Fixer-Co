@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { useLanguage } from "../context/LanguageContext.jsx";
 import Footer from "../components/Footer.jsx";
 import "./BecomeFixer.css";
@@ -108,7 +107,6 @@ const policyItems = [
 ];
 
 function BecomeFixer() {
-  const navigate = useNavigate();
   const { language, isArabic } = useLanguage();
   const tr = (en, ar) => (language === "ar" ? ar : en);
 
@@ -131,28 +129,6 @@ function BecomeFixer() {
   const [message, setMessage] = useState("");
   const [messageType, setMessageType] = useState("");
   const [submitting, setSubmitting] = useState(false);
-  const [showLoginRequired, setShowLoginRequired] = useState(false);
-
-  useEffect(() => {
-    const savedDraft = sessionStorage.getItem("fixerApplicationDraft");
-
-    if (!savedDraft) return;
-
-    try {
-      const draft = JSON.parse(savedDraft);
-
-      setFormData((previousData) => ({
-        ...previousData,
-        ...draft,
-        policy_accepted: Boolean(draft.policy_accepted),
-      }));
-
-      sessionStorage.removeItem("fixerApplicationDraft");
-    } catch (error) {
-      console.error("Could not restore fixer application draft:", error);
-      sessionStorage.removeItem("fixerApplicationDraft");
-    }
-  }, []);
 
   useEffect(() => {
     async function loadServices() {
@@ -225,61 +201,11 @@ function BecomeFixer() {
     }));
   }
 
-  function saveApplicationDraft() {
-    sessionStorage.setItem(
-      "fixerApplicationDraft",
-      JSON.stringify(formData)
-    );
-  }
-
-  function handleLoginFromModal() {
-    saveApplicationDraft();
-
-    localStorage.setItem(
-      "redirectAfterLogin",
-      window.location.pathname + window.location.search
-    );
-
-    setShowLoginRequired(false);
-    navigate("/login");
-  }
-
   async function handleSubmit(event) {
     event.preventDefault();
 
     setMessage("");
     setMessageType("");
-
-    let loggedIn = false;
-
-    try {
-      const authResponse = await fetch("/api/me", {
-        method: "GET",
-        credentials: "same-origin",
-      });
-
-      if (authResponse.ok) {
-        const authData = await authResponse.json();
-
-        loggedIn = Boolean(
-          authData.success &&
-          authData.authenticated &&
-          authData.user
-        );
-      }
-    } catch (error) {
-      console.error("Could not verify login state:", error);
-    }
-
-    if (!loggedIn) {
-      localStorage.removeItem("isLoggedIn");
-      localStorage.setItem("guestMode", "true");
-      setShowLoginRequired(true);
-      return;
-    }
-
-    localStorage.setItem("isLoggedIn", "true");
-    localStorage.removeItem("guestMode");
 
     const phonePattern = /^05\d{8}$/;
 
@@ -326,7 +252,6 @@ function BecomeFixer() {
         headers: {
           "Content-Type": "application/json",
         },
-        credentials: "same-origin",
         body: JSON.stringify({
           name: formData.name.trim(),
           phone: formData.phone.trim(),
@@ -342,12 +267,6 @@ function BecomeFixer() {
       });
 
       const data = await response.json();
-
-      if (response.status === 401) {
-        localStorage.removeItem("isLoggedIn");
-        setShowLoginRequired(true);
-        return;
-      }
 
       if (!response.ok) {
         throw new Error(
@@ -366,7 +285,6 @@ function BecomeFixer() {
         )
       );
       setMessageType("success");
-      sessionStorage.removeItem("fixerApplicationDraft");
 
       setFormData({
         name: "",
@@ -395,97 +313,89 @@ function BecomeFixer() {
       className="become-fixer-page"
     >
       {/* HERO */}
-      <section className="bf-hero">
-        <div className="bf-container bf-hero-grid">
-          <div>
-            <p
-              className="bf-label bf-reveal"
-              data-fixer-reveal
-            >
+      <section className="bf-hero bf-hero-editorial-v2">
+        <div className="bf-container bf-hero-v2-grid">
+          <div
+            className="bf-hero-v2-copy bf-reveal"
+            data-fixer-reveal
+          >
+            <p className="bf-label">
               {tr("FOR PROFESSIONALS", "للمحترفين")}
             </p>
 
-            <h1
-              className="bf-reveal"
-              data-fixer-reveal
-              style={{ "--bf-delay": "80ms" }}
-            >
+            <h1>
               {tr(
-                "Grow your business with ",
-                "طوّر عملك مع "
+                "Grow with Fixer.Co.",
+                "نمّي عملك مع Fixer.Co."
               )}
-              <span>Fixer.Co</span>
             </h1>
 
-            <p
-              className="bf-hero-copy bf-reveal"
-              data-fixer-reveal
-              style={{ "--bf-delay": "160ms" }}
-            >
+            <p className="bf-hero-copy">
               {tr(
-                "Join our network of home-service professionals, connect with customers near you, and build your reputation through great service.",
-                "انضم إلى شبكة محترفي الخدمات المنزلية، وتواصل مع العملاء القريبين منك، وابنِ سمعتك من خلال خدمة مميزة."
+                "Create a professional profile, reach customers looking for your service, and manage your availability and starting price in one place.",
+                "أنشئ ملفًا مهنيًا، ووصل للعملاء الباحثين عن خدمتك، وأدر توفرك وسعرك الابتدائي من مكان واحد."
               )}
             </p>
 
-            <a
-              href="#fixerApplication"
-              className="bf-primary-button bf-liquid-button bf-reveal"
-              data-fixer-reveal
-              style={{ "--bf-delay": "240ms" }}
-            >
-              <span className="bf-liquid-sheen"></span>
+            <div className="bf-hero-v2-actions">
+              <a
+                href="#fixerApplication"
+                className="bf-primary-button bf-liquid-button"
+              >
+                <span className="bf-liquid-sheen"></span>
+                <span className="bf-liquid-content">
+                  {tr("Apply to Join", "قدّم للانضمام")}
+                </span>
+              </a>
 
-              <span className="bf-liquid-content">
-                {tr("Apply to Join", "قدّم للانضمام")}
+              <span className="bf-hero-v2-note">
+                <i className="fa-solid fa-circle-check"></i>
+                {tr(
+                  "No payment required to apply",
+                  "لا يلزم الدفع عند التقديم"
+                )}
               </span>
-            </a>
+            </div>
           </div>
 
           <div
-            className="bf-price-card bf-reveal"
+            className="bf-hero-v2-fee bf-reveal"
             data-fixer-reveal
-            style={{ "--bf-delay": "120ms" }}
+            style={{ "--bf-delay": "100ms" }}
           >
-            <div className="bf-price-glow"></div>
-
             <p className="bf-label">
-              {tr(
-                "ONE-TIME REGISTRATION",
-                "تسجيل لمرة واحدة"
-              )}
+              {tr("ONE-TIME REGISTRATION", "تسجيل لمرة واحدة")}
             </p>
 
-            <div className="bf-price-row">
+            <div className="bf-hero-v2-price">
               <strong>99</strong>
               <span>{tr("SAR", "ر.س")}</span>
             </div>
 
             <p>
               {tr(
-                "Registration fee is collected only after your application is approved.",
-                "يتم تحصيل رسوم التسجيل فقط بعد الموافقة على طلبك."
+                "Collected only after your application is approved.",
+                "يتم تحصيلها فقط بعد الموافقة على طلبك."
               )}
             </p>
 
-            <div className="bf-divider"></div>
-
-            <div className="bf-price-check">
-              <i className="fa-solid fa-circle-check"></i>
-              {tr(
-                "No payment required to apply",
-                "لا يلزم الدفع عند التقديم"
-              )}
+            <div className="bf-hero-v2-mini">
+              <span>01</span>
+              <strong>{tr("Apply", "قدّم")}</strong>
+              <span>02</span>
+              <strong>{tr("Review", "مراجعة")}</strong>
+              <span>03</span>
+              <strong>{tr("Start", "ابدأ")}</strong>
             </div>
           </div>
         </div>
       </section>
 
       {/* BENEFITS */}
-      <section className="bf-section">
-        <div className="bf-container">
+      <section className="bf-section bf-benefits-v2">
+        <div className="bf-container bf-benefits-v2-grid">
           <div
-            className="bf-section-heading bf-reveal"
+            className="bf-benefits-v2-copy bf-reveal"
             data-fixer-reveal
           >
             <p className="bf-label">
@@ -494,40 +404,39 @@ function BecomeFixer() {
 
             <h2>
               {tr(
-                "Turn your skills into more opportunities.",
-                "حوّل مهاراتك إلى فرص أكثر."
+                "Everything you need to present your service clearly.",
+                "كل ما تحتاجه لعرض خدمتك بشكل واضح."
               )}
             </h2>
 
             <p>
               {tr(
-                "Join a platform built to help skilled professionals get discovered, stay flexible, and build trust.",
-                "انضم إلى منصة تساعد المحترفين على الظهور والوصول إلى العملاء والعمل بمرونة وبناء الثقة."
+                "Your profile keeps the important details customers look for together — your specialty, location, availability, starting price, ratings, and reviews.",
+                "يجمع ملفك أهم المعلومات التي يبحث عنها العملاء في مكان واحد: تخصصك، موقعك، توفرك، سعرك الابتدائي، تقييماتك ومراجعاتك."
               )}
             </p>
           </div>
 
-          <div className="bf-benefit-grid">
+          <div className="bf-benefits-v2-list">
             {benefitItems.map((item, index) => (
               <article
                 key={item.enTitle}
-                className="bf-benefit-card bf-card-reveal"
+                className="bf-benefits-v2-item bf-card-reveal"
                 data-fixer-reveal
-                style={{
-                  "--bf-delay": `${index * 75}ms`,
-                }}
+                style={{ "--bf-delay": `${index * 80}ms` }}
               >
-                <div className="bf-icon-box">
+                <span className="bf-benefits-v2-number">
+                  0{index + 1}
+                </span>
+
+                <div className="bf-benefits-v2-icon">
                   <i className={item.icon}></i>
                 </div>
 
-                <h3>
-                  {tr(item.enTitle, item.arTitle)}
-                </h3>
-
-                <p>
-                  {tr(item.enText, item.arText)}
-                </p>
+                <div>
+                  <h3>{tr(item.enTitle, item.arTitle)}</h3>
+                  <p>{tr(item.enText, item.arText)}</p>
+                </div>
               </article>
             ))}
           </div>
@@ -918,6 +827,13 @@ function BecomeFixer() {
                       "إرسال الطلب"
                     )}
 
+                {!submitting && (
+                  <i
+                    className={`fa-solid fa-arrow-right ${
+                      isArabic ? "bf-rtl-arrow" : ""
+                    }`}
+                  ></i>
+                )}
               </button>
 
               {message && (
@@ -939,99 +855,6 @@ function BecomeFixer() {
           </div>
         </div>
       </section>
-
-
-      {showLoginRequired && (
-        <div
-          className="bf-login-required-overlay"
-          onClick={() => setShowLoginRequired(false)}
-        >
-          <div
-            className="bf-login-required-modal"
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="bf-login-required-title"
-            onClick={(event) => event.stopPropagation()}
-          >
-            <button
-              type="button"
-              className="bf-login-required-close"
-              onClick={() => setShowLoginRequired(false)}
-              aria-label={tr("Close", "إغلاق")}
-            >
-              <i className="fa-solid fa-xmark"></i>
-            </button>
-
-            <div className="bf-login-required-icon-wrap">
-              <div className="bf-login-required-icon">
-                <i className="fa-solid fa-lock"></i>
-              </div>
-              <span className="bf-login-required-pulse"></span>
-            </div>
-
-            <p className="bf-login-required-kicker">
-              {tr("ACCOUNT REQUIRED", "يلزم تسجيل الدخول")}
-            </p>
-
-            <h3 id="bf-login-required-title">
-              {tr(
-                "Log in to submit your application",
-                "سجّل الدخول لإرسال طلب الانضمام"
-              )}
-            </h3>
-
-            <p className="bf-login-required-copy">
-              {tr(
-                <>
-                  Your application details are ready.
-                  <br />
-                  Log in to continue, and we'll bring you right back here.
-                </>,
-                <>
-                  تفاصيل طلبك جاهزة.
-                  <br />
-                  سجّل الدخول للمتابعة، وسنعيدك مباشرة إلى هنا.
-                </>
-              )}
-            </p>
-
-            <div className="bf-login-required-note">
-              <i className="fa-regular fa-circle-check"></i>
-              <span>
-                {tr(
-                  "Your form details will be saved while you log in.",
-                  "سنحتفظ ببيانات النموذج أثناء تسجيل الدخول."
-                )}
-              </span>
-            </div>
-
-            <div className="bf-login-required-actions">
-              <button
-                type="button"
-                className="bf-login-required-cancel"
-                onClick={() => setShowLoginRequired(false)}
-              >
-                {tr("Keep Browsing", "متابعة التصفح")}
-              </button>
-
-              <button
-                type="button"
-                className="bf-login-required-login"
-                onClick={handleLoginFromModal}
-              >
-                {tr("Log In to Continue", "تسجيل الدخول والمتابعة")}
-              </button>
-            </div>
-
-            <p className="bf-login-required-footer">
-              {tr(
-                "New to Fixer.Co? You can create an account from the login page.",
-                "جديد على Fixer.Co؟ يمكنك إنشاء حساب من صفحة تسجيل الدخول."
-              )}
-            </p>
-          </div>
-        </div>
-      )}
 
       <Footer />
     </main>

@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap");
 
 .contact-page {
   --contact-navy: #173b57;
@@ -12,7 +12,7 @@
   min-height: 100vh;
   background: var(--contact-bg);
   color: var(--contact-navy-dark);
-  font-family: "Manrope", sans-serif;
+  font-family: "Plus Jakarta Sans", sans-serif;
 }
 
 .contact-page *,
@@ -315,6 +315,7 @@
 /* RTL */
 .contact-page[dir="rtl"] {
   text-align: right;
+  font-family: "IBM Plex Sans Arabic", sans-serif;
 }
 
 .contact-page[dir="rtl"]
@@ -793,5 +794,40 @@
     -webkit-text-fill-color: currentColor !important;
     color: var(--contact-green-dark) !important;
     filter: none !important;
+  }
+}
+
+/* =========================================================
+   CONTACT TITLE — THINNER FONT + MORE ROOM
+   Motion, colors and timing are unchanged.
+   ========================================================= */
+
+.contact-title {
+  max-width: 700px !important;
+  font-weight: 500 !important;
+}
+
+.contact-title-animated {
+  overflow: visible !important;
+  padding-inline: 8px !important;
+  margin-inline: -8px !important;
+}
+
+.contact-title-animated .contact-word,
+.contact-shiny-you,
+.contact-from {
+  font-weight: 500 !important;
+}
+
+/* Override the older desktop max-width that was clipping the final word */
+@media (min-width: 951px) {
+  .contact-title {
+    max-width: 700px !important;
+  }
+}
+
+@media (max-width: 600px) {
+  .contact-title {
+    font-weight: 500 !important;
   }
 }

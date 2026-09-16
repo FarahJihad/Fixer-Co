@@ -65,7 +65,6 @@ function Navbar() {
 
         if (!response.ok) {
           setUser(null);
-          localStorage.removeItem("isLoggedIn");
           return;
         }
 
@@ -78,13 +77,10 @@ function Navbar() {
           !data.user
         ) {
           setUser(null);
-          localStorage.removeItem("isLoggedIn");
           return;
         }
 
         setUser(data.user);
-        localStorage.setItem("isLoggedIn", "true");
-        localStorage.removeItem("guestMode");
       } catch (error) {
         console.error(
           "Auth state error:",
@@ -98,7 +94,7 @@ function Navbar() {
     }
 
     loadCurrentUser();
-  }, [location.pathname]);
+  }, []);
 
   /* =========================
      SCROLL EFFECT
@@ -297,12 +293,17 @@ function Navbar() {
     : "";
 
   return (
-    <header
-      dir="ltr"
-      className={`
-        sticky
-        top-0
-        z-50
+    <>
+      <header
+        dir="ltr"
+        className={`
+          fixed
+          lg:sticky
+          top-0
+          left-0
+          right-0
+          z-50
+          [transform:translateZ(0)]
         w-full
         border-b
         transition-all
@@ -336,10 +337,11 @@ function Navbar() {
           sm:px-8
           lg:px-12
           xl:px-16
+          h-[88px]
           ${
             scrolled
-              ? "h-[68px]"
-              : "h-[88px]"
+              ? "lg:h-[68px]"
+              : "lg:h-[88px]"
           }
         `}
       >
@@ -366,10 +368,11 @@ function Navbar() {
               transition-all
               duration-500
               group-hover:opacity-90
+              text-[28px]
               ${
                 scrolled
-                  ? "text-[25px]"
-                  : "text-[28px]"
+                  ? "lg:text-[25px]"
+                  : "lg:text-[28px]"
               }
             `}
           >
@@ -984,7 +987,14 @@ function Navbar() {
             )}
         </div>
       )}
-    </header>
+      </header>
+
+      {/* Keeps page content from sliding under the fixed mobile navbar */}
+      <div
+        aria-hidden="true"
+        className="h-[88px] lg:hidden"
+      />
+    </>
   );
 }
 

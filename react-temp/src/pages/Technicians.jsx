@@ -575,41 +575,6 @@ function Technicians() {
     navigate(url);
   }
 
-  function handleHeroMove(event) {
-    const rect =
-      event.currentTarget.getBoundingClientRect();
-
-    const x =
-      ((event.clientX - rect.left) /
-        rect.width) *
-      100;
-
-    const y =
-      ((event.clientY - rect.top) /
-        rect.height) *
-      100;
-
-    event.currentTarget.style.setProperty(
-      "--hero-x",
-      `${x}%`
-    );
-
-    event.currentTarget.style.setProperty(
-      "--hero-y",
-      `${y}%`
-    );
-  }
-
-  function handleHeroLeave(event) {
-    event.currentTarget.style.removeProperty(
-      "--hero-x"
-    );
-
-    event.currentTarget.style.removeProperty(
-      "--hero-y"
-    );
-  }
-
   return (
     <main
       dir={isArabic ? "rtl" : "ltr"}
@@ -617,11 +582,7 @@ function Technicians() {
     >
 
       {/* PAGE HERO */}
-      <section
-        className="tech-find-hero-v2 tech-page-enter"
-        onMouseMove={handleHeroMove}
-        onMouseLeave={handleHeroLeave}
-      >
+      <section className="tech-find-hero-v2 tech-page-enter">
         <div className="tech-find-hero-v2__line" aria-hidden="true"></div>
 
         <div className="tech-container tech-find-hero-v2__inner">
