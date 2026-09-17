@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useLanguage } from "../context/LanguageContext.jsx";
 import Footer from "../components/Footer.jsx";
 import "./BecomeFixer.css";
@@ -107,8 +108,13 @@ const policyItems = [
 ];
 
 function BecomeFixer() {
+  const navigate = useNavigate();
   const { language, isArabic } = useLanguage();
   const tr = (en, ar) => (language === "ar" ? ar : en);
+
+  const [loggedIn, setLoggedIn] = useState(false);
+  const [authChecked, setAuthChecked] = useState(false);
+  const [showLoginRequired, setShowLoginRequired] = useState(false);
 
   const [services, setServices] = useState([]);
   const [servicesLoading, setServicesLoading] = useState(true);
@@ -129,6 +135,57 @@ function BecomeFixer() {
   const [message, setMessage] = useState("");
   const [messageType, setMessageType] = useState("");
   const [submitting, setSubmitting] = useState(false);
+
+  useEffect(() => {
+    const savedDraft = sessionStorage.getItem("fixerApplicationDraft");
+
+    if (!savedDraft) return;
+
+    try {
+      const draft = JSON.parse(savedDraft);
+
+      setFormData((previousData) => ({
+        ...previousData,
+        ...draft,
+      }));
+
+      sessionStorage.removeItem("fixerApplicationDraft");
+    } catch (error) {
+      console.error("Could not restore fixer application draft:", error);
+      sessionStorage.removeItem("fixerApplicationDraft");
+    }
+  }, []);
+
+  useEffect(() => {
+    async function checkAuthentication() {
+      try {
+        const response = await fetch("/api/me", {
+          credentials: "same-origin",
+        });
+
+        const data = await response.json();
+        const authenticated =
+          response.ok && data.authenticated && data.user;
+
+        setLoggedIn(Boolean(authenticated));
+
+        if (authenticated) {
+          localStorage.setItem("isLoggedIn", "true");
+          localStorage.removeItem("guestMode");
+        } else {
+          localStorage.removeItem("isLoggedIn");
+        }
+      } catch (error) {
+        console.error("Authentication check error:", error);
+        localStorage.removeItem("isLoggedIn");
+        setLoggedIn(false);
+      } finally {
+        setAuthChecked(true);
+      }
+    }
+
+    checkAuthentication();
+  }, []);
 
   useEffect(() => {
     async function loadServices() {
@@ -201,11 +258,23 @@ function BecomeFixer() {
     }));
   }
 
+  function saveFixerApplicationDraft() {
+    sessionStorage.setItem(
+      "fixerApplicationDraft",
+      JSON.stringify(formData)
+    );
+  }
+
   async function handleSubmit(event) {
     event.preventDefault();
 
     setMessage("");
     setMessageType("");
+
+    if (!authChecked || !loggedIn) {
+      setShowLoginRequired(true);
+      return;
+    }
 
     const phonePattern = /^05\d{8}$/;
 
@@ -252,6 +321,7 @@ function BecomeFixer() {
         headers: {
           "Content-Type": "application/json",
         },
+        credentials: "same-origin",
         body: JSON.stringify({
           name: formData.name.trim(),
           phone: formData.phone.trim(),
@@ -267,6 +337,13 @@ function BecomeFixer() {
       });
 
       const data = await response.json();
+
+      if (response.status === 401) {
+        localStorage.removeItem("isLoggedIn");
+        setLoggedIn(false);
+        setShowLoginRequired(true);
+        return;
+      }
 
       if (!response.ok) {
         throw new Error(
@@ -298,6 +375,8 @@ function BecomeFixer() {
         bio: "",
         policy_accepted: false,
       });
+
+      sessionStorage.removeItem("fixerApplicationDraft");
     } catch (error) {
       console.error("Application error:", error);
       setMessage(error.message);
@@ -305,6 +384,13 @@ function BecomeFixer() {
     } finally {
       setSubmitting(false);
     }
+  }
+
+  function handleLoginForApplication() {
+    saveFixerApplicationDraft();
+    localStorage.setItem("redirectAfterLogin", "/become-fixer#fixerApplication");
+    setShowLoginRequired(false);
+    navigate("/login");
   }
 
   return (
@@ -640,6 +726,7 @@ function BecomeFixer() {
             style={{ "--bf-delay": "90ms" }}
           >
             <form onSubmit={handleSubmit}>
+              <fieldset>
               <div className="bf-form-grid-two">
                 <FormGroup label={tr("Full Name", "الاسم الكامل")}>
                   <input
@@ -851,10 +938,88 @@ function BecomeFixer() {
                   {message}
                 </div>
               )}
+              </fieldset>
             </form>
           </div>
         </div>
       </section>
+
+      {showLoginRequired && (
+        <div
+          className="login-required-overlay"
+          onClick={() => setShowLoginRequired(false)}
+        >
+          <div
+            className="login-required-modal"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="fixer-login-required-title"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <button
+              type="button"
+              className="login-required-close"
+              onClick={() => setShowLoginRequired(false)}
+              aria-label={tr("Close", "إغلاق")}
+            >
+              <i className="fa-solid fa-xmark"></i>
+            </button>
+
+            <div className="login-required-icon-wrap">
+              <div className="login-required-icon">
+                <i className="fa-solid fa-lock"></i>
+              </div>
+              <span className="login-required-pulse"></span>
+            </div>
+
+            <p className="login-required-kicker">
+              {tr("ACCOUNT REQUIRED", "يلزم تسجيل الدخول")}
+            </p>
+
+            <h3 id="fixer-login-required-title">
+              {tr(
+                "Log in to apply as a fixer",
+                "سجّل الدخول للتقديم كفني"
+              )}
+            </h3>
+
+            <p className="login-required-copy">
+              {tr(
+                "Your application details are ready. Log in to continue, and we'll bring you right back here.",
+                "بيانات طلبك جاهزة. سجّل الدخول للمتابعة، وسنعيدك مباشرة إلى هنا."
+              )}
+            </p>
+
+            <div className="login-required-note">
+              <i className="fa-regular fa-circle-check"></i>
+              <span>
+                {tr(
+                  "Your form details will be saved while you log in.",
+                  "سنحتفظ ببيانات النموذج أثناء تسجيل الدخول."
+                )}
+              </span>
+            </div>
+
+            <div className="login-required-actions">
+              <button
+                type="button"
+                className="login-required-cancel"
+                onClick={() => setShowLoginRequired(false)}
+              >
+                {tr("Keep Browsing", "متابعة التصفح")}
+              </button>
+
+              <button
+                type="button"
+                className="login-required-login"
+                onClick={handleLoginForApplication}
+              >
+                {tr("Log In to Continue", "تسجيل الدخول والمتابعة")}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       <Footer />
     </main>

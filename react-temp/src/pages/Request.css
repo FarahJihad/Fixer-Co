@@ -202,6 +202,15 @@
   gap: 18px;
 }
 
+.request-form-card fieldset {
+  display: grid;
+  min-inline-size: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  gap: 18px;
+}
+
 .request-form-grid-two {
   display: grid;
   grid-template-columns:

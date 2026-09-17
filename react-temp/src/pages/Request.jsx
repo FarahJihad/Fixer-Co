@@ -41,6 +41,7 @@ function Request() {
   const [showSuccess, setShowSuccess] = useState(false);
   const [requestId, setRequestId] = useState(null);
   const [showLoginRequired, setShowLoginRequired] = useState(false);
+  const loggedIn = localStorage.getItem("isLoggedIn") === "true";
 
 
   useEffect(() => {
@@ -491,6 +492,7 @@ function Request() {
             </div>
 
             <form onSubmit={handleSubmit}>
+              <fieldset>
               <div className="request-form-grid-two">
                 <FormGroup
                   label={tr(
@@ -673,6 +675,7 @@ function Request() {
                   <span>{message}</span>
                 </div>
               )}
+              </fieldset>
             </form>
           </div>
         </div>

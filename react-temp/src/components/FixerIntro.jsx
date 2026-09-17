@@ -16,20 +16,9 @@ function FixerIntro() {
   const [leaving, setLeaving] = useState(false);
 
   function destinationAfterIntro() {
-    const loggedIn =
-      localStorage.getItem("isLoggedIn") === "true";
-
-    const guestMode =
-      localStorage.getItem("guestMode") === "true";
-
-    // Existing signed-in users and users who already selected Guest
-    // continue directly to Home.
-    if (loggedIn || guestMode) {
-      return "/";
-    }
-
-    // First-time / unauthenticated visitor sees Login after Intro.
-    return "/login";
+    // The intro always opens the public Home page. Guests can browse the
+    // website, while account-only actions remain locked until login.
+    return "/";
   }
 
   function finishIntro() {
