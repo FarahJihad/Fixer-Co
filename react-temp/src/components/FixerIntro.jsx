@@ -1,147 +1,168 @@
-import { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { useLocation } from "react-router-dom";
 import "./FixerIntro.css";
+import BeamsBackground from "./BeamsBackground.jsx";
+
+const INTRO_KEY = "fixerIntroBeamsV1Seen";
+
+const leftLetters = ["F", "i", "x", "e", "r"];
+const rightLetters = ["C", "o"];
 
 function FixerIntro() {
   const { pathname } = useLocation();
-  const navigate = useNavigate();
 
   const [visible, setVisible] = useState(() => {
-    return (
-      pathname === "/" &&
-      sessionStorage.getItem("fixerIntroSeen") !== "true"
-    );
+    return pathname === "/" && sessionStorage.getItem(INTRO_KEY) !== "true";
   });
 
-  const [leaving, setLeaving] = useState(false);
+  const [phase, setPhase] = useState("brand");
+  const [imageIndex, setImageIndex] = useState(0);
+  const pivotRef = useRef(null);
+  const [brandShift, setBrandShift] = useState(0);
 
-  function destinationAfterIntro() {
-    // The intro always opens the public Home page. Guests can browse the
-    // website, while account-only actions remain locked until login.
-    return "/";
-  }
+  const images = useMemo(
+    () => [
+      "/media/services/plumbing.png",
+      "/media/services/electrical.png",
+      "/media/services/general-maintenance.png",
+      "/media/hero/fixer-hero-bg.png",
+    ],
+    []
+  );
 
-  function finishIntro() {
-    sessionStorage.setItem("fixerIntroSeen", "true");
+  useLayoutEffect(() => {
+    if (!visible || pathname !== "/") return undefined;
 
-    const destination = destinationAfterIntro();
+    let cancelled = false;
 
-    setLeaving(true);
+    const measure = () => {
+      if (cancelled || !pivotRef.current) return;
 
-    window.setTimeout(() => {
-      setVisible(false);
-      document.body.style.overflow = "";
+      const rect = pivotRef.current.getBoundingClientRect();
+      const pivotCenter = rect.left + rect.width / 2;
+      const viewportCenter = window.innerWidth / 2;
 
-      if (destination !== pathname) {
-        navigate(destination, { replace: true });
-      }
-    }, 620);
-  }
+      // Move the WORDMARK slightly so the image square itself
+      // is exactly centered before it expands.
+      setBrandShift(viewportCenter - pivotCenter);
+    };
+
+    const frame = window.requestAnimationFrame(measure);
+    window.addEventListener("resize", measure);
+
+    if (document.fonts?.ready) {
+      document.fonts.ready.then(measure);
+    }
+
+    return () => {
+      cancelled = true;
+      window.cancelAnimationFrame(frame);
+      window.removeEventListener("resize", measure);
+    };
+  }, [visible, pathname]);
 
   useEffect(() => {
     if (!visible || pathname !== "/") return;
 
-    const oldOverflow =
-      document.body.style.overflow;
-
+    const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
 
-    const finishTimer =
-      window.setTimeout(
-        finishIntro,
-        2450
-      );
+    const timers = [
+      // Let the full wordmark finish entering, then hold for about a second.
+      window.setTimeout(() => setPhase("open"), 1750),
+      window.setTimeout(() => {
+        setPhase("gallery");
+        setImageIndex(0);
+      }, 2380),
+      window.setTimeout(() => setImageIndex(1), 2625),
+      window.setTimeout(() => setImageIndex(2), 3000),
+      window.setTimeout(() => {
+        setImageIndex(3);
+        setPhase("final");
+      }, 3460),
+      // No intermediate banner.
+      // The last square opens directly into the Home hero.
+      window.setTimeout(() => setPhase("expand"), 4150),
+      window.setTimeout(() => setPhase("reveal"), 5250),
+      window.setTimeout(() => {
+        sessionStorage.setItem(INTRO_KEY, "true");
+        setVisible(false);
+        document.body.style.overflow = previousOverflow;
+        window.dispatchEvent(new Event("fixer-intro-complete"));
+      }, 5800),
+    ];
 
     return () => {
-      window.clearTimeout(
-        finishTimer
-      );
-
-      document.body.style.overflow =
-        oldOverflow;
+      timers.forEach((timer) => window.clearTimeout(timer));
+      document.body.style.overflow = previousOverflow;
     };
-    // Run only for this intro mount.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [visible, pathname]);
 
   function skipIntro() {
-    finishIntro();
+    sessionStorage.setItem(INTRO_KEY, "true");
+    document.body.style.overflow = "";
+    setVisible(false);
+    window.dispatchEvent(new Event("fixer-intro-complete"));
   }
 
-  if (!visible || pathname !== "/") {
-    return null;
-  }
+  if (!visible || pathname !== "/") return null;
 
   return (
-    <div
-      className={`fixer-path-intro ${
-        leaving ? "is-leaving" : ""
-      }`}
-    >
-      <svg
-        className="fixer-paths-svg"
-        viewBox="0 0 1600 900"
-        preserveAspectRatio="xMidYMid slice"
-        aria-hidden="true"
-      >
-        <defs>
-          <linearGradient
-            id="fixerPathGreen"
-            x1="0%"
-            y1="0%"
-            x2="100%"
-            y2="100%"
-          >
-            <stop offset="0%" stopColor="#4faf8f" stopOpacity="0" />
-            <stop offset="48%" stopColor="#4faf8f" stopOpacity="0.62" />
-            <stop offset="100%" stopColor="#67c2a4" stopOpacity="0" />
-          </linearGradient>
+    <div className={`fixer-intro fixer-intro--${phase}`}>
+      <BeamsBackground intensity="subtle" />
+      <div className="fixer-intro__stage">
+        <div className="fixer-intro__brand" aria-label="Fixer.Co" style={{ "--brand-shift": `${brandShift}px` }}>
+          <span className="fixer-intro__word fixer-intro__word--left">
+            {leftLetters.map((letter, index) => (
+              <span
+                key={`${letter}-${index}`}
+                className="fixer-intro__char"
+                style={{ "--char-index": index }}
+              >
+                {letter}
+              </span>
+            ))}
+          </span>
 
-          <linearGradient
-            id="fixerPathNavy"
-            x1="0%"
-            y1="100%"
-            x2="100%"
-            y2="0%"
-          >
-            <stop offset="0%" stopColor="#173b57" stopOpacity="0" />
-            <stop offset="50%" stopColor="#173b57" stopOpacity="0.26" />
-            <stop offset="100%" stopColor="#102d43" stopOpacity="0" />
-          </linearGradient>
-        </defs>
+          <span ref={pivotRef} className="fixer-intro__pivot" aria-hidden="true">
+            <span
+              className="fixer-intro__dot fixer-intro__char"
+              style={{ "--char-index": 5 }}
+            >
+              .
+            </span>
 
-        <path className="fixer-path fixer-path-1" pathLength="1"
-          d="M-120 690 C120 500 280 520 450 410 C650 280 810 320 1010 190 C1190 70 1370 70 1710 -70" />
-        <path className="fixer-path fixer-path-2" pathLength="1"
-          d="M-100 180 C160 320 310 290 520 390 C720 485 860 610 1110 590 C1320 570 1470 690 1710 810" />
-        <path className="fixer-path fixer-path-3" pathLength="1"
-          d="M180 -80 C250 120 420 160 480 310 C545 475 470 620 610 780 C700 880 790 920 900 980" />
-        <path className="fixer-path fixer-path-4" pathLength="1"
-          d="M1270 -120 C1190 90 1040 190 1020 350 C990 560 1140 680 1080 890 C1050 980 990 1030 930 1080" />
-        <path className="fixer-path fixer-path-5" pathLength="1"
-          d="M-40 500 C200 440 390 470 560 520 C760 580 910 510 1100 450 C1310 380 1470 390 1660 480" />
-      </svg>
+            <span className="fixer-intro__window">
+              {images.map((src, index) => (
+                <img
+                  key={src}
+                  src={src}
+                  alt=""
+                  className={`fixer-intro__image ${
+                    imageIndex === index ? "is-active" : ""
+                  } ${index === images.length - 1 ? "is-home-image" : ""}`}
+                />
+              ))}
+              <span className="fixer-intro__window-shine" />
+            </span>
+          </span>
 
-      <div className="fixer-path-orb fixer-path-orb-one" aria-hidden="true" />
-      <div className="fixer-path-orb fixer-path-orb-two" aria-hidden="true" />
-
-      <div className="fixer-path-brand">
-        <div className="fixer-path-brand-name">
-          <span className="fixer-path-fixer">Fixer</span>
-          <span className="fixer-path-co">.Co</span>
+          <span className="fixer-intro__word fixer-intro__word--right">
+            {rightLetters.map((letter, index) => (
+              <span
+                key={`${letter}-${index}`}
+                className="fixer-intro__char"
+                style={{ "--char-index": index + 6 }}
+              >
+                {letter}
+              </span>
+            ))}
+          </span>
         </div>
 
-        <div className="fixer-path-brand-line" aria-hidden="true" />
-        <p className="fixer-path-tagline">
-          The right fix. Right around you.
-        </p>
       </div>
 
-      <button
-        type="button"
-        className="fixer-path-skip"
-        onClick={skipIntro}
-      >
+      <button type="button" className="fixer-intro__skip" onClick={skipIntro}>
         Skip
       </button>
     </div>

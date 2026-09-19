@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   useNavigate,
   useSearchParams,
@@ -6,6 +6,87 @@ import {
 import { useLanguage } from "../context/LanguageContext.jsx";
 import Footer from "../components/Footer.jsx";
 import "./Request.css";
+
+
+function RequestSmallLabelEffect({ text }) {
+  const textRef = useRef(null);
+  const [isVisible, setIsVisible] = useState(false);
+
+  const isArabicText = /[\u0600-\u06FF]/.test(text);
+  const pieces = isArabicText
+    ? text.split(/(\s+)/)
+    : Array.from(text);
+
+  useEffect(() => {
+    const element = textRef.current;
+    if (!element) return undefined;
+
+    const prefersReducedMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)"
+    ).matches;
+
+    if (prefersReducedMotion) {
+      setIsVisible(true);
+      return undefined;
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) return;
+
+        setIsVisible(true);
+        observer.unobserve(element);
+      },
+      {
+        threshold: 0.5,
+        rootMargin: "0px 0px -6% 0px",
+      }
+    );
+
+    observer.observe(element);
+
+    return () => observer.disconnect();
+  }, [text]);
+
+  return (
+    <span
+      ref={textRef}
+      className={`request-small-text-effect ${
+        isVisible ? "is-visible" : ""
+      } ${isArabicText ? "is-arabic-effect" : ""}`}
+      aria-label={text}
+    >
+      {pieces.map((piece, index) => {
+        if (piece.trim() === "") {
+          return (
+            <span
+              key={`space-${index}`}
+              className="request-small-text-effect-space"
+              aria-hidden="true"
+            >
+              {" "}
+            </span>
+          );
+        }
+
+        return (
+          <span
+            key={`${piece}-${index}`}
+            className="request-small-text-effect-piece"
+            aria-hidden="true"
+            style={{
+              "--request-text-delay": `${
+                index * (isArabicText ? 70 : 34)
+              }ms`,
+            }}
+          >
+            {piece}
+          </span>
+        );
+      })}
+    </span>
+  );
+}
 
 function Request() {
   const navigate = useNavigate();
@@ -38,10 +119,7 @@ function Request() {
   const [message, setMessage] = useState("");
   const [messageType, setMessageType] = useState("");
 
-  const [showSuccess, setShowSuccess] = useState(false);
-  const [requestId, setRequestId] = useState(null);
   const [showLoginRequired, setShowLoginRequired] = useState(false);
-  const loggedIn = localStorage.getItem("isLoggedIn") === "true";
 
 
   useEffect(() => {
@@ -231,6 +309,7 @@ function Request() {
     navigate("/login");
   }
 
+
   async function handleSubmit(event) {
     event.preventDefault();
 
@@ -325,10 +404,6 @@ function Request() {
         );
       }
 
-      setRequestId(
-        result.request_id || null
-      );
-
       setMessage(
         result.request_id
           ? tr(
@@ -350,7 +425,6 @@ function Request() {
       setProblem("");
 
       sessionStorage.removeItem("requestDraft");
-      setShowSuccess(true);
     } catch (error) {
       console.error(
         "Request error:",
@@ -384,10 +458,12 @@ function Request() {
               className="request-label request-reveal"
               data-request-reveal
             >
-              {tr(
-                "REQUEST A SERVICE",
-                "اطلب خدمة"
-              )}
+              <RequestSmallLabelEffect
+                text={tr(
+                  "REQUEST A SERVICE",
+                  "اطلب خدمة"
+                )}
+              />
             </p>
 
             <h1
@@ -470,10 +546,12 @@ function Request() {
           >
             <div className="request-form-heading">
               <p className="request-label">
-                {tr(
-                  "SERVICE DETAILS",
-                  "تفاصيل الخدمة"
-                )}
+                <RequestSmallLabelEffect
+                  text={tr(
+                    "SERVICE DETAILS",
+                    "تفاصيل الخدمة"
+                  )}
+                />
               </p>
 
               <h2>
@@ -492,7 +570,6 @@ function Request() {
             </div>
 
             <form onSubmit={handleSubmit}>
-              <fieldset>
               <div className="request-form-grid-two">
                 <FormGroup
                   label={tr(
@@ -675,7 +752,6 @@ function Request() {
                   <span>{message}</span>
                 </div>
               )}
-              </fieldset>
             </form>
           </div>
         </div>
@@ -787,83 +863,7 @@ function Request() {
         </div>
       )}
 
-      {showSuccess && (
-        <div
-          className="request-modal-overlay"
-          onClick={() =>
-            setShowSuccess(false)
-          }
-        >
-          <div
-            className="request-modal"
-            onClick={(event) =>
-              event.stopPropagation()
-            }
-          >
-            <div className="request-modal-icon">
-              <i className="fa-solid fa-circle-check"></i>
-            </div>
 
-            <h3>
-              {tr(
-                "Request Submitted!",
-                "تم إرسال الطلب!"
-              )}
-            </h3>
-
-            <p>
-              {tr(
-                "Your service request was created successfully.",
-                "تم إنشاء طلب الخدمة بنجاح."
-              )}
-            </p>
-
-            {requestId && (
-              <span className="request-id-chip">
-                {tr(
-                  `Request #${requestId}`,
-                  `طلب #${requestId}`
-                )}
-              </span>
-            )}
-
-            <p className="request-modal-question">
-              {tr(
-                "Would you like to view your requests?",
-                "هل تريد عرض طلباتك؟"
-              )}
-            </p>
-
-            <div className="request-modal-actions">
-              <button
-                type="button"
-                onClick={() =>
-                  setShowSuccess(false)
-                }
-                className="request-secondary-button"
-              >
-                {tr(
-                  "Stay Here",
-                  "البقاء هنا"
-                )}
-              </button>
-
-              <button
-                type="button"
-                onClick={() =>
-                  navigate("/my-requests")
-                }
-                className="request-primary-button"
-              >
-                {tr(
-                  "View My Requests",
-                  "عرض طلباتي"
-                )}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
 
       <Footer />
     </main>

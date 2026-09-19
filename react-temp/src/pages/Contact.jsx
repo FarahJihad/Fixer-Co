@@ -3,6 +3,87 @@ import { useLanguage } from "../context/LanguageContext.jsx";
 import Footer from "../components/Footer.jsx";
 import "./Contact.css";
 
+
+function ContactSmallLabelEffect({ text }) {
+  const textRef = useRef(null);
+  const [isVisible, setIsVisible] = useState(false);
+
+  const isArabicText = /[\u0600-\u06FF]/.test(text);
+  const pieces = isArabicText
+    ? text.split(/(\s+)/)
+    : Array.from(text);
+
+  useEffect(() => {
+    const element = textRef.current;
+    if (!element) return undefined;
+
+    const prefersReducedMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)"
+    ).matches;
+
+    if (prefersReducedMotion) {
+      setIsVisible(true);
+      return undefined;
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) return;
+
+        setIsVisible(true);
+        observer.unobserve(element);
+      },
+      {
+        threshold: 0.5,
+        rootMargin: "0px 0px -6% 0px",
+      }
+    );
+
+    observer.observe(element);
+
+    return () => observer.disconnect();
+  }, [text]);
+
+  return (
+    <span
+      ref={textRef}
+      className={`contact-small-text-effect ${
+        isVisible ? "is-visible" : ""
+      } ${isArabicText ? "is-arabic-effect" : ""}`}
+      aria-label={text}
+    >
+      {pieces.map((piece, index) => {
+        if (piece.trim() === "") {
+          return (
+            <span
+              key={`space-${index}`}
+              className="contact-small-text-effect-space"
+              aria-hidden="true"
+            >
+              {" "}
+            </span>
+          );
+        }
+
+        return (
+          <span
+            key={`${piece}-${index}`}
+            className="contact-small-text-effect-piece"
+            aria-hidden="true"
+            style={{
+              "--contact-text-delay": `${
+                index * (isArabicText ? 70 : 34)
+              }ms`,
+            }}
+          >
+            {piece}
+          </span>
+        );
+      })}
+    </span>
+  );
+}
+
 function Contact() {
   const { language, isArabic } = useLanguage();
 
@@ -256,10 +337,12 @@ function Contact() {
                 "--contact-delay": "0ms",
               }}
             >
-              {tr(
-                "CONTACT US",
-                "تواصل معنا"
-              )}
+              <ContactSmallLabelEffect
+                text={tr(
+                  "CONTACT US",
+                  "تواصل معنا"
+                )}
+              />
             </p>
 
             {/* Exact creative animation from the old Contact page */}

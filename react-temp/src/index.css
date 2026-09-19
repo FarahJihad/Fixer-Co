@@ -1,13 +1,30 @@
-@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap");
 
 @import "tailwindcss";
 @import "./animations.css";
 
+/* English / default font */
 html,
-body {
-  font-family: "Plus Jakarta Sans", "Segoe UI", Arial, sans-serif;
+body,
+#root,
+button,
+input,
+textarea,
+select {
+  font-family: "Plus Jakarta Sans", "IBM Plex Sans Arabic", sans-serif;
 }
 
-[dir="rtl"] {
-  font-family: "IBM Plex Sans Arabic", "Segoe UI", sans-serif;
+/* Arabic font */
+html[dir="rtl"] body,
+html[dir="rtl"] button,
+html[dir="rtl"] input,
+html[dir="rtl"] textarea,
+html[dir="rtl"] select {
+  font-family: "IBM Plex Sans Arabic", sans-serif;
+}
+
+/* Make all elements inherit the global font */
+* {
+  box-sizing: border-box;
+  font-family: inherit;
 }

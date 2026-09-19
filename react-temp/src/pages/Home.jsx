@@ -3,6 +3,96 @@ import { useNavigate } from "react-router-dom";
 import { useLanguage } from "../context/LanguageContext.jsx";
 import ScrollReveal from "../components/ScrollReveal.jsx";
 import Footer from "../components/Footer.jsx";
+import "./Home.css";
+
+
+function SmallLabelTextEffect({
+  text,
+  className = "",
+  enabled = true,
+  baseDelay = 0,
+}) {
+  const textRef = useRef(null);
+  const [isVisible, setIsVisible] = useState(false);
+
+  const isArabicText = /[\u0600-\u06FF]/.test(text);
+  const pieces = isArabicText ? text.split(/(\s+)/) : Array.from(text);
+
+  useEffect(() => {
+    if (!enabled) {
+      setIsVisible(false);
+      return undefined;
+    }
+
+    const element = textRef.current;
+    if (!element) return undefined;
+
+    const prefersReducedMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)"
+    ).matches;
+
+    if (prefersReducedMotion) {
+      setIsVisible(true);
+      return undefined;
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) return;
+
+        setIsVisible(true);
+        observer.unobserve(element);
+      },
+      {
+        threshold: 0.55,
+        rootMargin: "0px 0px -6% 0px",
+      }
+    );
+
+    observer.observe(element);
+
+    return () => observer.disconnect();
+  }, [text, enabled]);
+
+  return (
+    <span
+      ref={textRef}
+      className={`home-small-text-effect ${
+        isVisible ? "is-visible" : ""
+      } ${isArabicText ? "is-arabic-effect" : ""} ${className}`}
+      aria-label={text}
+    >
+      {pieces.map((piece, index) => {
+        if (piece.trim() === "") {
+          return (
+            <span
+              key={`space-${index}`}
+              aria-hidden="true"
+              className="home-small-text-effect-space"
+            >
+              {" "}
+            </span>
+          );
+        }
+
+        return (
+          <span
+            key={`${piece}-${index}`}
+            aria-hidden="true"
+            className="home-small-text-effect-piece"
+            style={{
+              "--text-effect-delay": `${
+                baseDelay + index * (isArabicText ? 72 : 34)
+              }ms`,
+            }}
+          >
+            {piece}
+          </span>
+        );
+      })}
+    </span>
+  );
+}
 
 function Home() {
   const navigate = useNavigate();
@@ -28,6 +118,7 @@ function Home() {
 
   const cameraInputRef = useRef(null);
   const uploadInputRef = useRef(null);
+  const photoMenuRef = useRef(null);
   const servicesTrackRef = useRef(null);
 
   const [problem, setProblem] = useState("");
@@ -45,9 +136,13 @@ const [technicians, setTechnicians] = useState([]);
 const [techniciansLoading, setTechniciansLoading] = useState(true);
 const [techniciansError, setTechniciansError] = useState("");
 const [heroWordIndex, setHeroWordIndex] = useState(0);
+const [heroAnimationReady, setHeroAnimationReady] = useState(
+  () => sessionStorage.getItem("fixerIntroBeamsV1Seen") === "true"
+);
 const [servicesAtStart, setServicesAtStart] = useState(true);
 const [servicesAtEnd, setServicesAtEnd] = useState(false);
 const [activeServiceIndex, setActiveServiceIndex] = useState(0);
+const [isAiAssistantOpen, setIsAiAssistantOpen] = useState(false);
 
 const heroWords = isArabic
   ? ["أسهل", "أوثق", "أذكى"]
@@ -56,6 +151,56 @@ const heroWords = isArabic
 const heroWord = heroWords[heroWordIndex];
 
   useEffect(() => {
+    const handleIntroComplete = () => {
+      // Tiny pause after the intro disappears, then start the hero word motion.
+      window.setTimeout(() => setHeroAnimationReady(true), 220);
+    };
+
+    window.addEventListener("fixer-intro-complete", handleIntroComplete);
+
+    // If the intro was already seen in this session, start immediately.
+    if (sessionStorage.getItem("fixerIntroBeamsV1Seen") === "true") {
+      setHeroAnimationReady(true);
+    }
+
+    return () => {
+      window.removeEventListener("fixer-intro-complete", handleIntroComplete);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!showImageMenu) return undefined;
+
+    const handleOutsidePhotoMenu = (event) => {
+      if (
+        photoMenuRef.current &&
+        !photoMenuRef.current.contains(event.target)
+      ) {
+        setShowImageMenu(false);
+      }
+    };
+
+    const handlePhotoMenuEscape = (event) => {
+      if (event.key === "Escape") {
+        setShowImageMenu(false);
+      }
+    };
+
+    document.addEventListener("pointerdown", handleOutsidePhotoMenu);
+    document.addEventListener("keydown", handlePhotoMenuEscape);
+
+    return () => {
+      document.removeEventListener("pointerdown", handleOutsidePhotoMenu);
+      document.removeEventListener("keydown", handlePhotoMenuEscape);
+    };
+  }, [showImageMenu]);
+
+  useEffect(() => {
+    if (!heroAnimationReady) {
+      setHeroWordIndex(0);
+      return undefined;
+    }
+
     setHeroWordIndex(0);
 
     const timers = [
@@ -64,7 +209,7 @@ const heroWord = heroWords[heroWordIndex];
     ];
 
     return () => timers.forEach((timer) => window.clearTimeout(timer));
-  }, [language]);
+  }, [language, heroAnimationReady]);
 
   const categories = [
     {
@@ -213,7 +358,7 @@ useEffect(() => {
       setTechnicians(
         [...technicianList]
           .sort((a, b) => Number(b.rating || 0) - Number(a.rating || 0))
-          .slice(0, 3)
+          .slice(0, 4)
       );
     } catch (error) {
       console.error("Technicians error:", error);
@@ -417,267 +562,262 @@ setAiError(
     );
   }
 
+
+  useEffect(() => {
+    const section = document.querySelector(".home-bridge-section");
+    if (!section) return undefined;
+
+    const prefersReducedMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)"
+    ).matches;
+
+    if (prefersReducedMotion) {
+      section.classList.add("is-vita-visible");
+      return undefined;
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) return;
+
+        section.classList.add("is-vita-visible");
+        observer.unobserve(section);
+      },
+      {
+        threshold: 0.18,
+        rootMargin: "0px 0px -8% 0px",
+      }
+    );
+
+    observer.observe(section);
+
+    return () => observer.disconnect();
+  }, []);
+
+
+  useEffect(() => {
+    const section = document.querySelector(".home-services-story-section");
+    if (!section) return undefined;
+
+    const prefersReducedMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)"
+    ).matches;
+
+    if (prefersReducedMotion) {
+      section.classList.add("is-services-visible");
+      return undefined;
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) return;
+
+        section.classList.add("is-services-visible");
+        observer.unobserve(section);
+      },
+      {
+        threshold: 0.12,
+        rootMargin: "0px 0px -8% 0px",
+      }
+    );
+
+    observer.observe(section);
+
+    return () => observer.disconnect();
+  }, []);
+
+
+  useEffect(() => {
+    if (techniciansLoading) return undefined;
+
+    const lineGroups = document.querySelectorAll(
+      ".home-top-fixers-editorial-grid"
+    );
+
+    if (!lineGroups.length) return undefined;
+
+    const prefersReducedMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)"
+    ).matches;
+
+    if (prefersReducedMotion) {
+      lineGroups.forEach((group) =>
+        group.classList.add("is-lines-visible")
+      );
+      return undefined;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+
+          entry.target.classList.add("is-lines-visible");
+          observer.unobserve(entry.target);
+        });
+      },
+      {
+        threshold: 0.12,
+        rootMargin: "0px 0px -8% 0px",
+      }
+    );
+
+    lineGroups.forEach((group) => observer.observe(group));
+
+    return () => observer.disconnect();
+  }, [techniciansLoading, technicians.length]);
+
   return (
     <main
       dir={isArabic ? "rtl" : "ltr"}
-      className="min-h-screen bg-[#f7f9f8] text-[#17252e]"
+      className="home-page min-h-screen bg-[#f7f9f8] text-[#17252e]"
     >
       <ScrollReveal />
 
-      {/* HERO */}
-      <section className="home-hero-editorial" data-reveal="up">
-        <div className="home-hero-editorial-overlay" aria-hidden="true"></div>
+      {/* CINEMATIC HERO */}
+      <section className="home-cinematic-hero">
+        <img
+          src="/media/hero/fixer-hero-bg.png"
+          alt={tr("Professional Fixer ready to help", "فني محترف جاهز للمساعدة")}
+          className="home-cinematic-hero-image"
+        />
 
-        <div className="home-hero-editorial-inner">
-          <div className="home-hero-editorial-content" data-reveal="up">
-            <p className="home-hero-editorial-kicker">
-              {tr("YOUR HOME. IN GOOD HANDS.", "منزلك في أيدٍ موثوقة.")}
+        <div className="home-cinematic-hero-shade" aria-hidden="true"></div>
+
+        <div className="home-cinematic-hero-inner">
+          <div className="home-cinematic-hero-content">
+            <p className="home-cinematic-hero-kicker">
+              <SmallLabelTextEffect
+                text={tr(
+                  "YOUR HOME. IN GOOD HANDS.",
+                  "منزلك في أيدٍ موثوقة."
+                )}
+                enabled={heroAnimationReady}
+              />
             </p>
 
-            <h1 className="home-hero-editorial-heading">
-              <span className="block">
-                {tr("Home repairs made", "صيانة المنزل أصبحت")}
-              </span>
-
-              <span className="home-hero-word-wrap mt-2 block">
-                <span key={`${language}-${heroWordIndex}`} className="home-hero-word">
+            <h1 className="home-cinematic-hero-title">
+              <span>{tr("Home repairs made", "صيانة المنزل أصبحت")}</span>
+              <span className="home-cinematic-hero-word-wrap">
+                <span
+                  key={`${language}-${heroWordIndex}`}
+                  className={`home-cinematic-hero-word ${
+                    !isArabic && heroWord === "Smarter" ? "is-smarter" : ""
+                  }`}
+                >
                   {heroWord}
                 </span>
               </span>
             </h1>
 
-            <p className="home-hero-editorial-copy">
-              {tr(
-                "Tell us what needs fixing, and we’ll guide you to the right service.",
-                "أخبرنا بما يحتاج إلى إصلاح، وسنوجّهك إلى الخدمة المناسبة."
+            <p className="home-cinematic-hero-copy">
+              {isArabic ? (
+                <>
+                  <span className="home-cinematic-copy-line">
+                    خدمات منزلية موثوقة، تناسب احتياجك الفعلي، مع فنيين موثوقين
+                  </span>
+                  <span className="home-cinematic-copy-line">
+                    جاهزين لإنجاز العمل بالشكل الصحيح.
+                  </span>
+                </>
+              ) : (
+                <>
+                  <span className="home-cinematic-copy-line">
+                    Trusted home services, matched to what you actually need, with reliable Fixers
+                  </span>
+                  <span className="home-cinematic-copy-line">
+                    ready to get the job done right.
+                  </span>
+                </>
               )}
             </p>
 
-            {/* SMART SERVICE FINDER */}
-            <div className="home-service-finder">
-              <div className="home-service-finder-head">
-                <p className="home-service-finder-label">
-                  {tr(
-                    "Not sure what service you need?",
-                    "غير متأكد من الخدمة التي تحتاجها؟"
-                  )}
-                </p>
+            <div className="home-cinematic-hero-actions">
+              <button
+                type="button"
+                className="home-cinematic-primary"
+                onClick={() => navigate("/services")}
+              >
+                <span>{tr("Explore services", "استكشف الخدمات")}</span>
+              </button>
 
-                <span className="home-service-finder-note">
-                  {tr(
-                    "Describe the problem or add a photo.",
-                    "صف المشكلة أو أضف صورة."
-                  )}
-                </span>
-              </div>
-
-              <div className="home-service-finder-bar">
-                <input
-                  type="text"
-                  maxLength="500"
-                  placeholder={tr(
-                    "Describe what’s wrong...",
-                    "صف المشكلة..."
-                  )}
-                  value={problem}
-                  onChange={(event) => setProblem(event.target.value)}
-                  onKeyDown={(event) => {
-                    if (event.key === "Enter") handleAISearch();
-                  }}
-                  className="home-service-finder-input"
-                />
-
-                <div className="home-service-finder-photo-wrap">
-                  <input
-                    ref={cameraInputRef}
-                    type="file"
-                    accept="image/*"
-                    capture="environment"
-                    hidden
-                    onChange={handleImageSelected}
-                  />
-
-                  <input
-                    ref={uploadInputRef}
-                    type="file"
-                    accept="image/*"
-                    hidden
-                    onChange={handleImageSelected}
-                  />
-
-                  <button
-                    type="button"
-                    aria-label={tr("Add a photo", "إضافة صورة")}
-                    onClick={() =>
-                      setShowImageMenu((current) => !current)
-                    }
-                    className="home-service-finder-photo"
-                  >
-                    <i className="fa-regular fa-image"></i>
-                    <span>
-                      {tr("Photo", "صورة")}
-                    </span>
-                  </button>
-
-                  {showImageMenu && (
-                    <div className="home-service-finder-menu">
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setShowImageMenu(false);
-                          cameraInputRef.current?.click();
-                        }}
-                      >
-                        <i className="fa-solid fa-camera"></i>
-                        {tr("Take a Photo", "التقاط صورة")}
-                      </button>
-
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setShowImageMenu(false);
-                          uploadInputRef.current?.click();
-                        }}
-                      >
-                        <i className="fa-regular fa-image"></i>
-                        {tr("Upload Image", "رفع صورة")}
-                      </button>
-                    </div>
-                  )}
-                </div>
-
-                <button
-                  type="button"
-                  onClick={handleAISearch}
-                  disabled={isAnalyzing}
-                  className="home-service-finder-submit"
-                >
-                  {isAnalyzing ? (
-                    <>
-                      <i className="fa-solid fa-spinner fa-spin"></i>
-                      <span>{tr("Checking...", "جارٍ التحقق...")}</span>
-                    </>
-                  ) : (
-                    <>
-                      <span>{tr("Find service", "اعثر على الخدمة")}</span>
-                    </>
-                  )}
-                </button>
-              </div>
-
-              <div className="home-service-finder-examples">
-                <span>{tr("Common issues", "مشاكل شائعة")}</span>
-
-                <button
-                  type="button"
-                  onClick={() =>
-                    setProblem(
-                      tr("Leaking faucet", "تسريب صنبور")
-                    )
-                  }
-                >
-                  {tr("Leaking faucet", "تسريب صنبور")}
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() =>
-                    setProblem(
-                      tr("AC not cooling", "المكيف لا يبرد")
-                    )
-                  }
-                >
-                  {tr("AC not cooling", "المكيف لا يبرد")}
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() =>
-                    setProblem(
-                      tr("Electrical issue", "مشكلة كهربائية")
-                    )
-                  }
-                >
-                  {tr("Electrical issue", "مشكلة كهربائية")}
-                </button>
-              </div>
+              <button
+                type="button"
+                className="home-cinematic-secondary"
+                onClick={() => navigate("/technicians")}
+              >
+                {tr("Find a Fixer", "ابحث عن فني")}
+              </button>
             </div>
-
-            {selectedImage && imagePreview && (
-              <div className="home-hero-feedback-card">
-                <img
-                  src={imagePreview}
-                  alt={tr("Selected problem", "صورة المشكلة المختارة")}
-                  className="max-h-[220px] w-full rounded-xl object-cover"
-                />
-                <div className="mt-3 flex items-center justify-between gap-3">
-                  <span className="flex items-center gap-2 text-sm font-semibold text-[#66757f]">
-                    <i className="fa-solid fa-image text-[#3d9276]"></i>
-                    {tr("Photo attached", "تم إرفاق الصورة")}
-                  </span>
-                  <button type="button" onClick={removeImage} className="text-sm font-bold text-[#173b57]">
-                    {tr("Remove", "إزالة")}
-                  </button>
-                </div>
-              </div>
-            )}
-
-            {aiError && (
-              <div className="home-hero-feedback-card home-hero-feedback-error">
-                <strong>{tr("AI Assistant is temporarily unavailable.", "مساعد الذكاء الاصطناعي غير متاح مؤقتًا.")}</strong>
-                <p className="mt-1">{aiError}</p>
-              </div>
-            )}
-
-            {aiResult && (
-              <div className="home-hero-feedback-card">
-                {aiResult.category === "UNKNOWN" ? (
-                  <>
-                    <p className="font-extrabold text-[#102d43]">
-                      {tr("We couldn't identify the issue.", "لم نتمكن من تحديد المشكلة.")}
-                    </p>
-                    <p className="mt-2 text-sm text-[#66757f]">
-                      {aiResult.explanation || tr(
-                        "Please describe the problem more clearly or upload a clearer photo.",
-                        "يرجى وصف المشكلة بشكل أوضح أو رفع صورة أوضح."
-                      )}
-                    </p>
-                  </>
-                ) : (
-                  <>
-                    <div className="flex items-start justify-between gap-4">
-                      <div>
-                        <p className="text-xs font-bold uppercase tracking-[1.2px] text-[#3d9276]">
-                          {tr("AI SERVICE MATCH", "الخدمة المقترحة بالذكاء الاصطناعي")}
-                        </p>
-                        <h3 className="mt-2 text-[22px] font-bold text-[#102d43]">
-                          {translateServiceName(aiResult.category, language)}
-                        </h3>
-                      </div>
-                      <span className="rounded-full bg-[#edf7f3] px-3 py-2 text-sm font-extrabold text-[#3d9276]">
-                        {Math.min(98, Number(aiResult.confidence))}% {tr("Match", "تطابق")}
-                      </span>
-                    </div>
-                    <p className="mt-4 text-sm text-[#66757f]">{aiResult.explanation}</p>
-                    <button type="button" onClick={viewFixers} className="mt-4 text-sm font-extrabold text-[#173b57]">
-                      {tr("View Fixers", "عرض الفنيين")}
-                    </button>
-                  </>
-                )}
-              </div>
-            )}
           </div>
 
-          <div className="home-hero-visual" data-reveal="up" aria-hidden="true">
-            <div className="home-hero-visual-mint home-hero-visual-mint-one"></div>
-            <div className="home-hero-visual-mint home-hero-visual-mint-two"></div>
+          <div className="home-cinematic-scroll" aria-hidden="true">
+            <span>{tr("Scroll", "مرر")}</span>
+            <span className="home-cinematic-scroll-line"></span>
+          </div>
+        </div>
+      </section>
 
-            <div className="home-hero-visual-frame">
-              <img
-                src="/media/hero/fixer-hero-card.png"
-                alt=""
-                className="home-hero-visual-image"
+      {/* HOME BRIDGE */}
+      <section className="home-bridge-section">
+        <div className="home-bridge-shell">
+          <div className="home-bridge-copy">
+            <p className="home-bridge-kicker">
+              <SmallLabelTextEffect
+                text={tr(
+                  "BUILT AROUND WHAT YOU NEED",
+                  "مصمم حول احتياجك"
+                )}
               />
+            </p>
+
+            <h2
+              className="home-bridge-title"
+              aria-label={tr(
+                "Need something fixed? We’ll match you with the right person.",
+                "تحتاج إصلاح شيء؟ سنوصلك بالشخص المناسب."
+              )}
+            >
+              <span className="home-bridge-line-mask">
+                <span className="home-bridge-line home-bridge-line--question">
+                  {tr("Need something fixed?", "تحتاج إصلاح شيء؟")}
+                </span>
+              </span>
+
+              <span className="home-bridge-line-mask">
+                <span className="home-bridge-line home-bridge-line--answer">
+                  {tr(
+                    "We’ll match you with the right person.",
+                    "سنوصلك بالشخص المناسب."
+                  )}
+                </span>
+              </span>
+            </h2>
+          </div>
+
+          <div className="home-bridge-points">
+            <div
+              className="home-bridge-point"
+              style={{ "--bridge-delay": "0.46s" }}
+            >
+              <span className="home-bridge-point-number">01</span>
+              <span>{tr("Smart Matching", "مطابقة ذكية")}</span>
+            </div>
+
+            <div
+              className="home-bridge-point"
+              style={{ "--bridge-delay": "0.58s" }}
+            >
+              <span className="home-bridge-point-number">02</span>
+              <span>{tr("Trusted Fixers", "فنيون موثوقون")}</span>
+            </div>
+
+            <div
+              className="home-bridge-point"
+              style={{ "--bridge-delay": "0.70s" }}
+            >
+              <span className="home-bridge-point-number">03</span>
+              <span>{tr("Simple Booking", "حجز بسيط")}</span>
             </div>
           </div>
         </div>
@@ -689,7 +829,9 @@ setAiError(
     <div data-reveal="up" className={`home-services-story-heading ${isArabic ? "text-right" : "text-left"}`}>
       <div>
         <p className="home-services-story-kicker">
-          {tr("OUR SERVICES", "خدماتنا")}
+          <SmallLabelTextEffect
+            text={tr("OUR SERVICES", "خدماتنا")}
+          />
         </p>
 
         <h2 className="home-services-story-title">
@@ -826,17 +968,328 @@ setAiError(
         )}
       </p>
     )}
+
+    <div
+      id="fixer-ai-guide"
+      className={`home-services-ai-drawer ${
+        isAiAssistantOpen ? "is-open" : ""
+      }`}
+    >
+      <button
+        type="button"
+        className="home-services-ai-drawer-trigger"
+        onClick={() => setIsAiAssistantOpen((current) => !current)}
+        aria-expanded={isAiAssistantOpen}
+        aria-controls="fixer-ai-drawer-content"
+      >
+        <span className="home-services-ai-drawer-heading">
+          <span className="home-services-ai-drawer-kicker">
+            {tr("NOT SURE WHICH SERVICE?", "غير متأكد أي خدمة تحتاج؟")}
+          </span>
+
+          <span className="home-services-ai-drawer-title">
+            {tr(
+              "Let Fixer AI help you choose the right one.",
+              "دع مساعد Fixer الذكي يساعدك في اختيار الخدمة المناسبة."
+            )}
+          </span>
+        </span>
+
+        <span className="home-services-ai-drawer-action">
+          <span>
+            {isAiAssistantOpen
+              ? tr("Close assistant", "إغلاق المساعد")
+              : tr("Ask Fixer AI", "اسأل مساعد Fixer الذكي")}
+          </span>
+
+          <i
+            className={`fa-solid ${
+              isAiAssistantOpen ? "fa-xmark" : "fa-plus"
+            }`}
+            aria-hidden="true"
+          ></i>
+        </span>
+      </button>
+
+      <div
+        id="fixer-ai-drawer-content"
+        className="home-services-ai-drawer-content"
+        aria-hidden={!isAiAssistantOpen}
+      >
+        <div className="home-services-ai-drawer-inner">
+          <div className="home-services-ai-intro">
+            <p>{tr("FIXER AI", "مساعد FIXER الذكي")}</p>
+
+            <h3>
+              {isArabic ? (
+                "صف المشكلة وسنوجّهك إلى الخدمة المناسبة."
+              ) : (
+                <>
+                  <span className="home-services-ai-heading-line">
+                    Describe the problem
+                  </span>
+                  <span className="home-services-ai-heading-line home-services-ai-heading-line--nowrap">
+                    We’ll point you to the right service.
+                  </span>
+                </>
+              )}
+            </h3>
+
+            <span>
+              {tr(
+                "You can also attach a photo if that’s easier.",
+                "ويمكنك أيضًا إرفاق صورة إذا كان ذلك أسهل."
+              )}
+            </span>
+          </div>
+
+          <div className="home-service-finder home-services-ai-composer">
+            <div className="home-service-finder-bar">
+              <input
+                type="text"
+                maxLength="500"
+                placeholder={tr(
+                  "What needs fixing?",
+                  "ما المشكلة التي تحتاج إلى إصلاح؟"
+                )}
+                value={problem}
+                onChange={(event) => setProblem(event.target.value)}
+                onKeyDown={(event) => {
+                  if (event.key === "Enter") handleAISearch();
+                }}
+                className="home-service-finder-input"
+              />
+
+              <div ref={photoMenuRef} className="home-service-finder-photo-wrap">
+                <input
+                  ref={cameraInputRef}
+                  type="file"
+                  accept="image/*"
+                  capture="environment"
+                  hidden
+                  onChange={handleImageSelected}
+                />
+
+                <input
+                  ref={uploadInputRef}
+                  type="file"
+                  accept="image/*"
+                  hidden
+                  onChange={handleImageSelected}
+                />
+
+                <button
+                  type="button"
+                  aria-label={tr("Add a photo", "إضافة صورة")}
+                  onClick={() =>
+                    setShowImageMenu((current) => !current)
+                  }
+                  className="home-service-finder-photo"
+                >
+                  <i className="fa-regular fa-image"></i>
+                  <span>{tr("Photo", "صورة")}</span>
+                </button>
+
+                {showImageMenu && (
+                  <div className="home-service-finder-menu">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setShowImageMenu(false);
+                        cameraInputRef.current?.click();
+                      }}
+                    >
+                      <i className="fa-solid fa-camera"></i>
+                      {tr("Take a Photo", "التقاط صورة")}
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setShowImageMenu(false);
+                        uploadInputRef.current?.click();
+                      }}
+                    >
+                      <i className="fa-regular fa-image"></i>
+                      {tr("Upload Image", "رفع صورة")}
+                    </button>
+                  </div>
+                )}
+              </div>
+
+              <button
+                type="button"
+                onClick={handleAISearch}
+                disabled={isAnalyzing}
+                className="home-service-finder-submit"
+              >
+                {isAnalyzing ? (
+                  <>
+                    <i className="fa-solid fa-spinner fa-spin"></i>
+                    <span>{tr("Checking...", "جارٍ التحقق...")}</span>
+                  </>
+                ) : (
+                  <>
+                    <span>{tr("Find service", "اعثر على الخدمة")}</span>
+                    <i
+                      className={`fa-solid ${
+                        isArabic ? "fa-arrow-left" : "fa-arrow-right"
+                      }`}
+                      aria-hidden="true"
+                    ></i>
+                  </>
+                )}
+              </button>
+            </div>
+
+            <div className="home-service-finder-examples">
+              <span>{tr("Try", "جرّب")}</span>
+
+              <button
+                type="button"
+                onClick={() =>
+                  setProblem(tr("Leaking faucet", "تسريب صنبور"))
+                }
+              >
+                {tr("Leaking faucet", "تسريب صنبور")}
+              </button>
+
+              <button
+                type="button"
+                onClick={() =>
+                  setProblem(tr("AC not cooling", "المكيف لا يبرد"))
+                }
+              >
+                {tr("AC not cooling", "المكيف لا يبرد")}
+              </button>
+
+              <button
+                type="button"
+                onClick={() =>
+                  setProblem(tr("Electrical issue", "مشكلة كهربائية"))
+                }
+              >
+                {tr("Electrical issue", "مشكلة كهربائية")}
+              </button>
+            </div>
+          </div>
+
+          {selectedImage && imagePreview && (
+            <div className="home-hero-feedback-card home-services-ai-feedback">
+              <img
+                src={imagePreview}
+                alt={tr(
+                  "Selected problem",
+                  "صورة المشكلة المختارة"
+                )}
+                className="max-h-[220px] w-full rounded-xl object-cover"
+              />
+
+              <div className="mt-3 flex items-center justify-between gap-3">
+                <span className="flex items-center gap-2 text-sm font-semibold text-[#66757f]">
+                  <i className="fa-solid fa-image text-[#3d9276]"></i>
+                  {tr("Photo attached", "تم إرفاق الصورة")}
+                </span>
+
+                <button
+                  type="button"
+                  onClick={removeImage}
+                  className="text-sm font-bold text-[#173b57]"
+                >
+                  {tr("Remove", "إزالة")}
+                </button>
+              </div>
+            </div>
+          )}
+
+          {aiError && (
+            <div className="home-hero-feedback-card home-hero-feedback-error home-services-ai-feedback">
+              <strong>
+                {tr(
+                  "AI Assistant is temporarily unavailable.",
+                  "مساعد الذكاء الاصطناعي غير متاح مؤقتًا."
+                )}
+              </strong>
+              <p className="mt-1">{aiError}</p>
+            </div>
+          )}
+
+          {aiResult && (
+            <div className="home-hero-feedback-card home-services-ai-feedback">
+              {aiResult.category === "UNKNOWN" ? (
+                <>
+                  <p className="font-extrabold text-[#102d43]">
+                    {tr(
+                      "We couldn't identify the issue.",
+                      "لم نتمكن من تحديد المشكلة."
+                    )}
+                  </p>
+
+                  <p className="mt-2 text-sm text-[#66757f]">
+                    {aiResult.explanation ||
+                      tr(
+                        "Please describe the problem more clearly or upload a clearer photo.",
+                        "يرجى وصف المشكلة بشكل أوضح أو رفع صورة أوضح."
+                      )}
+                  </p>
+                </>
+              ) : (
+                <>
+                  <div className="flex items-start justify-between gap-4">
+                    <div>
+                      <p className="text-xs font-bold uppercase tracking-[1.2px] text-[#3d9276]">
+                        {tr(
+                          "AI SERVICE MATCH",
+                          "الخدمة المقترحة بالذكاء الاصطناعي"
+                        )}
+                      </p>
+
+                      <h3 className="mt-2 text-[22px] font-bold text-[#102d43]">
+                        {translateServiceName(
+                          aiResult.category,
+                          language
+                        )}
+                      </h3>
+                    </div>
+
+                    <span className="rounded-full bg-[#edf7f3] px-3 py-2 text-sm font-extrabold text-[#3d9276]">
+                      {Math.min(98, Number(aiResult.confidence))}%{" "}
+                      {tr("Match", "تطابق")}
+                    </span>
+                  </div>
+
+                  <p className="mt-4 text-sm text-[#66757f]">
+                    {aiResult.explanation}
+                  </p>
+
+                  <button
+                    type="button"
+                    onClick={viewFixers}
+                    className="mt-4 text-sm font-extrabold text-[#173b57]"
+                  >
+                    {tr("View Fixers", "عرض الفنيين")}
+                  </button>
+                </>
+              )}
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
   </div>
 </section>
 
-{/* TOP FIXERS */}
+
+      {/* TOP FIXERS */}
 <section className="home-top-fixers-editorial" data-reveal="up">
   <div className="home-top-fixers-editorial-shell">
 
     <div className="home-top-fixers-editorial-head" data-reveal="up">
       <div>
         <p className="home-top-fixers-editorial-kicker">
-          {tr("TOP FIXERS", "أفضل الفنيين")}
+          <SmallLabelTextEffect
+            text={tr("TOP FIXERS", "أفضل الفنيين")}
+          />
         </p>
 
         <h2 className="home-top-fixers-editorial-title">
@@ -845,8 +1298,8 @@ setAiError(
 
         <p className="home-top-fixers-editorial-copy">
           {tr(
-            "Meet three of our highest-rated technicians, selected from our trusted network.",
-            "تعرّف على ثلاثة من أعلى الفنيين تقييمًا ضمن شبكة الفنيين الموثوقين لدينا."
+            "Meet four of our highest-rated technicians, selected from our trusted network.",
+            "تعرّف على أربعة من أعلى الفنيين تقييمًا ضمن شبكة الفنيين الموثوقين لدينا."
           )}
         </p>
       </div>
@@ -878,88 +1331,126 @@ setAiError(
       !techniciansError &&
       technicians.length > 0 && (
         <div className="home-top-fixers-editorial-grid">
-          {technicians.map((technician, index) => (
-            <article
-              key={technician.id}
-              className="home-top-fixer-editorial"
-              data-reveal="up"
-              style={{ "--reveal-delay": `${index * 110}ms` }}
-            >
-              <div className="home-top-fixer-visual">
-                <span className="home-top-fixer-rank">
-                  {String(index + 1).padStart(2, "0")}
-                </span>
+          {technicians.slice(0, 4).map((technician, index) => {
+            const technicianPhoto =
+              technician.profile_image ||
+              technician.image ||
+              technician.photo ||
+              technician.avatar ||
+              technician.image_url ||
+              technician.photo_url ||
+              "";
 
-                <span className="home-top-fixer-watermark">
-                  <i className={getServiceIcon(technician.service_id)}></i>
-                </span>
+            return (
+              <article
+                key={technician.id}
+                className="home-top-fixer-editorial"
+                data-reveal="up"
+                style={{ "--reveal-delay": `${index * 120}ms` }}
+              >
+                <div className="home-top-fixer-content">
+                  <div className="home-top-fixer-name-row">
+                    <h3>{technician.name}</h3>
 
-                <div className="home-top-fixer-initials">
-                  {getInitials(technician.name)}
-                </div>
-              </div>
+                    {Number(technician.verified) === 1 && (
+                      <i
+                        className="fa-solid fa-circle-check"
+                        title={tr("Verified Fixer", "فني موثّق")}
+                      ></i>
+                    )}
+                  </div>
 
-              <div className="home-top-fixer-info">
-                <div className="home-top-fixer-name-row">
-                  <h3>{technician.name}</h3>
+                  <p className="home-top-fixer-specialty">
+                    {translateServiceName(
+                      technician.service_name,
+                      language
+                    )}
+                  </p>
 
-                  {Number(technician.verified) === 1 && (
-                    <i
-                      className="fa-solid fa-circle-check"
-                      title={tr("Verified Fixer", "فني موثّق")}
-                    ></i>
-                  )}
-                </div>
+                  <div className="home-top-fixer-details">
+                    <div className="home-top-fixer-detail">
+                      <span>{tr("Rating", "التقييم")}</span>
+                      <strong>
+                        <i className="fa-solid fa-star"></i>
+                        {Number(technician.rating).toFixed(1)}
+                      </strong>
+                    </div>
 
-                <p className="home-top-fixer-specialty">
-                  {translateServiceName(technician.service_name, language)}
-                </p>
+                    <div className="home-top-fixer-detail">
+                      <span>{tr("Location", "الموقع")}</span>
+                      <strong>
+                        <i className="fa-solid fa-location-dot"></i>
+                        {technician.location}
+                      </strong>
+                    </div>
 
-                <div className="home-top-fixer-meta">
-                  <span>
-                    <i className="fa-solid fa-star"></i>
-                    {Number(technician.rating).toFixed(1)}
-                  </span>
+                    <div className="home-top-fixer-detail">
+                      <span>{tr("Starting from", "يبدأ من")}</span>
+                      <strong>
+                        {technician.starting_price ?? technician.price} {tr("SAR", "ر.س")}
+                      </strong>
+                    </div>
 
-                  <span>
-                    <i className="fa-solid fa-location-dot"></i>
-                    {technician.location}
-                  </span>
-
-                  {Number(technician.available) === 1 && (
-                    <span className="home-top-fixer-available">
-                      {tr("Available", "متاح")}
-                    </span>
-                  )}
-                </div>
-
-                <p className="home-top-fixer-bio">
-                  {technician.bio}
-                </p>
-
-                <div className="home-top-fixer-footer">
-                  <div>
-                    <span className="home-top-fixer-price-label">
-                      {tr("Starting from", "يبدأ من")}
-                    </span>
-
-                    <strong>
-                      {technician.starting_price} {tr("SAR", "ر.س")}
-                    </strong>
+                    <div className="home-top-fixer-detail">
+                      <span>{tr("Status", "الحالة")}</span>
+                      <strong
+                        className={
+                          Number(technician.available) === 1
+                            ? "is-available"
+                            : ""
+                        }
+                      >
+                        {Number(technician.available) === 1
+                          ? tr("Available", "متاح")
+                          : tr("Busy", "مشغول")}
+                      </strong>
+                    </div>
                   </div>
 
                   <button
                     type="button"
-                    onClick={() => navigate(`/technicians/${technician.id}`)}
+                    onClick={() =>
+                      navigate(`/technicians/${technician.id}`)
+                    }
                     className="home-top-fixer-profile"
                   >
                     <span>{tr("View Profile", "عرض الملف")}</span>
-                    <span aria-hidden="true">{isArabic ? "←" : "→"}</span>
+                    <span aria-hidden="true">
+                      {isArabic ? "←" : "→"}
+                    </span>
                   </button>
                 </div>
-              </div>
-            </article>
-          ))}
+
+                <div className="home-top-fixer-visual">
+                  {technicianPhoto ? (
+                    <img
+                      src={technicianPhoto}
+                      alt={technician.name}
+                      className="home-top-fixer-photo"
+                    />
+                  ) : (
+                    <div className="home-top-fixer-photo-fallback">
+                      <span className="home-top-fixer-rank">
+                        {String(index + 1).padStart(2, "0")}
+                      </span>
+
+                      <span className="home-top-fixer-watermark">
+                        <i
+                          className={getServiceIcon(
+                            technician.service_id
+                          )}
+                        ></i>
+                      </span>
+
+                      <div className="home-top-fixer-initials">
+                        {getInitials(technician.name)}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </article>
+            );
+          })}
         </div>
       )}
 
@@ -982,7 +1473,9 @@ setAiError(
 
     <div className="home-how-clean-head" data-reveal="up">
       <p className="home-how-clean-kicker">
-        {tr("HOW IT WORKS", "كيف تعمل المنصة")}
+        <SmallLabelTextEffect
+          text={tr("HOW IT WORKS", "كيف تعمل المنصة")}
+        />
       </p>
 
       <h2 className="home-how-clean-title">
@@ -1066,7 +1559,9 @@ setAiError(
   >
     <div className={isArabic ? "text-right" : "text-left"}>
       <p className="mb-5 text-xs font-bold uppercase tracking-[1.6px] text-[#3d9276]">
-        {tr("READY TO GET STARTED?", "جاهز للبدء؟")}
+        <SmallLabelTextEffect
+          text={tr("READY TO GET STARTED?", "جاهز للبدء؟")}
+        />
       </p>
 
       <h2 className="max-w-[760px] text-[36px] font-bold leading-[1.16] tracking-[-1.5px] sm:text-[42px] md:text-[48px]">

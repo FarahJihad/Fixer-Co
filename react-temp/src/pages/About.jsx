@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useLanguage } from "../context/LanguageContext.jsx";
 import Footer from "../components/Footer.jsx";
 import "./About.css";
@@ -168,6 +168,86 @@ function ProcessFlowCarousel({ language, tr }) {
   );
 }
 
+
+function AboutSmallLabelEffect({ text }) {
+  const textRef = useRef(null);
+  const [isVisible, setIsVisible] = useState(false);
+
+  const isArabicText = /[\u0600-\u06FF]/.test(text);
+  const pieces = isArabicText
+    ? text.split(/(\s+)/)
+    : Array.from(text);
+
+  useEffect(() => {
+    const element = textRef.current;
+    if (!element) return undefined;
+
+    const prefersReducedMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)"
+    ).matches;
+
+    if (prefersReducedMotion) {
+      setIsVisible(true);
+      return undefined;
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) return;
+        setIsVisible(true);
+        observer.unobserve(element);
+      },
+      {
+        threshold: 0.45,
+        rootMargin: "0px 0px -6% 0px",
+      }
+    );
+
+    observer.observe(element);
+
+    return () => observer.disconnect();
+  }, [text]);
+
+  return (
+    <span
+      ref={textRef}
+      className={`about-small-text-effect ${
+        isVisible ? "is-visible" : ""
+      } ${isArabicText ? "is-arabic-effect" : ""}`}
+      aria-label={text}
+    >
+      {pieces.map((piece, index) => {
+        if (piece.trim() === "") {
+          return (
+            <span
+              key={`space-${index}`}
+              className="about-small-text-effect-space"
+              aria-hidden="true"
+            >
+              {" "}
+            </span>
+          );
+        }
+
+        return (
+          <span
+            key={`${piece}-${index}`}
+            className="about-small-text-effect-piece"
+            aria-hidden="true"
+            style={{
+              "--about-text-delay": `${
+                index * (isArabicText ? 80 : 36)
+              }ms`,
+            }}
+          >
+            {piece}
+          </span>
+        );
+      })}
+    </span>
+  );
+}
+
 function About() {
   const { language, isArabic } = useLanguage();
   const tr = (en, ar) => (language === "ar" ? ar : en);
@@ -206,74 +286,84 @@ function About() {
       className="about-page"
       dir={isArabic ? "rtl" : "ltr"}
     >
-      {/* HERO — TEXT MOTION */}
-      <section className="about-hero about-hero-motion">
-        <div className="about-motion-marquee about-motion-marquee-top" aria-hidden="true">
-          <div className="about-motion-track">
-            <span>{tr("CLEAR SERVICES", "خدمات واضحة")}</span>
-            <i></i>
-            <span>{tr("TRUSTED FIXERS", "فنيون موثوقون")}</span>
-            <i></i>
-            <span>{tr("SIMPLE REQUESTS", "طلبات أبسط")}</span>
-            <i></i>
-            <span>{tr("CLEAR SERVICES", "خدمات واضحة")}</span>
-            <i></i>
-            <span>{tr("TRUSTED FIXERS", "فنيون موثوقون")}</span>
-            <i></i>
-            <span>{tr("SIMPLE REQUESTS", "طلبات أبسط")}</span>
-          </div>
-        </div>
+      {/* HERO — LAYERED TEXT */}
+      <section className="about-hero about-layered-hero">
+        <div
+          className="about-layered-hero-grid"
+          aria-hidden="true"
+        ></div>
 
-        <div className="about-container about-motion-shell">
-          <div className="about-motion-index" data-about-reveal>
-            <span>01</span>
-            <i></i>
-            <p>{tr("ABOUT FIXER.CO", "عن FIXER.CO")}</p>
+        <div className="about-container about-layered-hero-inner">
+          <div className="about-layered-hero-top">
+            <p className="about-eyebrow">
+              <AboutSmallLabelEffect
+                text={tr("ABOUT FIXER.CO", "عن FIXER.CO")}
+              />
+            </p>
+
+            <span className="about-layered-hero-index">
+              {tr("01 / ABOUT", "٠١ / من نحن")}
+            </span>
           </div>
 
-          <div className="about-motion-copy" data-about-reveal>
-            <h1>
-              <span>{tr("Home maintenance,", "صيانة المنزل،")}</span>
-              <span className="about-motion-accent">
-                {tr("made simpler.", "بشكل أبسط.")}
-              </span>
-            </h1>
-
-            <div className="about-motion-bottom-row">
-              <p>
-                {tr(
-                  "Fixer.Co brings the whole maintenance journey into one clear place  understand the problem, find the right service, compare trusted fixers, and send your request.",
-                  "تجمع Fixer.Co رحلة الصيانة في مكان واحد واضح — افهم المشكلة، اعثر على الخدمة المناسبة، قارن الفنيين الموثوقين، ثم أرسل طلبك."
-                )}
-              </p>
-
-              <div className="about-motion-signature" aria-hidden="true">
-                <span>Fixer</span>
-                <strong>.Co</strong>
-              </div>
+          <div
+            className="about-layered-title-wrap"
+            role="heading"
+            aria-level="1"
+            aria-label={tr("ABOUT US", "من نحن")}
+          >
+            <div className="about-layered-title">
+              {[4, 3, 2, 1, 0].map((layer) => (
+                <span
+                  key={layer}
+                  className={`about-layered-title-layer ${
+                    layer === 0 ? "is-front" : ""
+                  }`}
+                  style={{ "--about-layer": layer }}
+                  aria-hidden="true"
+                >
+                  {tr("ABOUT US", "من نحن")}
+                </span>
+              ))}
             </div>
           </div>
-        </div>
 
-        <div className="about-motion-marquee about-motion-marquee-bottom" aria-hidden="true">
-          <div className="about-motion-track about-motion-track-reverse">
-            <span>{tr("LOCAL HELP", "مساعدة محلية")}</span>
-            <i></i>
-            <span>{tr("LESS SEARCHING", "بحث أقل")}</span>
-            <i></i>
-            <span>{tr("MORE CLARITY", "وضوح أكثر")}</span>
-            <i></i>
-            <span>{tr("LOCAL HELP", "مساعدة محلية")}</span>
-            <i></i>
-            <span>{tr("LESS SEARCHING", "بحث أقل")}</span>
-            <i></i>
-            <span>{tr("MORE CLARITY", "وضوح أكثر")}</span>
+          <div className="about-layered-hero-bottom">
+            <p className="about-layered-hero-copy">
+              {tr(
+                "Fixer.Co brings home maintenance into one clear experience — understand the issue, find the right service, compare trusted fixers, and send your request.",
+                "تجمع Fixer.Co صيانة المنزل في تجربة واضحة واحدة — افهم المشكلة، اختر الخدمة المناسبة، قارن الفنيين الموثوقين، ثم أرسل طلبك."
+              )}
+            </p>
+
+            <div className="about-layered-hero-notes">
+              <span>{tr("CLEAR SERVICES", "خدمات واضحة")}</span>
+              <i></i>
+              <span>{tr("TRUSTED FIXERS", "فنيون موثوقون")}</span>
+              <i></i>
+              <span>{tr("SIMPLE REQUESTS", "طلبات أبسط")}</span>
+            </div>
           </div>
         </div>
       </section>
 
       {/* INTRO STRIP */}
-     
+      <section className="about-intro-strip">
+        <div className="about-container about-intro-grid">
+          <div>
+            <span>{tr("01", "٠١")}</span>
+            <strong>{tr("One clear platform", "منصة واحدة واضحة")}</strong>
+          </div>
+          <div>
+            <span>{tr("02", "٠٢")}</span>
+            <strong>{tr("Six service categories", "ست فئات للخدمات")}</strong>
+          </div>
+          <div>
+            <span>{tr("03", "٠٣")}</span>
+            <strong>{tr("Trusted fixer", "فني موثوق")}</strong>
+          </div>
+        </div>
+      </section>
 
       {/* WHY FIXER.CO — TEXT ONLY */}
       <section className="about-story about-story-text-only">
@@ -284,7 +374,9 @@ function About() {
               data-about-reveal
             >
               <p className="about-eyebrow">
-                {tr("WHY FIXER.CO", "لماذا FIXER.CO")}
+                <AboutSmallLabelEffect
+                  text={tr("WHY FIXER.CO", "لماذا FIXER.CO")}
+                />
               </p>
 
               <h2>
@@ -378,7 +470,9 @@ function About() {
 
             <div>
               <p className="about-eyebrow">
-                {tr("OUR MISSION", "مهمتنا")}
+                <AboutSmallLabelEffect
+                  text={tr("OUR MISSION", "مهمتنا")}
+                />
               </p>
               <h2>
                 {tr(
@@ -404,7 +498,9 @@ function About() {
 
             <div>
               <p className="about-eyebrow">
-                {tr("OUR VISION", "رؤيتنا")}
+                <AboutSmallLabelEffect
+                  text={tr("OUR VISION", "رؤيتنا")}
+                />
               </p>
               <h2>
                 {tr(
@@ -433,7 +529,9 @@ function About() {
           >
             <div>
               <p className="about-eyebrow">
-                {tr("HOW IT WORKS", "كيف تعمل المنصة")}
+                <AboutSmallLabelEffect
+                  text={tr("HOW IT WORKS", "كيف تعمل المنصة")}
+                />
               </p>
               <h2>
                 {tr(
@@ -467,7 +565,9 @@ function About() {
           >
             <div>
               <p className="about-eyebrow">
-                {tr("NEED SOMETHING FIXED?", "تحتاج إلى إصلاح شيء؟")}
+                <AboutSmallLabelEffect
+                  text={tr("NEED SOMETHING FIXED?", "تحتاج إلى إصلاح شيء؟")}
+                />
               </p>
 
               <h2>

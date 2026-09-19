@@ -2032,3 +2032,249 @@ body:has(.technicians-page) {
   overflow-y: visible !important;
 }
 
+
+
+/* =========================================================
+   FIND A FIXER — small label text effect
+   Same calm reveal language used on Home + Services.
+   ========================================================= */
+
+.tech-small-text-effect {
+  display: inline-flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  white-space: pre-wrap;
+}
+
+.tech-small-text-effect-piece {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(0.5em);
+  filter: blur(5px);
+
+  transition:
+    opacity 0.42s var(--tech-text-delay, 0ms)
+      cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.52s var(--tech-text-delay, 0ms)
+      cubic-bezier(0.16, 1, 0.3, 1),
+    filter 0.42s var(--tech-text-delay, 0ms)
+      cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.tech-small-text-effect.is-visible
+.tech-small-text-effect-piece {
+  opacity: 1;
+  transform: translateY(0);
+  filter: blur(0);
+}
+
+.tech-small-text-effect-space {
+  display: inline-block;
+  width: 0.34em;
+}
+
+/* Arabic keeps connected letters intact while still revealing progressively. */
+.technicians-page[dir="rtl"]
+.tech-small-text-effect.is-arabic-effect
+.tech-small-text-effect-piece {
+  opacity: 1;
+  filter: none;
+  transform: translateY(0.26em);
+  clip-path: inset(0 0 0 100%);
+
+  transition:
+    clip-path 0.78s var(--tech-text-delay, 0ms)
+      steps(7, end),
+    transform 0.56s var(--tech-text-delay, 0ms)
+      cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.technicians-page[dir="rtl"]
+.tech-small-text-effect.is-arabic-effect.is-visible
+.tech-small-text-effect-piece {
+  clip-path: inset(0);
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tech-small-text-effect-piece {
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+    clip-path: none !important;
+    transition: none !important;
+  }
+}
+
+
+/* =========================================================
+   FIND A FIXER — match Services small-label typography
+   ========================================================= */
+
+.tech-find-hero-v2__kicker {
+  font-family: "Plus Jakarta Sans", "IBM Plex Sans Arabic", sans-serif !important;
+  font-size: 10px !important;
+  font-weight: 700 !important;
+  letter-spacing: .17em !important;
+}
+
+.technicians-page[dir="rtl"] .tech-find-hero-v2__kicker {
+  font-family: "IBM Plex Sans Arabic", sans-serif !important;
+  letter-spacing: 0 !important;
+}
+
+/* =========================================================
+   FIXER CARDS — calm premium entrance
+   Uses the page's existing IntersectionObserver + tech-show class.
+   Card design itself stays unchanged.
+   ========================================================= */
+
+.technicians-page .tech-card-reveal {
+  opacity: 0 !important;
+
+  transform:
+    translateY(26px)
+    scale(.988);
+
+  filter: blur(1.5px);
+
+  transition:
+    opacity .72s var(--tech-delay, 0ms)
+      cubic-bezier(.22, 1, .36, 1),
+    transform .88s var(--tech-delay, 0ms)
+      cubic-bezier(.16, 1, .3, 1),
+    filter .68s var(--tech-delay, 0ms)
+      ease,
+    border-color .28s ease,
+    box-shadow .28s ease,
+    background .28s ease !important;
+}
+
+/* Inner content arrives in a soft sequence. */
+.technicians-page .tech-card-reveal .tech-card-top {
+  opacity: 0;
+  transform: translateY(10px);
+
+  transition:
+    opacity .52s
+      calc(var(--tech-delay, 0ms) + 120ms)
+      ease,
+    transform .66s
+      calc(var(--tech-delay, 0ms) + 120ms)
+      cubic-bezier(.16, 1, .3, 1);
+}
+
+.technicians-page .tech-card-reveal .tech-info {
+  opacity: 0;
+  transform: translateY(12px);
+
+  transition:
+    opacity .54s
+      calc(var(--tech-delay, 0ms) + 180ms)
+      ease,
+    transform .70s
+      calc(var(--tech-delay, 0ms) + 180ms)
+      cubic-bezier(.16, 1, .3, 1);
+}
+
+.technicians-page .tech-card-reveal .tech-bio {
+  opacity: 0;
+  transform: translateY(10px);
+
+  transition:
+    opacity .50s
+      calc(var(--tech-delay, 0ms) + 220ms)
+      ease,
+    transform .66s
+      calc(var(--tech-delay, 0ms) + 220ms)
+      cubic-bezier(.16, 1, .3, 1);
+}
+
+.technicians-page .tech-card-reveal .tech-card-footer {
+  opacity: 0;
+  transform: translateY(9px);
+
+  transition:
+    opacity .50s
+      calc(var(--tech-delay, 0ms) + 250ms)
+      ease,
+    transform .64s
+      calc(var(--tech-delay, 0ms) + 250ms)
+      cubic-bezier(.16, 1, .3, 1);
+}
+
+/* Revealed state */
+.technicians-page .tech-card-reveal.tech-show {
+  opacity: 1 !important;
+  transform: translateY(0) scale(1) !important;
+  filter: blur(0) !important;
+}
+
+.technicians-page .tech-card-reveal.tech-show .tech-card-top,
+.technicians-page .tech-card-reveal.tech-show .tech-info,
+.technicians-page .tech-card-reveal.tech-show .tech-bio,
+.technicians-page .tech-card-reveal.tech-show .tech-card-footer {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Keep the existing hover after reveal. */
+.technicians-page .tech-card-reveal.tech-show:hover {
+  transform: translateY(-6px) scale(1) !important;
+}
+
+/* Slightly softer on phones. */
+@media (max-width: 760px) {
+  .technicians-page .tech-card-reveal {
+    transform:
+      translateY(20px)
+      scale(.992);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .technicians-page .tech-card-reveal,
+  .technicians-page .tech-card-reveal .tech-card-top,
+  .technicians-page .tech-card-reveal .tech-info,
+  .technicians-page .tech-card-reveal .tech-bio,
+  .technicians-page .tech-card-reveal .tech-card-footer {
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+    transition: none !important;
+  }
+}
+
+
+/* =========================================================
+   AVAILABLE PROFESSIONALS — same small-label motion as Home/Services
+   ========================================================= */
+
+.tech-results-heading .tech-eyebrow {
+  overflow: visible;
+}
+
+.tech-results-heading .tech-eyebrow .tech-small-text-effect {
+  color: inherit;
+}
+
+/* =========================================================
+   FIXER CARDS — ensure entrance is visibly noticeable
+   Calm, premium, staggered.
+   ========================================================= */
+
+.technicians-page .tech-card-reveal {
+  opacity: 0 !important;
+  transform: translateY(30px) scale(.985) !important;
+  filter: blur(2px) !important;
+}
+
+.technicians-page .tech-card-reveal.tech-show {
+  opacity: 1 !important;
+  transform: translateY(0) scale(1) !important;
+  filter: blur(0) !important;
+}
+
+.technicians-page .tech-card-reveal.tech-show:hover {
+  transform: translateY(-6px) scale(1) !important;
+}

@@ -1,0 +1,2991 @@
+/* =========================================================
+   FIXER.CO — HOME
+   Hero only for now.
+   Keeps the rest of the existing Home sections untouched.
+   ========================================================= */
+
+.home-page {
+  width: 100%;
+  min-height: 100vh;
+  overflow-x: hidden;
+  background: #f7f9f8;
+  color: #17252e;
+}
+
+/* =========================
+   HERO
+   ========================= */
+
+.home-cinematic-hero {
+  position: relative;
+  width: 100%;
+  height: calc(100svh - 88px);
+  min-height: 620px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  isolation: isolate;
+  background: #102d43;
+}
+
+.home-cinematic-hero-image {
+  position: absolute !important;
+  inset: 0 !important;
+  z-index: -3 !important;
+  width: 100% !important;
+  height: 100% !important;
+  max-width: none !important;
+  object-fit: cover !important;
+
+  /* IMPORTANT: same crop as the final intro frame */
+  object-position: 84% center !important;
+
+  /* no zoom here, so the intro can cross-fade into the exact same frame */
+  transform: none !important;
+  border-radius: 0 !important;
+}
+
+.home-cinematic-hero-shade {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  pointer-events: none;
+  background:
+    linear-gradient(
+      90deg,
+      rgba(10, 31, 46, 0.70) 0%,
+      rgba(10, 31, 46, 0.48) 34%,
+      rgba(10, 31, 46, 0.13) 64%,
+      rgba(10, 31, 46, 0.02) 100%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(16, 45, 67, 0.05) 0%,
+      rgba(16, 45, 67, 0.08) 48%,
+      rgba(16, 45, 67, 0.38) 100%
+    );
+}
+
+.home-cinematic-hero-inner {
+  position: relative;
+  z-index: 1;
+  width: min(91%, 1240px);
+  margin: 0 auto;
+  padding: 56px 0 48px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 40px;
+}
+
+.home-cinematic-hero-content {
+  width: min(720px, 68vw);
+  max-width: 100%;
+  color: #ffffff;
+  overflow: visible !important;
+}
+
+.home-cinematic-hero-kicker {
+  margin: 0 0 16px;
+  color: rgba(255, 255, 255, 0.78);
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.4;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  white-space: normal;
+}
+
+.home-cinematic-hero-title {
+  margin: 0;
+  max-width: 720px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  overflow: visible !important;
+
+  color: #ffffff;
+  font-size: clamp(44px, 4.8vw, 72px);
+  font-weight: 800;
+  line-height: 1.02;
+  letter-spacing: -0.052em;
+
+  white-space: normal !important;
+  overflow-wrap: normal;
+  word-break: normal;
+}
+
+.home-cinematic-hero-title > span:first-child {
+  display: block;
+  width: 100%;
+  white-space: normal !important;
+}
+
+.home-cinematic-hero-word-wrap {
+  display: block;
+  width: 100%;
+  min-height: 1.04em;
+  overflow: hidden;
+}
+
+.home-cinematic-hero-word {
+  display: inline-block;
+  color: #62c2a3;
+  white-space: nowrap;
+  animation: homeHeroWordIn 0.56s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes homeHeroWordIn {
+  from {
+    opacity: 0;
+    transform: translateY(34%);
+    filter: blur(5px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+
+.home-cinematic-hero-copy {
+  display: block;
+  max-width: 560px;
+  margin: 24px 0 0;
+  color: rgba(255, 255, 255, 0.84);
+  font-size: clamp(16px, 1.25vw, 18px);
+  font-weight: 500;
+  line-height: 1.65;
+
+  white-space: normal !important;
+  overflow: visible !important;
+  text-overflow: clip !important;
+  overflow-wrap: break-word;
+}
+
+.home-cinematic-hero-actions {
+  margin-top: 28px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+}
+
+.home-cinematic-primary,
+.home-cinematic-secondary {
+  min-height: 58px;
+  padding: 0 23px;
+  border-radius: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+
+  border: 1px solid transparent;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 800;
+  white-space: nowrap;
+  cursor: pointer;
+
+  transition:
+    transform 0.25s ease,
+    background 0.25s ease,
+    border-color 0.25s ease;
+}
+
+.home-cinematic-primary {
+  background: #ffffff;
+  color: #102d43;
+  border-color: #ffffff;
+}
+
+.home-cinematic-secondary {
+  background: rgba(255, 255, 255, 0.07);
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.home-cinematic-primary:hover,
+.home-cinematic-secondary:hover {
+  transform: translateY(-2px);
+}
+
+.home-cinematic-scroll {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-bottom: 4px;
+  color: rgba(255, 255, 255, 0.74);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.home-cinematic-scroll-line {
+  width: 58px;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.48);
+}
+
+/* RTL */
+.home-page[dir="rtl"] .home-cinematic-hero-content {
+  text-align: right;
+}
+
+.home-page[dir="rtl"] .home-cinematic-hero-title {
+  align-items: flex-start;
+  letter-spacing: -0.02em;
+}
+
+/* =========================
+   TABLET
+   ========================= */
+
+@media (max-width: 992px) {
+  .home-cinematic-hero {
+    height: calc(100svh - 80px);
+    min-height: 600px;
+  }
+
+  .home-cinematic-hero-inner {
+    width: min(90%, 1240px);
+    padding: 46px 0 40px;
+  }
+
+  .home-cinematic-hero-content {
+    width: min(620px, 76vw);
+  }
+
+  .home-cinematic-hero-title {
+    font-size: clamp(46px, 7.6vw, 70px);
+  }
+
+  .home-cinematic-scroll {
+    display: none;
+  }
+}
+
+/* =========================
+   MOBILE
+   ========================= */
+
+@media (max-width: 768px) {
+  .home-cinematic-hero {
+    height: calc(100svh - 72px);
+    min-height: 620px;
+    align-items: flex-end;
+  }
+
+  .home-cinematic-hero-image {
+    object-position: 84% center !important;
+  }
+
+  .home-cinematic-hero-shade {
+    background:
+      linear-gradient(
+        180deg,
+        rgba(16, 45, 67, 0.02) 0%,
+        rgba(16, 45, 67, 0.10) 32%,
+        rgba(16, 45, 67, 0.86) 100%
+      );
+  }
+
+  .home-cinematic-hero-inner {
+    width: 90%;
+    padding: 30px 0 32px;
+  }
+
+  .home-cinematic-hero-content {
+    width: 100%;
+  }
+
+  .home-cinematic-hero-kicker {
+    margin-bottom: 11px;
+    font-size: 10px;
+  }
+
+  .home-cinematic-hero-title {
+    max-width: 100%;
+    font-size: clamp(38px, 11.8vw, 56px);
+    line-height: 1;
+    letter-spacing: -0.045em;
+  }
+
+  .home-cinematic-hero-copy {
+    max-width: 100%;
+    margin-top: 16px;
+    font-size: 15px;
+    line-height: 1.55;
+  }
+
+  .home-cinematic-hero-actions {
+    width: 100%;
+    margin-top: 21px;
+    gap: 9px;
+  }
+
+  .home-cinematic-primary,
+  .home-cinematic-secondary {
+    min-height: 48px;
+    padding: 0 18px;
+  }
+}
+
+@media (max-width: 520px) {
+  .home-cinematic-hero {
+    height: calc(100svh - 66px);
+    min-height: 610px;
+  }
+
+  .home-cinematic-hero-inner {
+    width: 89%;
+    padding-bottom: 26px;
+  }
+
+  .home-cinematic-hero-title {
+    font-size: clamp(36px, 11.4vw, 50px);
+  }
+
+  .home-cinematic-hero-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .home-cinematic-primary,
+  .home-cinematic-secondary {
+    width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-cinematic-hero-word {
+    animation: none !important;
+  }
+
+  .home-cinematic-primary,
+  .home-cinematic-secondary {
+    transition: none !important;
+  }
+}
+
+
+/* =========================================================
+   MOBILE REFINEMENT — Home Hero
+   Desktop stays unchanged.
+   ========================================================= */
+
+@media (max-width: 768px) {
+  .home-cinematic-hero {
+    height: calc(100svh - 72px);
+    min-height: 580px;
+    align-items: flex-end;
+  }
+
+  /* Must match the final Intro crop exactly. */
+  .home-cinematic-hero-image {
+    object-position: 78% center !important;
+  }
+
+  .home-cinematic-hero-shade {
+    background:
+      linear-gradient(
+        180deg,
+        rgba(16, 45, 67, 0.02) 0%,
+        rgba(16, 45, 67, 0.08) 34%,
+        rgba(16, 45, 67, 0.48) 64%,
+        rgba(16, 45, 67, 0.90) 100%
+      );
+  }
+
+  .home-cinematic-hero-inner {
+    width: 88%;
+    padding: 24px 0 28px;
+    gap: 0;
+  }
+
+  .home-cinematic-hero-content {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .home-cinematic-hero-kicker {
+    margin-bottom: 10px;
+    font-size: 9.5px;
+    line-height: 1.4;
+    letter-spacing: 0.13em;
+  }
+
+  .home-cinematic-hero-title {
+    max-width: 100%;
+    font-size: clamp(35px, 10.3vw, 48px);
+    line-height: 1.01;
+    letter-spacing: -0.04em;
+  }
+
+  .home-cinematic-hero-word-wrap {
+    min-height: 1.03em;
+  }
+
+  .home-cinematic-hero-copy {
+    max-width: 94%;
+    margin-top: 14px;
+    font-size: 14px;
+    line-height: 1.55;
+  }
+
+  .home-cinematic-hero-actions {
+    width: 100%;
+    margin-top: 18px;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 9px;
+  }
+
+  .home-cinematic-primary,
+  .home-cinematic-secondary {
+    width: 100%;
+    min-height: 48px;
+    padding: 0 17px;
+    border-radius: 9px;
+    font-size: 13px;
+  }
+
+  .home-cinematic-scroll {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .home-cinematic-hero {
+    height: calc(100svh - 66px);
+    min-height: 560px;
+  }
+
+  .home-cinematic-hero-inner {
+    width: 88%;
+    padding-bottom: 22px;
+  }
+
+  .home-cinematic-hero-title {
+    font-size: clamp(33px, 10.2vw, 43px);
+  }
+
+  .home-cinematic-hero-copy {
+    max-width: 100%;
+    font-size: 13.5px;
+  }
+
+  .home-cinematic-primary,
+  .home-cinematic-secondary {
+    min-height: 52px;
+  }
+}
+
+/* Short landscape phones */
+@media (max-width: 900px) and (max-height: 520px) {
+  .home-cinematic-hero {
+    height: auto;
+    min-height: 520px;
+  }
+
+  .home-cinematic-hero-inner {
+    padding: 72px 0 24px;
+  }
+
+  .home-cinematic-hero-title {
+    font-size: 42px;
+  }
+
+  .home-cinematic-hero-copy {
+    margin-top: 10px;
+  }
+
+  .home-cinematic-hero-actions {
+    margin-top: 14px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+
+
+
+
+
+
+/* =========================================================
+   HERO TEXT POSITION — desktop
+   Blue area: move kicker + title UP
+   Red area: move copy + buttons DOWN
+   SCROLL stays untouched
+   ========================================================= */
+
+@media (min-width: 992px) {
+  .home-cinematic-hero-kicker,
+  .home-cinematic-hero-title {
+    transform: translateY(-54px);
+  }
+
+  .home-cinematic-hero-copy,
+  .home-cinematic-hero-actions {
+    transform: translateY(66px);
+  }
+}
+
+@media (min-width: 769px) and (max-width: 991px) {
+  .home-cinematic-hero-kicker,
+  .home-cinematic-hero-title {
+    transform: translateY(-34px);
+  }
+
+  .home-cinematic-hero-copy,
+  .home-cinematic-hero-actions {
+    transform: translateY(42px);
+  }
+}
+
+
+/* =========================================================
+   HERO COPY + BUTTON SIZE — desktop refinement
+   ========================================================= */
+
+@media (min-width: 992px) {
+  .home-cinematic-hero-actions {
+    gap: 14px;
+  }
+
+  .home-cinematic-primary,
+  .home-cinematic-secondary {
+    min-height: 60px;
+    padding: 0 34px;
+    font-size: 16px;
+    border-radius: 10px;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 991px) {
+  .home-cinematic-primary,
+  .home-cinematic-secondary {
+    min-height: 56px;
+    padding: 0 28px;
+    font-size: 15px;
+  }
+}
+
+
+/* =========================================================
+   HERO COPY LINE BREAK + SCROLL ALIGNMENT
+   ========================================================= */
+
+@media (min-width: 992px) {
+  .home-cinematic-copy-line {
+    display: block;
+  }
+
+  .home-cinematic-copy-line:first-child {
+    white-space: nowrap;
+  }
+
+  /* The buttons are visually shifted down by 66px,
+     so move SCROLL by the same amount to sit on their level. */
+  .home-cinematic-scroll {
+    transform: translateY(66px);
+  }
+}
+
+/* Keep normal wrapping on smaller screens. */
+@media (max-width: 991px) {
+  .home-cinematic-copy-line {
+    display: inline;
+  }
+
+  .home-cinematic-copy-line + .home-cinematic-copy-line::before {
+    content: " ";
+  }
+}
+
+
+/* =========================================================
+   HERO TITLE — slightly larger on desktop
+   ========================================================= */
+@media (min-width: 992px) {
+  .home-cinematic-hero-title {
+    max-width: 760px;
+    font-size: clamp(46px, 5vw, 76px);
+  }
+}
+
+
+/* =========================================================
+   HOME BRIDGE — Vita-inspired entrance
+   Masked headline reveal + staggered lower items.
+   ========================================================= */
+
+.home-bridge-section {
+  position: relative;
+  overflow: hidden;
+  background: #eef2ef;
+  padding: 84px 0 58px;
+}
+
+.home-bridge-shell {
+  width: min(1180px, 88%);
+  margin: 0 auto;
+}
+
+/* ---------- Header ---------- */
+
+.home-bridge-copy {
+  display: grid;
+  grid-template-columns: minmax(180px, 0.68fr) minmax(0, 2fr);
+  gap: clamp(42px, 7vw, 112px);
+  align-items: start;
+}
+
+.home-bridge-kicker {
+  margin: 9px 0 0;
+  color: #6d7e82;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  line-height: 1.4;
+
+  opacity: 0;
+  transform: translateY(18px);
+  transition:
+    opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.home-bridge-title {
+  margin: 0;
+  max-width: 900px;
+  font-size: clamp(39px, 4.55vw, 66px);
+  font-weight: 650;
+  letter-spacing: -0.05em;
+  line-height: 1.08;
+}
+
+/* Each sentence has its own clipping window, like the reference. */
+.home-bridge-line-mask {
+  display: block;
+  overflow: hidden;
+
+  /* Extra room for descenders like g / y / p while keeping the mask reveal. */
+  padding: 0.08em 0 0.18em;
+  margin: -0.08em 0 -0.08em;
+}
+
+.home-bridge-line {
+  display: block;
+  transform: translateY(112%);
+  will-change: transform;
+  transition: transform 0.95s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.home-bridge-line--question {
+  color: #4aa889;
+  transition-delay: 0.08s;
+}
+
+.home-bridge-line--answer {
+  color: #102d43;
+  transition-delay: 0.19s;
+}
+
+/* ---------- Lower points ---------- */
+
+.home-bridge-points {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin-top: 64px;
+  border-bottom: 1px solid rgba(16, 45, 67, 0.11);
+}
+
+/* Draw the top rule only after the heading has entered. */
+.home-bridge-points::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 1px;
+  background: rgba(16, 45, 67, 0.18);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.95s 0.32s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+html[dir="rtl"] .home-bridge-points::before {
+  transform-origin: right center;
+}
+
+.home-bridge-point {
+  position: relative;
+  min-height: 92px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+
+  color: #173b57;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+
+  opacity: 0;
+  transform: translateY(48px);
+  transition:
+    opacity 0.72s var(--bridge-delay, 0.46s) cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.9s var(--bridge-delay, 0.46s) cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Vertical dividers grow upward instead of popping in. */
+.home-bridge-point + .home-bridge-point {
+  padding-inline-start: clamp(24px, 3.6vw, 54px);
+}
+
+.home-bridge-point + .home-bridge-point::before {
+  content: "";
+  position: absolute;
+  inset-inline-start: 0;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: rgba(16, 45, 67, 0.12);
+  transform: scaleY(0);
+  transform-origin: bottom center;
+  transition: transform 0.8s calc(var(--bridge-delay, 0.46s) + 0.06s)
+    cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.home-bridge-point-number {
+  color: rgba(74, 168, 137, 0.9);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+}
+
+/* ---------- Entered state ---------- */
+
+.home-bridge-section.is-vita-visible .home-bridge-kicker {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.home-bridge-section.is-vita-visible .home-bridge-line {
+  transform: translateY(0);
+}
+
+.home-bridge-section.is-vita-visible .home-bridge-points::before {
+  transform: scaleX(1);
+}
+
+.home-bridge-section.is-vita-visible .home-bridge-point {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.home-bridge-section.is-vita-visible
+  .home-bridge-point
+  + .home-bridge-point::before {
+  transform: scaleY(1);
+}
+
+/* Bring Services in naturally after this transition. */
+.home-bridge-section + .home-services-story-section {
+  padding-top: 56px;
+}
+
+/* ---------- Tablet ---------- */
+
+@media (max-width: 900px) {
+  .home-bridge-section {
+    padding: 66px 0 46px;
+  }
+
+  .home-bridge-copy {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .home-bridge-kicker {
+    margin-top: 0;
+  }
+
+  .home-bridge-title {
+    max-width: 760px;
+    font-size: clamp(34px, 6.4vw, 50px);
+  }
+
+  .home-bridge-points {
+    margin-top: 46px;
+  }
+}
+
+/* ---------- Mobile ---------- */
+
+@media (max-width: 640px) {
+  .home-bridge-section {
+    padding: 48px 0 36px;
+  }
+
+  .home-bridge-shell {
+    width: 88%;
+  }
+
+  .home-bridge-title {
+    font-size: clamp(31px, 9.2vw, 41px);
+    line-height: 1.04;
+  }
+
+  .home-bridge-line-mask + .home-bridge-line-mask {
+    margin-top: 4px;
+  }
+
+  .home-bridge-points {
+    grid-template-columns: 1fr;
+    margin-top: 36px;
+  }
+
+  .home-bridge-point {
+    min-height: 64px;
+    transform: translateY(32px);
+  }
+
+  .home-bridge-point + .home-bridge-point {
+    padding-inline-start: 0;
+  }
+
+  .home-bridge-point + .home-bridge-point::before {
+    inset-inline-start: 0;
+    inset-inline-end: 0;
+    top: 0;
+    bottom: auto;
+    width: auto;
+    height: 1px;
+    transform: scaleX(0);
+    transform-origin: left center;
+  }
+
+  html[dir="rtl"]
+    .home-bridge-point
+    + .home-bridge-point::before {
+    transform-origin: right center;
+  }
+
+  .home-bridge-section.is-vita-visible
+    .home-bridge-point
+    + .home-bridge-point::before {
+    transform: scaleX(1);
+  }
+
+  .home-bridge-section + .home-services-story-section {
+    padding-top: 42px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-bridge-kicker,
+  .home-bridge-line,
+  .home-bridge-point,
+  .home-bridge-points::before,
+  .home-bridge-point + .home-bridge-point::before {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
+
+
+
+
+/* =========================================================
+   SERVICES — staggered entrance
+   ========================================================= */
+
+.home-services-story-section .home-services-story-heading {
+  opacity: 0;
+  translate: 0 26px;
+  transition:
+    opacity 0.7s 0.04s cubic-bezier(0.22, 1, 0.36, 1),
+    translate 0.85s 0.04s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.home-services-story-section .home-service-story-card {
+  opacity: 0;
+  translate: 0 34px;
+  transition:
+    opacity 0.72s var(--service-delay, 0ms) cubic-bezier(0.22, 1, 0.36, 1),
+    translate 0.9s var(--service-delay, 0ms) cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.home-services-story-section .home-services-story-controls {
+  opacity: 0;
+  translate: 0 16px;
+  transition:
+    opacity 0.65s 0.52s ease,
+    translate 0.78s 0.52s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.home-services-story-section .home-services-ai-drawer {
+  opacity: 0;
+  translate: 0 28px;
+  transition:
+    opacity 0.72s 0.6s ease,
+    translate 0.9s 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+    background-color 0.35s ease,
+    border-color 0.35s ease;
+}
+
+.home-services-story-section.is-services-visible .home-services-story-heading,
+.home-services-story-section.is-services-visible .home-service-story-card,
+.home-services-story-section.is-services-visible .home-services-story-controls,
+.home-services-story-section.is-services-visible .home-services-ai-drawer {
+  opacity: 1;
+  translate: 0 0;
+}
+
+/* =========================================================
+   FIXER AI — expandable assistant below Services
+   Compact when closed, chat-style composer when opened.
+   ========================================================= */
+
+.home-services-ai-drawer,
+.home-services-ai-drawer input,
+.home-services-ai-drawer button {
+  font-family: inherit;
+}
+
+/* Keep Font Awesome's own font so icons don't render as empty squares. */
+.home-services-ai-drawer .fa-solid,
+.home-services-ai-drawer .fas {
+  font-family: "Font Awesome 6 Free" !important;
+  font-weight: 900 !important;
+}
+
+.home-services-ai-drawer .fa-regular,
+.home-services-ai-drawer .far {
+  font-family: "Font Awesome 6 Free" !important;
+  font-weight: 400 !important;
+}
+
+.home-services-ai-drawer {
+  margin-top: 52px;
+  overflow: hidden;
+  border: 1px solid rgba(102, 197, 166, 0.20);
+  border-radius: 20px;
+  background:
+    linear-gradient(
+      135deg,
+      #0f2f45 0%,
+      #123c50 48%,
+      #1d5d5a 100%
+    );
+  box-shadow: 0 20px 54px rgba(16, 45, 67, 0.12);
+}
+
+.home-services-ai-drawer.is-open {
+  background:
+    linear-gradient(
+      135deg,
+      #0d293b 0%,
+      #11384c 46%,
+      #1a5554 100%
+    );
+  border-color: rgba(102, 197, 166, 0.30);
+}
+
+/* No circular wand icon — deliberately text-led. */
+.home-services-ai-drawer-trigger {
+  width: 100%;
+  min-height: 106px;
+  padding: 24px 28px;
+  border: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 30px;
+  background: transparent;
+  color: inherit;
+  text-align: inherit;
+  cursor: pointer;
+}
+
+.home-services-ai-drawer-heading {
+  min-width: 0;
+  display: grid;
+  gap: 5px;
+}
+
+.home-services-ai-drawer-kicker {
+  color: #71cdb0;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  line-height: 1.35;
+}
+
+.home-services-ai-drawer-title {
+  color: #ffffff;
+  font-size: clamp(20px, 1.9vw, 28px);
+  font-weight: 650;
+  letter-spacing: -0.03em;
+  line-height: 1.12;
+}
+
+.home-services-ai-drawer-action {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 13px;
+  color: rgba(255, 255, 255, 0.82);
+  font-size: 12px;
+  font-weight: 750;
+}
+
+.home-services-ai-drawer-action i {
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 10px;
+  color: #102d43;
+  background: #f4f7f5;
+  font-size: 11px;
+  transition:
+    transform 0.38s cubic-bezier(0.22, 1, 0.36, 1),
+    background-color 0.25s ease;
+}
+
+.home-services-ai-drawer-trigger:hover .home-services-ai-drawer-action i {
+  transform: scale(1.06);
+  background: #ffffff;
+}
+
+/* Smooth rectangle expansion. */
+.home-services-ai-drawer-content {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    grid-template-rows 0.72s cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 0.36s ease,
+    visibility 0s linear 0.72s;
+}
+
+.home-services-ai-drawer.is-open .home-services-ai-drawer-content {
+  grid-template-rows: 1fr;
+  opacity: 1;
+  visibility: visible;
+  transition:
+    grid-template-rows 0.78s cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 0.42s 0.08s ease,
+    visibility 0s;
+}
+
+.home-services-ai-drawer-inner {
+  width: 100%;
+  min-height: 0;
+  overflow: hidden;
+  box-sizing: border-box;
+  padding: 0 28px;
+}
+
+.home-services-ai-drawer.is-open .home-services-ai-drawer-inner {
+  padding-bottom: 30px;
+}
+
+/* Elements reveal one after another once the box opens. */
+.home-services-ai-intro,
+.home-services-ai-composer,
+.home-services-ai-feedback {
+  opacity: 0;
+  translate: 0 20px;
+  transition:
+    opacity 0.54s ease,
+    translate 0.72s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.home-services-ai-drawer.is-open .home-services-ai-intro {
+  opacity: 1;
+  translate: 0 0;
+  transition-delay: 0.18s;
+}
+
+.home-services-ai-drawer.is-open .home-services-ai-composer {
+  opacity: 1;
+  translate: 0 0;
+  transition-delay: 0.29s;
+}
+
+.home-services-ai-drawer.is-open .home-services-ai-feedback {
+  opacity: 1;
+  translate: 0 0;
+  transition-delay: 0.40s;
+}
+
+.home-services-ai-intro {
+  padding: 8px 0 18px;
+  border-top: 1px solid rgba(255, 255, 255, 0.10);
+}
+
+.home-services-ai-intro > p {
+  margin: 22px 0 7px;
+  color: #71cdb0;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.15em;
+}
+
+.home-services-ai-intro > h3 {
+  margin: 0;
+  max-width: 720px;
+  color: #ffffff;
+  font-size: clamp(25px, 2.7vw, 38px);
+  font-weight: 650;
+  letter-spacing: -0.04em;
+  line-height: 1.08;
+}
+
+.home-services-ai-intro > span {
+  display: block;
+  margin-top: 8px;
+  color: rgba(255, 255, 255, 0.58);
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+/* Chat-input inspired composer */
+.home-services-ai-composer {
+  position: relative;
+  width: 100%;
+  max-width: none;
+  box-sizing: border-box;
+  margin-top: 20px;
+  padding: 14px;
+  border: 1px solid rgba(16, 45, 67, 0.11);
+  border-radius: 16px;
+  background: #f7f9f8;
+  box-shadow:
+    0 14px 40px rgba(4, 22, 33, 0.16),
+    inset 0 1px 0 rgba(255, 255, 255, 0.78);
+}
+
+.home-services-ai-composer .home-service-finder-bar {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.home-services-ai-composer .home-service-finder-input {
+  min-width: 0;
+  flex: 1 1 auto;
+  height: 52px;
+  padding: 0 12px;
+  border: 0;
+  outline: none;
+  background: transparent;
+  color: #102d43;
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.home-services-ai-composer .home-service-finder-input::placeholder {
+  color: #8b989e;
+}
+
+.home-services-ai-composer .home-service-finder-photo-wrap {
+  position: relative;
+  flex: 0 0 auto;
+}
+
+.home-services-ai-composer .home-service-finder-photo,
+.home-services-ai-composer .home-service-finder-submit {
+  min-height: 46px;
+  border-radius: 10px;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 750;
+  cursor: pointer;
+}
+
+.home-services-ai-composer .home-service-finder-photo {
+  padding: 0 14px;
+  border: 1px solid rgba(16, 45, 67, 0.10);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #ffffff;
+  color: #173b57;
+}
+
+.home-services-ai-composer .home-service-finder-submit {
+  padding: 0 17px;
+  border: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  background: #102d43;
+  color: #ffffff;
+}
+
+.home-services-ai-composer .home-service-finder-submit:disabled {
+  cursor: wait;
+  opacity: 0.66;
+}
+
+.home-services-ai-composer .home-service-finder-menu {
+  position: absolute;
+  z-index: 20;
+  right: 0;
+  top: calc(100% + 10px);
+  bottom: auto;
+  width: 210px;
+  padding: 7px;
+  overflow: hidden;
+  border: 1px solid rgba(16, 45, 67, 0.10);
+  border-radius: 14px;
+  background: #ffffff;
+  box-shadow: 0 16px 42px rgba(16, 45, 67, 0.16);
+}
+
+html[dir="rtl"]
+  .home-services-ai-composer
+  .home-service-finder-menu {
+  right: auto;
+  left: 0;
+}
+
+.home-services-ai-composer .home-service-finder-menu button {
+  width: 100%;
+  min-height: 42px;
+  padding: 10px 11px;
+  border: 0;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  background: transparent;
+  color: #173b57;
+  text-align: start;
+  cursor: pointer;
+}
+
+.home-services-ai-composer .home-service-finder-menu button:hover {
+  background: #f0f4f2;
+}
+
+.home-services-ai-composer .home-service-finder-examples {
+  padding: 5px 5px 2px;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.home-services-ai-composer .home-service-finder-examples > span {
+  margin-inline-end: 2px;
+  color: #8a979d;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.home-services-ai-composer .home-service-finder-examples button {
+  padding: 7px 10px;
+  border: 1px solid rgba(16, 45, 67, 0.10);
+  border-radius: 999px;
+  background: #ffffff;
+  color: #54666f;
+  font: inherit;
+  font-size: 11px;
+  font-weight: 650;
+  cursor: pointer;
+  transition:
+    background-color 0.22s ease,
+    border-color 0.22s ease,
+    color 0.22s ease;
+}
+
+.home-services-ai-composer .home-service-finder-examples button:hover {
+  border-color: rgba(74, 168, 137, 0.40);
+  background: #eef6f2;
+  color: #173b57;
+}
+
+.home-services-ai-feedback {
+  width: 100%;
+  max-width: none;
+  box-sizing: border-box;
+  margin-top: 18px;
+  padding: 24px 26px;
+  border: 1px solid rgba(16, 45, 67, 0.10);
+  border-radius: 16px;
+  background: #ffffff;
+}
+
+.home-services-ai-feedback h3 {
+  font-size: clamp(24px, 2.1vw, 32px);
+  line-height: 1.12;
+}
+
+.home-services-ai-feedback p {
+  font-size: 14px;
+  line-height: 1.65;
+}
+
+/* =========================================================
+   Responsive
+   ========================================================= */
+
+@media (max-width: 760px) {
+  .home-services-ai-drawer {
+    margin-top: 38px;
+    border-radius: 16px;
+  }
+
+  .home-services-ai-drawer-trigger {
+    min-height: 0;
+    padding: 20px;
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 17px;
+  }
+
+  .home-services-ai-drawer-title {
+    font-size: 21px;
+  }
+
+  .home-services-ai-drawer-action {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .home-services-ai-drawer-inner {
+    padding-inline: 20px;
+  }
+
+  .home-services-ai-drawer.is-open .home-services-ai-drawer-inner {
+    padding-bottom: 22px;
+  }
+
+  .home-services-ai-intro > h3 {
+    font-size: clamp(24px, 7.4vw, 32px);
+  }
+
+  .home-services-ai-composer .home-service-finder-bar {
+    align-items: stretch;
+    flex-wrap: wrap;
+  }
+
+  .home-services-ai-composer .home-service-finder-input {
+    flex-basis: 100%;
+    height: 48px;
+  }
+
+  .home-services-ai-composer .home-service-finder-photo,
+  .home-services-ai-composer .home-service-finder-submit {
+    flex: 1 1 calc(50% - 5px);
+  }
+
+  .home-services-ai-composer .home-service-finder-photo {
+    justify-content: center;
+  }
+
+  .home-services-ai-composer .home-service-finder-submit {
+    min-width: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-services-story-section .home-services-story-heading,
+  .home-services-story-section .home-service-story-card,
+  .home-services-story-section .home-services-story-controls,
+  .home-services-story-section .home-services-ai-drawer,
+  .home-services-ai-intro,
+  .home-services-ai-composer,
+  .home-services-ai-feedback {
+    opacity: 1 !important;
+    translate: none !important;
+    transition: none !important;
+  }
+
+  .home-services-ai-drawer-content {
+    transition: none !important;
+  }
+}
+
+
+@media (max-width: 760px) {
+  .home-services-ai-composer {
+    width: 100%;
+    padding: 10px;
+  }
+
+  .home-services-ai-feedback {
+    width: 100%;
+    padding: 18px;
+  }
+}
+
+
+/* =========================================================
+   AI WHITE PANELS — same width + cleaner dropdown behavior
+   ========================================================= */
+
+.home-services-ai-drawer-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.home-services-ai-composer,
+.home-services-ai-feedback,
+.home-services-ai-drawer .home-service-finder {
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  margin-inline: 0 !important;
+  align-self: stretch !important;
+  box-sizing: border-box !important;
+}
+
+.home-services-ai-composer {
+  position: relative;
+  z-index: 3;
+}
+
+.home-services-ai-feedback {
+  position: relative;
+  z-index: 1;
+}
+
+/* Keep the Photo popover above the following result card. */
+.home-services-ai-composer .home-service-finder-photo-wrap {
+  z-index: 30;
+}
+
+.home-services-ai-composer .home-service-finder-menu {
+  z-index: 40;
+}
+
+/* Make composer + result visually feel like matching panels. */
+.home-services-ai-composer,
+.home-services-ai-feedback {
+  border-radius: 16px;
+  border: 1px solid rgba(16, 45, 67, 0.10);
+  background: #ffffff;
+}
+
+/* Composer keeps a faint inner surface without changing its outer size. */
+.home-services-ai-composer .home-service-finder-bar {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Slightly more breathing room between equally-sized white panels. */
+.home-services-ai-feedback {
+  margin-top: 20px;
+}
+
+@media (max-width: 760px) {
+  .home-services-ai-composer,
+  .home-services-ai-feedback,
+  .home-services-ai-drawer .home-service-finder {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+}
+
+
+/* =========================================================
+   AI HEADING — controlled two-line layout
+   ========================================================= */
+
+.home-services-ai-heading-line {
+  display: block;
+}
+
+@media (min-width: 900px) {
+  .home-services-ai-heading-line--nowrap {
+    white-space: nowrap;
+  }
+}
+
+/* Allow natural wrapping on smaller screens so it stays responsive. */
+@media (max-width: 899px) {
+  .home-services-ai-heading-line--nowrap {
+    white-space: normal;
+  }
+}
+
+/* =========================================================
+   HERO — final rotating word
+   ========================================================= */
+
+.home-cinematic-hero-word.is-smarter {
+  color: transparent !important;
+  background: linear-gradient(
+    90deg,
+    #4aa889 0%,
+    #4aa889 54%,
+    #2e7f78 72%,
+    #102d43 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+
+/* =========================================================
+   HERO ROTATING WORDS — one consistent Fixer mint
+   ========================================================= */
+
+.home-cinematic-hero-word,
+.home-cinematic-hero-word.is-smarter {
+  color: #4aa889 !important;
+  background: none !important;
+  -webkit-background-clip: initial !important;
+  background-clip: initial !important;
+  -webkit-text-fill-color: #4aa889 !important;
+}
+
+
+/* =========================================================
+   TOP FIXERS — 4 editorial cards / 2 x 2 desktop
+   Inspired by the split info + visual composition.
+   ========================================================= */
+
+.home-top-fixers-editorial {
+  position: relative;
+  background: #071f24;
+  color: #ffffff;
+  overflow: hidden;
+}
+
+.home-top-fixers-editorial-shell {
+  width: min(100%, 1440px);
+  margin: 0 auto;
+}
+
+.home-top-fixers-editorial-head {
+  width: min(1180px, 88%);
+  margin: 0 auto;
+  padding: 82px 0 62px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 44px;
+}
+
+.home-top-fixers-editorial-kicker {
+  margin: 0 0 12px;
+  color: #67c4a5;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.17em;
+}
+
+.home-top-fixers-editorial-title {
+  margin: 0;
+  color: #ffffff;
+  font-size: clamp(38px, 4.3vw, 62px);
+  font-weight: 700;
+  letter-spacing: -0.05em;
+  line-height: 1.02;
+}
+
+.home-top-fixers-editorial-copy {
+  margin: 16px 0 0;
+  max-width: 610px;
+  color: rgba(255, 255, 255, 0.58);
+  font-size: 14px;
+  line-height: 1.65;
+}
+
+.home-top-fixers-editorial-all {
+  flex: 0 0 auto;
+  min-height: 48px;
+  padding: 0 18px;
+  border: 1px solid rgba(255, 255, 255, 0.20);
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  background: transparent;
+  color: #ffffff;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    background-color 0.25s ease,
+    color 0.25s ease,
+    transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.home-top-fixers-editorial-all:hover {
+  background: #ffffff;
+  color: #071f24;
+  transform: translateY(-2px);
+}
+
+.home-top-fixers-editorial-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  border-top: 1px solid rgba(255, 255, 255, 0.11);
+}
+
+.home-top-fixer-editorial {
+  min-height: 430px;
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(230px, 0.95fr);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.11);
+  overflow: hidden;
+}
+
+.home-top-fixer-editorial:nth-child(odd) {
+  border-inline-end: 1px solid rgba(255, 255, 255, 0.11);
+}
+
+.home-top-fixer-content {
+  min-width: 0;
+  padding: 44px 34px 38px;
+  display: flex;
+  flex-direction: column;
+}
+
+.home-top-fixer-name-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+}
+
+.home-top-fixer-name-row h3 {
+  margin: 0;
+  max-width: 330px;
+  color: #ffffff;
+  font-size: clamp(24px, 2vw, 31px);
+  font-weight: 700;
+  line-height: 1.06;
+  letter-spacing: -0.04em;
+}
+
+.home-top-fixer-name-row i {
+  margin-top: 5px;
+  color: #67c4a5;
+  font-size: 13px;
+}
+
+.home-top-fixer-specialty {
+  margin: 9px 0 0;
+  color: rgba(255, 255, 255, 0.56);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.home-top-fixer-details {
+  margin-top: auto;
+  padding-top: 34px;
+  display: grid;
+  gap: 10px;
+}
+
+.home-top-fixer-detail {
+  display: grid;
+  grid-template-columns: minmax(90px, 0.85fr) minmax(0, 1.15fr);
+  gap: 14px;
+  align-items: center;
+}
+
+.home-top-fixer-detail > span {
+  color: rgba(255, 255, 255, 0.42);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.home-top-fixer-detail strong {
+  min-width: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: rgba(255, 255, 255, 0.84);
+  font-size: 12px;
+  font-weight: 650;
+  line-height: 1.35;
+}
+
+.home-top-fixer-detail strong i {
+  color: #67c4a5;
+  font-size: 10px;
+}
+
+.home-top-fixer-detail strong .fa-star,
+.home-top-fixer-detail strong > .fa-star {
+  color: #f3ae46;
+}
+
+.home-top-fixer-detail strong.is-available {
+  color: #75d4b4;
+}
+
+.home-top-fixer-profile {
+  width: 100%;
+  min-height: 44px;
+  margin-top: 28px;
+  padding: 0 17px;
+  border: 0;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #0c3943;
+  color: #ffffff;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 750;
+  cursor: pointer;
+  transition:
+    background-color 0.26s ease,
+    transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.home-top-fixer-profile:hover {
+  background: #12505a;
+  transform: translateY(-2px);
+}
+
+.home-top-fixer-visual {
+  position: relative;
+  min-width: 0;
+  min-height: 100%;
+  overflow: hidden;
+  background: #0c3037;
+}
+
+.home-top-fixer-photo {
+  width: 100%;
+  height: 100%;
+  min-height: 430px;
+  display: block;
+  object-fit: cover;
+}
+
+.home-top-fixer-photo-fallback {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  background:
+    linear-gradient(
+      145deg,
+      rgba(103, 196, 165, 0.13),
+      rgba(8, 44, 51, 0.32)
+    ),
+    #0b333b;
+}
+
+.home-top-fixer-photo-fallback::after {
+  content: "";
+  position: absolute;
+  inset: 12%;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.home-top-fixer-rank {
+  position: absolute;
+  top: 22px;
+  inset-inline-start: 22px;
+  color: rgba(255, 255, 255, 0.42);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+}
+
+.home-top-fixer-watermark {
+  position: absolute;
+  right: -14px;
+  bottom: -12px;
+  color: rgba(103, 196, 165, 0.10);
+  font-size: 132px;
+  transform: rotate(-8deg);
+}
+
+.home-top-fixer-initials {
+  position: relative;
+  z-index: 1;
+  width: 112px;
+  height: 112px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.055);
+  color: #ffffff;
+  font-size: 29px;
+  font-weight: 750;
+  letter-spacing: -0.03em;
+  backdrop-filter: blur(8px);
+}
+
+.home-top-fixers-editorial-state,
+.home-top-fixers-editorial-error {
+  width: min(1180px, 88%);
+  margin: 0 auto;
+  padding: 30px 0 70px;
+  color: rgba(255, 255, 255, 0.64);
+  font-size: 14px;
+}
+
+.home-top-fixers-editorial-error {
+  color: #f6b5b5;
+}
+
+/* Tablet */
+@media (max-width: 1080px) {
+  .home-top-fixer-editorial {
+    grid-template-columns: 1fr;
+  }
+
+  .home-top-fixer-visual {
+    min-height: 300px;
+    order: -1;
+  }
+
+  .home-top-fixer-photo {
+    min-height: 300px;
+  }
+}
+
+/* Mobile */
+@media (max-width: 760px) {
+  .home-top-fixers-editorial-head {
+    padding: 60px 0 42px;
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .home-top-fixers-editorial-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .home-top-fixer-editorial,
+  .home-top-fixer-editorial:nth-child(odd) {
+    border-inline-end: 0;
+  }
+
+  .home-top-fixer-content {
+    padding: 28px 22px 26px;
+  }
+
+  .home-top-fixer-visual {
+    min-height: 280px;
+  }
+
+  .home-top-fixer-photo {
+    min-height: 280px;
+  }
+
+  .home-top-fixer-detail {
+    grid-template-columns: 100px minmax(0, 1fr);
+  }
+
+  .home-top-fixer-initials {
+    width: 96px;
+    height: 96px;
+    font-size: 25px;
+  }
+}
+
+
+/* =========================================================
+   TOP FIXERS — minimal corrections only
+   Keep the original dark 2x2 design exactly as before.
+   ========================================================= */
+
+/* Reduce only the large gap before the section title. */
+.home-top-fixers-editorial-head {
+  padding-top: 42px !important;
+}
+
+/* Keep the 4-card 2x2 layout from the original version. */
+.home-top-fixers-editorial-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+}
+
+/* The no-photo area stays inside the original image panel,
+   but use a calmer neutral navy instead of the teal tone. */
+.home-top-fixer-photo-fallback {
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255, 255, 255, 0.025),
+      rgba(16, 45, 67, 0.16)
+    ),
+    #0c2b33 !important;
+}
+
+/* Remove only the oversized decorative outer watermark/shape. */
+.home-top-fixer-photo-fallback::after,
+.home-top-fixer-watermark {
+  display: none !important;
+}
+
+/* Keep initials centered inside the existing visual area. */
+.home-top-fixer-initials {
+  width: 104px !important;
+  height: 104px !important;
+  border-color: rgba(255, 255, 255, 0.16) !important;
+  background: rgba(255, 255, 255, 0.045) !important;
+  color: #ffffff !important;
+}
+
+/* Keep fourth technician visible with the same card dimensions. */
+.home-top-fixer-editorial:nth-child(4) {
+  display: grid !important;
+}
+
+@media (max-width: 760px) {
+  .home-top-fixers-editorial-head {
+    padding-top: 34px !important;
+  }
+}
+
+
+/* =========================================================
+   TOP FIXERS — compact proportions, same original dark style
+   ========================================================= */
+
+/* Shorter cards: keep the 2x2 reference feeling instead of tall panels. */
+.home-top-fixer-editorial {
+  min-height: 340px !important;
+  grid-template-columns: minmax(0, 1.08fr) minmax(250px, 0.92fr) !important;
+}
+
+/* Tighten the text side without changing the original layout. */
+.home-top-fixer-content {
+  padding: 32px 34px 28px !important;
+}
+
+.home-top-fixer-details {
+  padding-top: 20px !important;
+  gap: 8px !important;
+}
+
+.home-top-fixer-profile {
+  min-height: 40px !important;
+  margin-top: 18px !important;
+}
+
+/* Make the fallback/photo panel closer to the reference image size. */
+.home-top-fixer-visual {
+  min-height: 0 !important;
+  height: auto !important;
+  align-self: stretch !important;
+  margin: 28px 30px 28px 0 !important;
+  border-radius: 0 !important;
+  overflow: hidden !important;
+}
+
+html[dir="rtl"] .home-top-fixer-visual {
+  margin: 28px 0 28px 30px !important;
+}
+
+.home-top-fixer-photo {
+  width: 100% !important;
+  height: 100% !important;
+  min-height: 284px !important;
+  object-fit: cover !important;
+}
+
+/* Fallback panel: keep AA compact, like a real image placeholder. */
+.home-top-fixer-photo-fallback {
+  position: absolute !important;
+  inset: 0 !important;
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255, 255, 255, 0.018),
+      rgba(16, 45, 67, 0.10)
+    ),
+    #12333d !important;
+}
+
+/* Keep the big decorative circle removed. */
+.home-top-fixer-photo-fallback::after {
+  display: none !important;
+}
+
+/* Restore the service symbol (snowflake / wrench / etc.) behind the initials. */
+.home-top-fixer-watermark {
+  display: block !important;
+  position: absolute !important;
+  right: 18px !important;
+  bottom: 12px !important;
+  color: rgba(103, 196, 165, 0.12) !important;
+  font-size: 86px !important;
+  line-height: 1 !important;
+  transform: rotate(-8deg) !important;
+  pointer-events: none !important;
+}
+
+html[dir="rtl"] .home-top-fixer-watermark {
+  right: auto !important;
+  left: 18px !important;
+}
+
+/* Smaller initials circle, matching the compact visual panel. */
+.home-top-fixer-initials {
+  width: 86px !important;
+  height: 86px !important;
+  font-size: 25px !important;
+  border: 1px solid rgba(255, 255, 255, 0.18) !important;
+  background: rgba(255, 255, 255, 0.035) !important;
+}
+
+/* Keep the rank small in the corner. */
+.home-top-fixer-rank {
+  top: 18px !important;
+  inset-inline-start: 18px !important;
+  font-size: 10px !important;
+}
+
+/* Tablet */
+@media (max-width: 1080px) {
+  .home-top-fixer-editorial {
+    min-height: 320px !important;
+    grid-template-columns: minmax(0, 1fr) minmax(220px, 0.88fr) !important;
+  }
+
+  .home-top-fixer-visual {
+    order: initial !important;
+    min-height: 0 !important;
+    margin: 24px 24px 24px 0 !important;
+  }
+
+  html[dir="rtl"] .home-top-fixer-visual {
+    margin: 24px 0 24px 24px !important;
+  }
+
+  .home-top-fixer-photo {
+    min-height: 260px !important;
+  }
+}
+
+/* Mobile remains stacked, but much shorter than before. */
+@media (max-width: 760px) {
+  .home-top-fixer-editorial {
+    grid-template-columns: 1fr !important;
+    min-height: 0 !important;
+  }
+
+  .home-top-fixer-visual {
+    order: -1 !important;
+    min-height: 220px !important;
+    margin: 12px 12px 0 !important;
+  }
+
+  html[dir="rtl"] .home-top-fixer-visual {
+    margin: 12px 12px 0 !important;
+  }
+
+  .home-top-fixer-photo {
+    min-height: 220px !important;
+  }
+
+  .home-top-fixer-content {
+    padding: 24px 22px 22px !important;
+  }
+}
+
+
+/* =========================================================
+   TOP FIXERS — slightly taller visual panel only
+   Keep the same design; just improve proportions.
+   ========================================================= */
+
+.home-top-fixer-editorial {
+  min-height: 365px !important;
+}
+
+.home-top-fixer-visual {
+  min-height: 310px !important;
+}
+
+.home-top-fixer-photo {
+  min-height: 310px !important;
+}
+
+@media (max-width: 1080px) {
+  .home-top-fixer-editorial {
+    min-height: 345px !important;
+  }
+
+  .home-top-fixer-visual,
+  .home-top-fixer-photo {
+    min-height: 285px !important;
+  }
+}
+
+@media (max-width: 760px) {
+  .home-top-fixer-editorial {
+    min-height: 0 !important;
+  }
+
+  .home-top-fixer-visual,
+  .home-top-fixer-photo {
+    min-height: 235px !important;
+  }
+}
+
+
+/* =========================================================
+   SECTION RHYTHM — Services + Top Fixers
+   Exact same top spacing before each kicker.
+   ========================================================= */
+
+.home-services-story-section,
+.home-top-fixers-editorial {
+  padding-top: 68px !important;
+}
+
+/* Remove any extra internal top space so both kickers start
+   at the same distance from their section edge. */
+.home-services-story-shell,
+.home-top-fixers-editorial-shell {
+  padding-top: 0 !important;
+  margin-top: 0 !important;
+}
+
+.home-services-story-heading,
+.home-top-fixers-editorial-head {
+  margin-top: 0 !important;
+}
+
+/* Top Fixers already has its own header padding, so neutralize
+   the extra top part and keep only the lower breathing room. */
+.home-top-fixers-editorial-head {
+  padding-top: 0 !important;
+}
+
+/* Services heading should not introduce extra top spacing either. */
+.home-services-story-heading {
+  padding-top: 0 !important;
+}
+
+/* =========================================================
+   MAIN SECTION TITLES — EXACT SAME TYPOGRAPHY
+   "What can we fix for you?" = "Trusted by homeowners"
+   ========================================================= */
+
+.home-services-story-title,
+.home-top-fixers-editorial-title {
+  width: min(720px, 100%) !important;
+  max-width: 720px !important;
+
+  margin: 0 !important;
+
+  font-family: "Plus Jakarta Sans", "IBM Plex Sans Arabic", sans-serif !important;
+  font-size: clamp(38px, 4.3vw, 62px) !important;
+  font-weight: 600 !important;
+  letter-spacing: -0.045em !important;
+  line-height: 1.02 !important;
+}
+
+/* Keep each section's intended color only. */
+.home-services-story-title {
+  color: #102d43 !important;
+}
+
+.home-top-fixers-editorial-title {
+  color: #ffffff !important;
+}
+
+/* Same kicker-to-title rhythm as well. */
+.home-services-story-kicker,
+.home-top-fixers-editorial-kicker {
+  margin-bottom: 12px !important;
+}
+
+/* Responsive: keep both titles matched at every breakpoint. */
+@media (max-width: 900px) {
+  .home-services-story-section,
+  .home-top-fixers-editorial {
+    padding-top: 54px !important;
+  }
+
+  .home-services-story-title,
+  .home-top-fixers-editorial-title {
+    width: min(680px, 100%) !important;
+    max-width: 680px !important;
+    font-size: clamp(34px, 6vw, 50px) !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .home-services-story-section,
+  .home-top-fixers-editorial {
+    padding-top: 44px !important;
+  }
+
+  .home-services-story-title,
+  .home-top-fixers-editorial-title {
+    width: 100% !important;
+    max-width: 100% !important;
+    font-size: clamp(31px, 9vw, 41px) !important;
+    line-height: 1.04 !important;
+  }
+}
+
+
+/* =========================================================
+   BRIDGE TITLE — slightly smaller
+   ========================================================= */
+
+.home-bridge-title {
+  font-size: clamp(34px, 3.9vw, 56px) !important;
+}
+
+@media (max-width: 900px) {
+  .home-bridge-title {
+    font-size: clamp(31px, 5.6vw, 44px) !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .home-bridge-title {
+    font-size: clamp(28px, 8.2vw, 37px) !important;
+  }
+}
+
+
+/* =========================================================
+   SMALL SECTION LABELS — character / word text effect
+   Inspired by the 21st / Motion Primitives Text Effect.
+   ========================================================= */
+
+.home-small-text-effect {
+  display: inline-flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  white-space: pre-wrap;
+}
+
+.home-small-text-effect-piece {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(0.55em);
+  filter: blur(5px);
+  will-change: opacity, transform, filter;
+
+  transition:
+    opacity 0.42s var(--text-effect-delay, 0ms)
+      cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.52s var(--text-effect-delay, 0ms)
+      cubic-bezier(0.16, 1, 0.3, 1),
+    filter 0.42s var(--text-effect-delay, 0ms)
+      cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.home-small-text-effect.is-visible .home-small-text-effect-piece {
+  opacity: 1;
+  transform: translateY(0);
+  filter: blur(0);
+}
+
+.home-small-text-effect-space {
+  display: inline-block;
+  width: 0.34em;
+}
+
+/* Arabic is revealed word-by-word, preserving connected letterforms. */
+html[dir="rtl"] .home-small-text-effect {
+  direction: rtl;
+}
+
+html[dir="rtl"] .home-small-text-effect-piece {
+  transform: translateY(0.42em);
+}
+
+html[dir="rtl"]
+  .home-small-text-effect.is-visible
+  .home-small-text-effect-piece {
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-small-text-effect-piece {
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+    transition: none !important;
+  }
+}
+
+
+/* =========================================================
+   TOP FIXERS — scroll-drawn structural lines
+   The rules draw themselves as the grid enters the viewport.
+   ========================================================= */
+
+.home-top-fixers-editorial-grid {
+  position: relative;
+  border-top: 0 !important;
+}
+
+/* Top rule */
+.home-top-fixers-editorial-grid::before {
+  content: "";
+  position: absolute;
+  z-index: 8;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.13);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 1.05s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+}
+
+html[dir="rtl"] .home-top-fixers-editorial-grid::before {
+  transform-origin: right center;
+}
+
+/* Remove the static card borders; pseudo-elements redraw them. */
+.home-top-fixer-editorial,
+.home-top-fixer-editorial:nth-child(odd) {
+  position: relative;
+  border-bottom: 0 !important;
+  border-inline-end: 0 !important;
+}
+
+/* Horizontal rule under every card */
+.home-top-fixer-editorial::after {
+  content: "";
+  position: absolute;
+  z-index: 8;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.13);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition:
+    transform 0.92s var(--fixer-line-delay, 0.16s)
+    cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+}
+
+html[dir="rtl"] .home-top-fixer-editorial::after {
+  transform-origin: right center;
+}
+
+/* Vertical divider for the left card in each desktop row */
+.home-top-fixer-editorial:nth-child(odd)::before {
+  content: "";
+  position: absolute;
+  z-index: 8;
+  top: 0;
+  inset-inline-end: 0;
+  width: 1px;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.13);
+  transform: scaleY(0);
+  transform-origin: top center;
+  transition:
+    transform 1.02s var(--fixer-line-delay, 0.20s)
+    cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+}
+
+/* Stagger the second row slightly. */
+.home-top-fixer-editorial:nth-child(1) {
+  --fixer-line-delay: 0.12s;
+}
+
+.home-top-fixer-editorial:nth-child(2) {
+  --fixer-line-delay: 0.18s;
+}
+
+.home-top-fixer-editorial:nth-child(3) {
+  --fixer-line-delay: 0.30s;
+}
+
+.home-top-fixer-editorial:nth-child(4) {
+  --fixer-line-delay: 0.36s;
+}
+
+.home-top-fixers-editorial-grid.is-lines-visible::before,
+.home-top-fixers-editorial-grid.is-lines-visible
+  .home-top-fixer-editorial::after {
+  transform: scaleX(1);
+}
+
+.home-top-fixers-editorial-grid.is-lines-visible
+  .home-top-fixer-editorial:nth-child(odd)::before {
+  transform: scaleY(1);
+}
+
+/* Mobile has one column, so only the horizontal rules draw. */
+@media (max-width: 760px) {
+  .home-top-fixer-editorial:nth-child(odd)::before {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-top-fixers-editorial-grid::before,
+  .home-top-fixer-editorial::after,
+  .home-top-fixer-editorial:nth-child(odd)::before {
+    transform: none !important;
+    transition: none !important;
+  }
+}
+
+
+/* =========================================================
+   ARABIC + MOBILE FIXES ONLY
+   IMPORTANT: English layout is intentionally untouched.
+   ========================================================= */
+
+/* Keep the Arabic hero block on the LEFT side like the English design,
+   while the Arabic text itself stays RTL and right-aligned. */
+.home-page[dir="rtl"] .home-cinematic-hero-inner {
+  direction: ltr;
+}
+
+.home-page[dir="rtl"] .home-cinematic-hero-content {
+  direction: rtl;
+  text-align: right;
+  margin-right: auto;
+  margin-left: 0;
+}
+
+.home-page[dir="rtl"] .home-cinematic-hero-title {
+  align-items: flex-end;
+  text-align: right;
+  letter-spacing: 0;
+}
+
+.home-page[dir="rtl"] .home-cinematic-hero-copy {
+  margin-right: 0;
+  margin-left: auto;
+  text-align: right;
+}
+
+.home-page[dir="rtl"] .home-cinematic-hero-actions {
+  direction: rtl;
+  justify-content: flex-start;
+}
+
+/* Arabic typography should not inherit English negative tracking. */
+.home-page[dir="rtl"] .home-bridge-title,
+.home-page[dir="rtl"] .home-services-story-title,
+.home-page[dir="rtl"] .home-top-fixers-editorial-title,
+.home-page[dir="rtl"] .home-services-ai-intro > h3 {
+  letter-spacing: 0 !important;
+}
+
+/* Give Arabic mobile content more breathing room from the edges
+   and slightly more vertical space so wrapped Arabic lines don't feel cramped. */
+@media (max-width: 768px) {
+  .home-page[dir="rtl"] .home-cinematic-hero-inner {
+    width: 86%;
+    padding-top: 34px;
+    padding-bottom: 34px;
+  }
+
+  .home-page[dir="rtl"] .home-cinematic-hero-content {
+    width: 100%;
+    padding-inline: 2px;
+  }
+
+  .home-page[dir="rtl"] .home-cinematic-hero-kicker {
+    margin-bottom: 13px;
+  }
+
+  .home-page[dir="rtl"] .home-cinematic-hero-title {
+    font-size: clamp(34px, 10vw, 46px);
+    line-height: 1.08;
+  }
+
+  .home-page[dir="rtl"] .home-cinematic-hero-word-wrap {
+    min-height: 1.1em;
+  }
+
+  .home-page[dir="rtl"] .home-cinematic-hero-copy {
+    max-width: 100%;
+    margin-top: 19px;
+    line-height: 1.7;
+  }
+
+  .home-page[dir="rtl"] .home-cinematic-hero-actions {
+    margin-top: 24px;
+    gap: 10px;
+  }
+
+  /* More side-space for the following sections on Arabic mobile only. */
+  .home-page[dir="rtl"] .home-bridge-shell,
+  .home-page[dir="rtl"] .home-services-story-shell,
+  .home-page[dir="rtl"] .home-top-fixers-editorial-head {
+    width: 86% !important;
+    margin-inline: auto !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .home-page[dir="rtl"] .home-cinematic-hero-inner {
+    width: 84%;
+    padding-bottom: 30px;
+  }
+
+  .home-page[dir="rtl"] .home-cinematic-hero-title {
+    font-size: clamp(32px, 9.7vw, 41px);
+  }
+
+  .home-page[dir="rtl"] .home-cinematic-primary,
+  .home-page[dir="rtl"] .home-cinematic-secondary {
+    min-height: 50px;
+  }
+}
+
+
+/* =========================================================
+   ARABIC HERO — FIX CLIPPED ROTATING WORD + SCROLL POSITION
+   RTL ONLY. English stays exactly as-is.
+   ========================================================= */
+
+@media (min-width: 769px) {
+  /* Give the animated Arabic word enough vertical room so
+     letters/diacritics are never clipped by the reveal wrapper. */
+  .home-page[dir="rtl"] .home-cinematic-hero-word-wrap {
+    display: block;
+    min-height: 1.38em !important;
+    height: auto !important;
+    overflow: visible !important;
+    padding-top: 0.12em;
+    padding-bottom: 0.16em;
+    margin-top: -0.08em;
+    margin-bottom: -0.10em;
+  }
+
+  .home-page[dir="rtl"] .home-cinematic-hero-word {
+    display: inline-block;
+    line-height: 1.16 !important;
+    padding-top: 0.04em;
+    padding-bottom: 0.08em;
+    overflow: visible !important;
+  }
+
+  /* Keep the full Arabic title roomy as well. */
+  .home-page[dir="rtl"] .home-cinematic-hero-title {
+    line-height: 1.11 !important;
+    overflow: visible !important;
+  }
+
+  /* Move "مرر" to the left side, on the same visual band
+     as the paragraph/buttons instead of over the worker. */
+  .home-page[dir="rtl"] .home-cinematic-scroll {
+    position: absolute !important;
+    left: 0 !important;
+    right: auto !important;
+    bottom: 66px !important;
+
+    direction: rtl;
+    display: flex !important;
+    align-items: center;
+    gap: 13px;
+    transform: none !important;
+    text-align: left;
+  }
+
+  .home-page[dir="rtl"] .home-cinematic-scroll::before,
+  .home-page[dir="rtl"] .home-cinematic-scroll::after {
+    flex: 0 0 auto;
+  }
+}
+
+/* Slightly tighter Arabic title on medium desktop widths,
+   while still keeping the animated word fully visible. */
+@media (min-width: 769px) and (max-width: 1100px) {
+  .home-page[dir="rtl"] .home-cinematic-hero-title {
+    font-size: clamp(42px, 5.8vw, 66px);
+  }
+
+  .home-page[dir="rtl"] .home-cinematic-scroll {
+    bottom: 58px !important;
+  }
+}
+
+/* Mobile: preserve enough room for Arabic letter shapes too. */
+@media (max-width: 768px) {
+  .home-page[dir="rtl"] .home-cinematic-hero-word-wrap {
+    min-height: 1.34em !important;
+    height: auto !important;
+    overflow: visible !important;
+    padding-top: 0.10em;
+    padding-bottom: 0.14em;
+  }
+
+  .home-page[dir="rtl"] .home-cinematic-hero-word {
+    line-height: 1.15 !important;
+    overflow: visible !important;
+  }
+}
+
+
+/* =========================================================
+   ARABIC HERO — lower "مرر" to the buttons band
+   RTL ONLY. English stays untouched.
+   ========================================================= */
+
+@media (min-width: 769px) {
+  .home-page[dir="rtl"] .home-cinematic-scroll {
+    bottom: 32px !important;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1100px) {
+  .home-page[dir="rtl"] .home-cinematic-scroll {
+    bottom: 28px !important;
+  }
+}
+
+
+/* =========================================================
+   ARABIC SMALL LABELS — stronger typed/reveal motion
+   RTL ONLY. English text effect stays exactly as-is.
+   ========================================================= */
+
+.home-page[dir="rtl"]
+  .home-small-text-effect.is-arabic-effect
+  .home-small-text-effect-piece {
+  opacity: 1;
+  filter: none;
+  transform: translateY(0.28em);
+
+  /* Keep Arabic glyphs connected while revealing the word progressively. */
+  clip-path: inset(0 0 0 100%);
+
+  transition:
+    clip-path 0.78s var(--text-effect-delay, 0ms)
+      steps(7, end),
+    transform 0.56s var(--text-effect-delay, 0ms)
+      cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.home-page[dir="rtl"]
+  .home-small-text-effect.is-arabic-effect.is-visible
+  .home-small-text-effect-piece {
+  clip-path: inset(0 0 0 0);
+  transform: translateY(0);
+}
+
+/* More breathing room between the Services title and Arabic description. */
+.home-page[dir="rtl"] .home-services-story-copy {
+  margin-top: 22px !important;
+}
+
+/* Keep the same spacing on Arabic tablet/mobile, without touching English. */
+@media (max-width: 768px) {
+  .home-page[dir="rtl"] .home-services-story-copy {
+    margin-top: 18px !important;
+    line-height: 1.75;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-page[dir="rtl"]
+    .home-small-text-effect.is-arabic-effect
+    .home-small-text-effect-piece {
+    clip-path: none !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
+
+
+/* =========================================================
+   TOP FIXERS — MOBILE ONLY
+   English + Arabic mobile/tablet layout.
+   Desktop/laptop styles are NOT touched.
+   ========================================================= */
+
+@media (min-width: 481px) and (max-width: 760px) {
+  /* Keep the four Fixers as a clean 2 × 2 mobile grid. */
+  .home-top-fixers-editorial-grid {
+    position: relative;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 0 !important;
+  }
+
+  /* Thin center divider between the two columns. */
+  .home-top-fixers-editorial-grid::after {
+    content: "";
+    position: absolute;
+    z-index: 12;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    width: 1px;
+    background: rgba(255, 255, 255, 0.13);
+    transform: translateX(-0.5px);
+    pointer-events: none;
+  }
+
+  /* Each technician stays compact inside its half. */
+  .home-top-fixer-editorial {
+    min-width: 0 !important;
+    min-height: 0 !important;
+    grid-template-columns: 1fr !important;
+    align-content: start;
+    overflow: hidden;
+  }
+
+  /* Top visual / placeholder. */
+  .home-top-fixer-visual,
+  html[dir="rtl"] .home-top-fixer-visual {
+    order: -1 !important;
+    width: auto !important;
+    min-height: 220px !important;
+    height: 220px !important;
+    margin: 12px 12px 0 !important;
+  }
+
+  .home-top-fixer-photo {
+    width: 100% !important;
+    height: 220px !important;
+    min-height: 220px !important;
+  }
+
+  .home-top-fixer-initials {
+    width: 82px !important;
+    height: 82px !important;
+    font-size: 24px !important;
+  }
+
+  .home-top-fixer-watermark {
+    font-size: 72px !important;
+    bottom: 10px !important;
+  }
+
+  /* Content spacing */
+  .home-top-fixer-content {
+    min-width: 0;
+    padding: 22px 22px 24px !important;
+  }
+
+  .home-top-fixer-name-row {
+    gap: 7px;
+  }
+
+  .home-top-fixer-name-row h3 {
+    min-width: 0;
+    font-size: clamp(20px, 4vw, 25px) !important;
+    line-height: 1.12 !important;
+    overflow-wrap: anywhere;
+  }
+
+  .home-top-fixer-specialty {
+    margin-top: 8px;
+    min-height: 2.7em;
+    font-size: 12px;
+    line-height: 1.45;
+  }
+
+  .home-top-fixer-details {
+    margin-top: 20px !important;
+    padding-top: 0 !important;
+    gap: 9px !important;
+  }
+
+  .home-top-fixer-detail {
+    grid-template-columns: minmax(64px, 0.72fr) minmax(0, 1.28fr) !important;
+    gap: 8px !important;
+  }
+
+  .home-top-fixer-detail > span {
+    font-size: 8.5px !important;
+    letter-spacing: 0.035em;
+  }
+
+  .home-top-fixer-detail strong {
+    min-width: 0;
+    font-size: 10.5px !important;
+    line-height: 1.35;
+    overflow-wrap: anywhere;
+  }
+
+  .home-top-fixer-profile {
+    min-height: 42px !important;
+    margin-top: 18px !important;
+    padding-inline: 14px !important;
+    font-size: 11px !important;
+  }
+
+  /* Arabic mobile typography only. */
+  html[dir="rtl"] .home-top-fixer-name-row h3,
+  html[dir="rtl"] .home-top-fixer-specialty,
+  html[dir="rtl"] .home-top-fixer-detail > span,
+  html[dir="rtl"] .home-top-fixer-detail strong,
+  html[dir="rtl"] .home-top-fixer-profile {
+    letter-spacing: 0 !important;
+  }
+
+  /* Keep a thin horizontal rule between row 1 and row 2. */
+  .home-top-fixer-editorial:nth-child(1)::after,
+  .home-top-fixer-editorial:nth-child(2)::after {
+    transform: scaleX(1) !important;
+    background: rgba(255, 255, 255, 0.13) !important;
+  }
+
+  /* Existing desktop divider pseudo-elements are disabled on mobile;
+     the grid center line above replaces them cleanly. */
+  .home-top-fixer-editorial:nth-child(odd)::before {
+    display: none !important;
+  }
+}
+
+/* Real narrow phones: one column is much more readable. */
+@media (max-width: 480px) {
+  .home-top-fixers-editorial-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .home-top-fixers-editorial-grid::after {
+    display: none !important;
+  }
+
+  .home-top-fixer-editorial {
+    grid-template-columns: 1fr !important;
+  }
+
+  .home-top-fixer-visual,
+  html[dir="rtl"] .home-top-fixer-visual {
+    order: -1 !important;
+    min-height: 210px !important;
+    height: 210px !important;
+    margin: 12px 12px 0 !important;
+  }
+
+  .home-top-fixer-photo {
+    height: 210px !important;
+    min-height: 210px !important;
+  }
+
+  .home-top-fixer-content {
+    padding: 22px 20px 24px !important;
+  }
+
+  .home-top-fixer-detail {
+    grid-template-columns: 92px minmax(0, 1fr) !important;
+  }
+
+  .home-top-fixer-name-row h3 {
+    font-size: 23px !important;
+  }
+}
+
+
+/* =========================================================
+   HOME AI PHOTO DROPDOWN — MOBILE ONLY / CLEAN FIX
+   Desktop + laptop remain untouched.
+   ========================================================= */
+
+@media (max-width: 760px) {
+  /* Keep the Photo button as the dropdown anchor. */
+  .home-services-ai-composer
+  .home-service-finder-photo-wrap {
+    position: relative !important;
+    z-index: 60 !important;
+  }
+
+  /* Small floating dropdown directly under Photo.
+     It does NOT stretch the white composer or cover the buttons. */
+  .home-services-ai-composer
+  .home-service-finder-menu {
+    position: absolute !important;
+
+    top: calc(100% + 8px) !important;
+    bottom: auto !important;
+
+    /* Logical positioning:
+       LTR -> left aligned to Photo
+       RTL -> right aligned to Photo */
+    inset-inline-start: 0 !important;
+    inset-inline-end: auto !important;
+
+    width: min(220px, calc(100vw - 76px)) !important;
+    max-width: 220px !important;
+
+    display: block !important;
+
+    padding: 7px !important;
+    overflow: hidden !important;
+
+    border-radius: 12px !important;
+    box-sizing: border-box !important;
+
+    background: #ffffff !important;
+    box-shadow: 0 14px 34px rgba(16, 45, 67, 0.16) !important;
+  }
+
+  /* Cancel older physical left/right RTL rules on mobile. */
+  html[dir="rtl"]
+    .home-services-ai-composer
+    .home-service-finder-menu {
+    left: auto !important;
+    right: 0 !important;
+  }
+
+  html[dir="ltr"]
+    .home-services-ai-composer
+    .home-service-finder-menu {
+    left: 0 !important;
+    right: auto !important;
+  }
+
+  .home-services-ai-composer
+  .home-service-finder-menu button {
+    width: 100% !important;
+    min-height: 42px !important;
+
+    justify-content: flex-start !important;
+    gap: 9px !important;
+
+    white-space: nowrap !important;
+  }
+
+  /* Create only the amount of room the dropdown actually needs.
+     No giant empty white area. */
+  .home-services-ai-composer:has(.home-service-finder-menu)
+  .home-service-finder-examples {
+    margin-top: 104px !important;
+  }
+}
+
+/* Very narrow phones: use nearly full composer width,
+   still anchored cleanly below the Photo button. */
+@media (max-width: 430px) {
+  .home-services-ai-composer
+  .home-service-finder-menu {
+    width: min(250px, calc(100vw - 64px)) !important;
+    max-width: none !important;
+  }
+}

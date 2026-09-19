@@ -1,0 +1,92 @@
+.fixer-beams {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  background:
+    linear-gradient(
+      135deg,
+      #f0f1ec 0%,
+      #e9efea 54%,
+      #f0efea 100%
+    );
+}
+
+.fixer-beams__canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.98;
+  filter: blur(7px);
+}
+
+.fixer-beams__wash {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.16),
+      rgba(255, 255, 255, 0.02) 45%,
+      rgba(16, 45, 67, 0.025)
+    );
+  backdrop-filter: blur(1px);
+  animation: fixerBeamsWash 9s ease-in-out infinite alternate;
+}
+
+@keyframes fixerBeamsWash {
+  from {
+    opacity: 0.58;
+  }
+
+  to {
+    opacity: 0.84;
+  }
+}
+
+@media (max-width: 768px) {
+  .fixer-beams {
+    background:
+      linear-gradient(
+        150deg,
+        #edf0eb 0%,
+        #e6ece7 56%,
+        #eeede8 100%
+      );
+  }
+
+  .fixer-beams__canvas {
+    opacity: 0.88;
+    filter: blur(9px);
+  }
+
+  .fixer-beams__wash {
+    background:
+      linear-gradient(
+        180deg,
+        rgba(255, 255, 255, 0.10),
+        rgba(255, 255, 255, 0.01) 44%,
+        rgba(16, 45, 67, 0.035)
+      );
+    opacity: 0.64;
+  }
+}
+
+@media (max-width: 480px) {
+  .fixer-beams__canvas {
+    opacity: 0.84;
+    filter: blur(10px);
+  }
+
+  .fixer-beams__wash {
+    opacity: 0.60;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fixer-beams__wash {
+    animation: none;
+  }
+}

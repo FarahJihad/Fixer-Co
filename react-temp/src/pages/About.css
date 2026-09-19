@@ -1389,3 +1389,774 @@
   background: #e0eee8 !important;
   color: #3d9276 !important;
 }
+
+/* =========================================================
+   HOW IT WORKS — SMALLER + LOWER CONTROLS
+   ========================================================= */
+
+.about-process-controls {
+  margin-top: 18px !important;
+  gap: 14px !important;
+  transform: translateY(12px);
+}
+
+.about-process-controls > button {
+  width: 42px !important;
+  height: 42px !important;
+  font-size: 16px !important;
+  border-width: 1px !important;
+}
+
+.about-process-dots {
+  gap: 7px !important;
+}
+
+.about-process-dots button {
+  width: 9px !important;
+  height: 9px !important;
+}
+
+.about-process-dots button.active {
+  width: 28px !important;
+}
+
+@media (max-width: 700px) {
+  .about-process-controls {
+    margin-top: 14px !important;
+    transform: translateY(8px);
+  }
+
+  .about-process-controls > button {
+    width: 38px !important;
+    height: 38px !important;
+    font-size: 14px !important;
+  }
+
+  .about-process-dots button {
+    width: 8px !important;
+    height: 8px !important;
+  }
+
+  .about-process-dots button.active {
+    width: 24px !important;
+  }
+}
+
+
+/* =========================================================
+   ABOUT — LAYERED TEXT HERO
+   Inspired by the layered 3D text interaction, adapted to
+   Fixer.Co's navy + green palette.
+   ONLY the About hero is affected.
+   ========================================================= */
+
+.about-layered-hero {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+
+  min-height: 690px;
+  padding: 70px 0 58px !important;
+
+  background:
+    radial-gradient(
+      circle at 16% 18%,
+      rgba(79, 175, 143, 0.13),
+      transparent 28%
+    ),
+    radial-gradient(
+      circle at 88% 76%,
+      rgba(23, 59, 87, 0.08),
+      transparent 34%
+    ),
+    linear-gradient(
+      135deg,
+      #f8faf9 0%,
+      #eef6f2 52%,
+      #e8f2ee 100%
+    ) !important;
+}
+
+.about-layered-hero::before,
+.about-layered-hero::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  pointer-events: none;
+  border-radius: 50%;
+  filter: blur(2px);
+}
+
+.about-layered-hero::before {
+  width: 360px;
+  height: 360px;
+  top: -160px;
+  right: -90px;
+  background:
+    radial-gradient(
+      circle,
+      rgba(79, 175, 143, 0.16),
+      rgba(79, 175, 143, 0)
+    );
+}
+
+.about-layered-hero::after {
+  width: 300px;
+  height: 300px;
+  left: -130px;
+  bottom: -150px;
+  background:
+    radial-gradient(
+      circle,
+      rgba(16, 45, 67, 0.09),
+      rgba(16, 45, 67, 0)
+    );
+}
+
+.about-layered-hero-grid {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+
+  opacity: 0.32;
+
+  background-image:
+    linear-gradient(
+      rgba(16, 45, 67, 0.055) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      90deg,
+      rgba(16, 45, 67, 0.055) 1px,
+      transparent 1px
+    );
+
+  background-size: 72px 72px;
+  mask-image:
+    linear-gradient(
+      to bottom,
+      transparent 0%,
+      #000 18%,
+      #000 82%,
+      transparent 100%
+    );
+}
+
+.about-layered-hero-inner {
+  position: relative;
+  min-height: 560px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.about-layered-hero-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.about-layered-hero-index {
+  color: rgba(16, 45, 67, 0.45);
+
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.about-page[dir="rtl"] .about-layered-hero-index {
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.about-layered-title-wrap {
+  position: relative;
+
+  width: 100%;
+  margin: 34px 0 42px;
+
+  display: grid;
+  place-items: center;
+
+  perspective: 1200px;
+}
+
+.about-layered-title {
+  position: relative;
+
+  width: min(100%, 1120px);
+  min-height: 245px;
+
+  display: grid;
+  place-items: center;
+
+  transform-style: preserve-3d;
+  transform:
+    rotateX(1.5deg)
+    rotateY(-2deg);
+
+  transition:
+    transform 0.75s
+      cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.about-page[dir="rtl"] .about-layered-title {
+  transform:
+    rotateX(1.5deg)
+    rotateY(2deg);
+}
+
+.about-layered-title-layer {
+  --about-layer: 0;
+
+  position: absolute;
+  inset: 0;
+
+  display: grid;
+  place-items: center;
+
+  padding-inline: 16px;
+
+  color:
+    rgba(
+      79,
+      175,
+      143,
+      calc(0.10 + var(--about-layer) * 0.075)
+    );
+
+  font-family:
+    "Plus Jakarta Sans",
+    "IBM Plex Sans Arabic",
+    sans-serif;
+
+  font-size:
+    clamp(92px, 12.5vw, 190px);
+
+  font-weight: 800;
+  line-height: 0.86;
+  letter-spacing: -0.075em;
+  text-align: center;
+  white-space: nowrap;
+
+  text-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.30);
+
+  transform:
+    translate3d(
+      calc(var(--about-layer) * 7px),
+      calc(var(--about-layer) * 7px),
+      calc(var(--about-layer) * -18px)
+    );
+
+  transition:
+    transform 0.78s
+      cubic-bezier(0.16, 1, 0.3, 1),
+    color 0.5s ease,
+    text-shadow 0.5s ease;
+
+  will-change: transform;
+}
+
+.about-layered-title-layer.is-front {
+  z-index: 6;
+
+  color: #102d43;
+
+  text-shadow:
+    0 8px 28px rgba(16, 45, 67, 0.08);
+}
+
+.about-layered-title:hover {
+  transform:
+    rotateX(3deg)
+    rotateY(-5deg)
+    translateY(-3px);
+}
+
+.about-page[dir="rtl"] .about-layered-title:hover {
+  transform:
+    rotateX(3deg)
+    rotateY(5deg)
+    translateY(-3px);
+}
+
+.about-layered-title:hover
+.about-layered-title-layer {
+  transform:
+    translate3d(
+      calc(var(--about-layer) * 11px),
+      calc(var(--about-layer) * 9px),
+      calc(var(--about-layer) * -26px)
+    );
+}
+
+.about-layered-title:hover
+.about-layered-title-layer.is-front {
+  text-shadow:
+    0 18px 42px rgba(16, 45, 67, 0.13);
+}
+
+.about-page[dir="rtl"]
+.about-layered-title-layer {
+  font-family:
+    "IBM Plex Sans Arabic",
+    sans-serif;
+
+  font-size:
+    clamp(82px, 11vw, 165px);
+
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0;
+
+  transform:
+    translate3d(
+      calc(var(--about-layer) * -7px),
+      calc(var(--about-layer) * 7px),
+      calc(var(--about-layer) * -18px)
+    );
+}
+
+.about-page[dir="rtl"]
+.about-layered-title:hover
+.about-layered-title-layer {
+  transform:
+    translate3d(
+      calc(var(--about-layer) * -11px),
+      calc(var(--about-layer) * 9px),
+      calc(var(--about-layer) * -26px)
+    );
+}
+
+.about-layered-hero-bottom {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 42px;
+
+  padding-top: 22px;
+
+  border-top:
+    1px solid
+    rgba(16, 45, 67, 0.11);
+}
+
+.about-layered-hero-copy {
+  max-width: 660px;
+  margin: 0;
+
+  color: #63747d;
+
+  font-size: 14px;
+  line-height: 1.8;
+}
+
+.about-layered-hero-notes {
+  flex: 0 0 auto;
+
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  color: rgba(16, 45, 67, 0.54);
+
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.about-layered-hero-notes i {
+  width: 20px;
+  height: 1px;
+
+  background:
+    rgba(61, 146, 118, 0.50);
+}
+
+.about-page[dir="rtl"]
+.about-layered-hero-notes {
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+/* Layer entrance — calm, not dramatic. */
+@keyframes aboutLayeredTitleIn {
+  from {
+    opacity: 0;
+    transform:
+      translate3d(
+        0,
+        26px,
+        -40px
+      )
+      scale(0.98);
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+.about-layered-title-layer {
+  animation:
+    aboutLayeredTitleIn
+    0.88s
+    cubic-bezier(0.16, 1, 0.3, 1)
+    both;
+
+  animation-delay:
+    calc(
+      90ms +
+      (4 - var(--about-layer)) * 70ms
+    );
+}
+
+/* =========================================================
+   ABOUT — SMALL LABEL EFFECT
+   Applied only to the small eyebrow labels.
+   ========================================================= */
+
+.about-small-text-effect {
+  display: inline-flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  white-space: pre-wrap;
+}
+
+.about-small-text-effect-piece {
+  display: inline-block;
+
+  opacity: 0;
+  transform: translateY(0.5em);
+  filter: blur(5px);
+
+  transition:
+    opacity 0.42s
+      var(--about-text-delay, 0ms)
+      cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.52s
+      var(--about-text-delay, 0ms)
+      cubic-bezier(0.16, 1, 0.3, 1),
+    filter 0.42s
+      var(--about-text-delay, 0ms)
+      cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.about-small-text-effect.is-visible
+.about-small-text-effect-piece {
+  opacity: 1;
+  transform: translateY(0);
+  filter: blur(0);
+}
+
+.about-small-text-effect-space {
+  display: inline-block;
+  width: 0.34em;
+}
+
+.about-page[dir="rtl"]
+.about-small-text-effect.is-arabic-effect
+.about-small-text-effect-piece {
+  opacity: 1;
+  filter: none;
+
+  transform: translateY(0.25em);
+  clip-path: inset(0 0 0 100%);
+
+  transition:
+    clip-path 0.78s
+      var(--about-text-delay, 0ms)
+      steps(7, end),
+    transform 0.56s
+      var(--about-text-delay, 0ms)
+      cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.about-page[dir="rtl"]
+.about-small-text-effect.is-arabic-effect.is-visible
+.about-small-text-effect-piece {
+  clip-path: inset(0);
+  transform: translateY(0);
+}
+
+/* =========================================================
+   ABOUT HERO — RESPONSIVE
+   Fixes the Arabic mobile hero only; other About sections
+   keep their existing responsive rules.
+   ========================================================= */
+
+@media (max-width: 900px) {
+  .about-layered-hero {
+    min-height: 620px;
+    padding: 56px 0 48px !important;
+  }
+
+  .about-layered-hero-inner {
+    min-height: 505px;
+  }
+
+  .about-layered-title-wrap {
+    margin:
+      38px 0
+      44px;
+  }
+
+  .about-layered-title {
+    min-height: 205px;
+  }
+
+  .about-layered-title-layer {
+    font-size:
+      clamp(74px, 14.5vw, 126px);
+  }
+
+  .about-page[dir="rtl"]
+  .about-layered-title-layer {
+    font-size:
+      clamp(70px, 13.5vw, 112px);
+  }
+
+  .about-layered-hero-bottom {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  .about-layered-hero-notes {
+    flex-wrap: wrap;
+    white-space: normal;
+  }
+}
+
+@media (max-width: 700px) {
+  .about-layered-hero {
+    min-height: auto;
+    padding:
+      42px 0
+      44px !important;
+  }
+
+  .about-layered-hero-inner {
+    min-height: auto;
+  }
+
+  .about-layered-hero-top {
+    gap: 16px;
+  }
+
+  .about-layered-hero-index {
+    font-size: 8.5px;
+  }
+
+  .about-layered-title-wrap {
+    margin:
+      44px 0
+      48px;
+
+    overflow: visible;
+  }
+
+  .about-layered-title {
+    width: 100%;
+    min-height: 150px;
+
+    transform: none !important;
+  }
+
+  .about-layered-title:hover {
+    transform: none !important;
+  }
+
+  .about-layered-title-layer {
+    padding-inline: 10px;
+
+    font-size:
+      clamp(54px, 16vw, 78px);
+
+    line-height: 0.92;
+    letter-spacing: -0.055em;
+
+    transform:
+      translate3d(
+        calc(var(--about-layer) * 4px),
+        calc(var(--about-layer) * 5px),
+        calc(var(--about-layer) * -10px)
+      ) !important;
+  }
+
+  .about-layered-title:hover
+  .about-layered-title-layer {
+    transform:
+      translate3d(
+        calc(var(--about-layer) * 4px),
+        calc(var(--about-layer) * 5px),
+        calc(var(--about-layer) * -10px)
+      ) !important;
+  }
+
+  /* Arabic mobile:
+     no clipping, no giant off-screen title, no sideways card-like overflow. */
+  .about-page[dir="rtl"]
+  .about-layered-title {
+    min-height: 160px;
+  }
+
+  .about-page[dir="rtl"]
+  .about-layered-title-layer {
+    width: 100%;
+
+    padding-inline: 14px;
+
+    font-size:
+      clamp(52px, 15.5vw, 72px);
+
+    line-height: 1.08;
+    letter-spacing: 0;
+
+    white-space: nowrap;
+
+    transform:
+      translate3d(
+        calc(var(--about-layer) * -4px),
+        calc(var(--about-layer) * 5px),
+        calc(var(--about-layer) * -10px)
+      ) !important;
+  }
+
+  .about-page[dir="rtl"]
+  .about-layered-title:hover
+  .about-layered-title-layer {
+    transform:
+      translate3d(
+        calc(var(--about-layer) * -4px),
+        calc(var(--about-layer) * 5px),
+        calc(var(--about-layer) * -10px)
+      ) !important;
+  }
+
+  .about-layered-hero-bottom {
+    padding-top: 18px;
+  }
+
+  .about-layered-hero-copy {
+    font-size: 12.5px;
+    line-height: 1.8;
+  }
+
+  .about-layered-hero-notes {
+    gap: 7px;
+
+    font-size: 8.5px;
+  }
+
+  .about-layered-hero-notes i {
+    width: 14px;
+  }
+
+  .about-layered-hero-grid {
+    background-size:
+      54px 54px;
+  }
+}
+
+@media (max-width: 430px) {
+  .about-layered-title-layer {
+    font-size:
+      clamp(46px, 15vw, 64px);
+  }
+
+  .about-page[dir="rtl"]
+  .about-layered-title-layer {
+    font-size:
+      clamp(46px, 14.5vw, 62px);
+  }
+
+  .about-layered-hero-index {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .about-layered-title-layer,
+  .about-small-text-effect-piece {
+    animation: none !important;
+    transition: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+    clip-path: none !important;
+  }
+}
+
+
+/* =========================================================
+   ABOUT — RTL PROCESS CAROUSEL CENTERING FIX ONLY
+   Fixes the Arabic "How it works" cards being pushed/clipped
+   to the left. No other About section is changed.
+   ========================================================= */
+
+.about-page[dir="rtl"] .about-process-orbit,
+.about-page[dir="rtl"] .about-process-card {
+  /* Use physical centering here.
+     inset-inline-start becomes "right" in RTL and was shifting
+     the whole carousel away from the center. */
+  inset-inline-start: auto !important;
+  left: 50% !important;
+  right: auto !important;
+}
+
+/* Keep the active card exactly centered. */
+.about-page[dir="rtl"] .about-process-card.is-active {
+  transform: translateX(-50%) scale(1) !important;
+}
+
+/* Keep the two side cards balanced around the centered card. */
+.about-page[dir="rtl"] .about-process-card.is-left {
+  transform:
+    translateX(calc(-50% + 305px))
+    translateY(18px)
+    rotate(6deg)
+    scale(.9) !important;
+}
+
+.about-page[dir="rtl"] .about-process-card.is-right {
+  transform:
+    translateX(calc(-50% - 305px))
+    translateY(18px)
+    rotate(-6deg)
+    scale(.9) !important;
+}
+
+@media (max-width: 960px) {
+  .about-page[dir="rtl"] .about-process-card.is-left {
+    transform:
+      translateX(calc(-50% + 210px))
+      translateY(18px)
+      rotate(5deg)
+      scale(.88) !important;
+  }
+
+  .about-page[dir="rtl"] .about-process-card.is-right {
+    transform:
+      translateX(calc(-50% - 210px))
+      translateY(18px)
+      rotate(-5deg)
+      scale(.88) !important;
+  }
+}
+
+@media (max-width: 700px) {
+  /* On phones show the active Arabic card cleanly in the center.
+     The side cards remain handled by the existing mobile rules. */
+  .about-page[dir="rtl"] .about-process-card.is-active {
+    left: 50% !important;
+    right: auto !important;
+    transform: translateX(-50%) scale(1) !important;
+  }
+}

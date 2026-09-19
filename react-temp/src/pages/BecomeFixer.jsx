@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useLanguage } from "../context/LanguageContext.jsx";
 import Footer from "../components/Footer.jsx";
@@ -107,6 +107,87 @@ const policyItems = [
   },
 ];
 
+
+function BecomeFixerSmallLabelEffect({ text }) {
+  const textRef = useRef(null);
+  const [isVisible, setIsVisible] = useState(false);
+
+  const isArabicText = /[\u0600-\u06FF]/.test(text);
+  const pieces = isArabicText
+    ? text.split(/(\s+)/)
+    : Array.from(text);
+
+  useEffect(() => {
+    const element = textRef.current;
+    if (!element) return undefined;
+
+    const prefersReducedMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)"
+    ).matches;
+
+    if (prefersReducedMotion) {
+      setIsVisible(true);
+      return undefined;
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) return;
+
+        setIsVisible(true);
+        observer.unobserve(element);
+      },
+      {
+        threshold: 0.45,
+        rootMargin: "0px 0px -6% 0px",
+      }
+    );
+
+    observer.observe(element);
+
+    return () => observer.disconnect();
+  }, [text]);
+
+  return (
+    <span
+      ref={textRef}
+      className={`bf-small-text-effect ${
+        isVisible ? "is-visible" : ""
+      } ${isArabicText ? "is-arabic-effect" : ""}`}
+      aria-label={text}
+    >
+      {pieces.map((piece, index) => {
+        if (piece.trim() === "") {
+          return (
+            <span
+              key={`space-${index}`}
+              className="bf-small-text-effect-space"
+              aria-hidden="true"
+            >
+              {" "}
+            </span>
+          );
+        }
+
+        return (
+          <span
+            key={`${piece}-${index}`}
+            className="bf-small-text-effect-piece"
+            aria-hidden="true"
+            style={{
+              "--bf-text-delay": `${
+                index * (isArabicText ? 80 : 36)
+              }ms`,
+            }}
+          >
+            {piece}
+          </span>
+        );
+      })}
+    </span>
+  );
+}
+
 function BecomeFixer() {
   const navigate = useNavigate();
   const { language, isArabic } = useLanguage();
@@ -136,8 +217,11 @@ function BecomeFixer() {
   const [messageType, setMessageType] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
+
   useEffect(() => {
-    const savedDraft = sessionStorage.getItem("fixerApplicationDraft");
+    const savedDraft = sessionStorage.getItem(
+      "fixerApplicationDraft"
+    );
 
     if (!savedDraft) return;
 
@@ -149,10 +233,18 @@ function BecomeFixer() {
         ...draft,
       }));
 
-      sessionStorage.removeItem("fixerApplicationDraft");
+      sessionStorage.removeItem(
+        "fixerApplicationDraft"
+      );
     } catch (error) {
-      console.error("Could not restore fixer application draft:", error);
-      sessionStorage.removeItem("fixerApplicationDraft");
+      console.error(
+        "Could not restore fixer application draft:",
+        error
+      );
+
+      sessionStorage.removeItem(
+        "fixerApplicationDraft"
+      );
     }
   }, []);
 
@@ -257,6 +349,7 @@ function BecomeFixer() {
       [name]: type === "checkbox" ? checked : value,
     }));
   }
+
 
   function saveFixerApplicationDraft() {
     sessionStorage.setItem(
@@ -375,8 +468,6 @@ function BecomeFixer() {
         bio: "",
         policy_accepted: false,
       });
-
-      sessionStorage.removeItem("fixerApplicationDraft");
     } catch (error) {
       console.error("Application error:", error);
       setMessage(error.message);
@@ -388,7 +479,12 @@ function BecomeFixer() {
 
   function handleLoginForApplication() {
     saveFixerApplicationDraft();
-    localStorage.setItem("redirectAfterLogin", "/become-fixer#fixerApplication");
+
+    localStorage.setItem(
+      "redirectAfterLogin",
+      "/become-fixer#fixerApplication"
+    );
+
     setShowLoginRequired(false);
     navigate("/login");
   }
@@ -406,7 +502,7 @@ function BecomeFixer() {
             data-fixer-reveal
           >
             <p className="bf-label">
-              {tr("FOR PROFESSIONALS", "للمحترفين")}
+              <BecomeFixerSmallLabelEffect text={tr("FOR PROFESSIONALS", "للمحترفين")} />
             </p>
 
             <h1>
@@ -450,7 +546,7 @@ function BecomeFixer() {
             style={{ "--bf-delay": "100ms" }}
           >
             <p className="bf-label">
-              {tr("ONE-TIME REGISTRATION", "تسجيل لمرة واحدة")}
+              <BecomeFixerSmallLabelEffect text={tr("ONE-TIME REGISTRATION", "تسجيل لمرة واحدة")} />
             </p>
 
             <div className="bf-hero-v2-price">
@@ -485,7 +581,7 @@ function BecomeFixer() {
             data-fixer-reveal
           >
             <p className="bf-label">
-              {tr("WHY FIXER.CO", "لماذا FIXER.CO")}
+              <BecomeFixerSmallLabelEffect text={tr("WHY FIXER.CO", "لماذا FIXER.CO")} />
             </p>
 
             <h2>
@@ -545,7 +641,7 @@ function BecomeFixer() {
 
             <div className="bf-motion-heading-content">
               <p className="bf-label">
-                {tr("HOW IT WORKS", "كيف تعمل")}
+                <BecomeFixerSmallLabelEffect text={tr("HOW IT WORKS", "كيف تعمل")} />
               </p>
 
               <h2>
@@ -608,10 +704,12 @@ function BecomeFixer() {
             data-fixer-reveal
           >
             <p className="bf-label">
-              {tr(
-                "PROFESSIONAL POLICY",
-                "سياسة المحترفين"
-              )}
+              <BecomeFixerSmallLabelEffect
+                text={tr(
+                  "PROFESSIONAL POLICY",
+                  "سياسة المحترفين"
+                )}
+              />
             </p>
 
             <h2>
@@ -670,10 +768,12 @@ function BecomeFixer() {
             data-fixer-reveal
           >
             <p className="bf-label">
-              {tr(
-                "YOUR APPLICATION",
-                "طلب الانضمام"
-              )}
+              <BecomeFixerSmallLabelEffect
+                text={tr(
+                  "YOUR APPLICATION",
+                  "طلب الانضمام"
+                )}
+              />
             </p>
 
             <h2 className="bf-ready-title">
@@ -726,7 +826,6 @@ function BecomeFixer() {
             style={{ "--bf-delay": "90ms" }}
           >
             <form onSubmit={handleSubmit}>
-              <fieldset>
               <div className="bf-form-grid-two">
                 <FormGroup label={tr("Full Name", "الاسم الكامل")}>
                   <input
@@ -938,7 +1037,6 @@ function BecomeFixer() {
                   {message}
                 </div>
               )}
-              </fieldset>
             </form>
           </div>
         </div>
@@ -985,8 +1083,8 @@ function BecomeFixer() {
 
             <p className="login-required-copy">
               {tr(
-                "Your application details are ready. Log in to continue, and we'll bring you right back here.",
-                "بيانات طلبك جاهزة. سجّل الدخول للمتابعة، وسنعيدك مباشرة إلى هنا."
+                "You can fill in the application as a guest, but you need an account before submitting it.",
+                "يمكنك تعبئة طلب الانضمام كضيف، لكن يجب تسجيل الدخول قبل إرساله."
               )}
             </p>
 
@@ -994,8 +1092,8 @@ function BecomeFixer() {
               <i className="fa-regular fa-circle-check"></i>
               <span>
                 {tr(
-                  "Your form details will be saved while you log in.",
-                  "سنحتفظ ببيانات النموذج أثناء تسجيل الدخول."
+                  "We'll bring you back here after login.",
+                  "سنعيدك إلى هنا بعد تسجيل الدخول."
                 )}
               </span>
             </div>

@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap");
 
 .request-page {
   --rq-navy: #173b57;
@@ -17,7 +17,7 @@
       #fbfcfc 100%
     );
   color: var(--rq-navy-dark);
-  font-family: "Manrope", sans-serif;
+  font-family: "Plus Jakarta Sans", "IBM Plex Sans Arabic", sans-serif;
 }
 
 .request-page *,
@@ -211,11 +211,81 @@
   gap: 18px;
 }
 
+.request-guest-gate {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 14px;
+  align-items: center;
+  margin-bottom: 20px;
+  padding: 16px;
+  border: 1px solid #cfe2da;
+  border-radius: 16px;
+  background: #edf7f3;
+}
+
+.request-guest-gate-icon {
+  display: grid;
+  width: 42px;
+  height: 42px;
+  place-items: center;
+  border-radius: 12px;
+  background: #173b57;
+  color: #fff;
+}
+
+.request-guest-gate strong {
+  display: block;
+  color: var(--rq-navy-dark);
+  font-size: 13px;
+}
+
+.request-guest-gate p {
+  margin: 4px 0 0;
+  color: var(--rq-muted);
+  font-size: 11px;
+  line-height: 1.55;
+}
+
+.request-guest-gate button {
+  min-height: 40px;
+  padding: 0 16px;
+  border: 0;
+  border-radius: 10px;
+  background: #173b57;
+  color: #fff;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.request-form-card form.is-guest-locked fieldset {
+  opacity: .48;
+  filter: grayscale(.18);
+}
+
+.request-form-card form.is-guest-locked input,
+.request-form-card form.is-guest-locked select,
+.request-form-card form.is-guest-locked textarea {
+  cursor: not-allowed;
+}
+
 .request-form-grid-two {
   display: grid;
   grid-template-columns:
     repeat(2, minmax(0, 1fr));
   gap: 16px;
+}
+
+@media (max-width: 620px) {
+  .request-guest-gate {
+    grid-template-columns: auto 1fr;
+  }
+
+  .request-guest-gate button {
+    grid-column: 1 / -1;
+    width: 100%;
+  }
 }
 
 .request-form-group label {
@@ -1582,5 +1652,99 @@
   .login-required-modal,
   .login-required-pulse {
     animation: none;
+  }
+}
+
+
+/* =========================================================
+   REQUEST — FONT ONLY + SMALL LABEL EFFECT ONLY
+   Existing page/form motions stay unchanged.
+   ========================================================= */
+
+.request-page,
+.request-page button,
+.request-page input,
+.request-page textarea,
+.request-page select {
+  font-family: "Plus Jakarta Sans", "IBM Plex Sans Arabic", sans-serif !important;
+}
+
+.request-page[dir="rtl"],
+.request-page[dir="rtl"] button,
+.request-page[dir="rtl"] input,
+.request-page[dir="rtl"] textarea,
+.request-page[dir="rtl"] select {
+  font-family: "IBM Plex Sans Arabic", sans-serif !important;
+}
+
+.request-page[dir="rtl"] .request-label,
+.request-page[dir="rtl"] .request-static-title,
+.request-page[dir="rtl"] .request-form-heading h2 {
+  letter-spacing: 0 !important;
+}
+
+.request-small-text-effect {
+  display: inline-flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  white-space: pre-wrap;
+}
+
+.request-small-text-effect-piece {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(0.5em);
+  filter: blur(5px);
+
+  transition:
+    opacity 0.42s var(--request-text-delay, 0ms)
+      cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.52s var(--request-text-delay, 0ms)
+      cubic-bezier(0.16, 1, 0.3, 1),
+    filter 0.42s var(--request-text-delay, 0ms)
+      cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.request-small-text-effect.is-visible
+.request-small-text-effect-piece {
+  opacity: 1;
+  transform: translateY(0);
+  filter: blur(0);
+}
+
+.request-small-text-effect-space {
+  display: inline-block;
+  width: 0.34em;
+}
+
+.request-page[dir="rtl"]
+.request-small-text-effect.is-arabic-effect
+.request-small-text-effect-piece {
+  opacity: 1;
+  filter: none;
+  transform: translateY(0.26em);
+  clip-path: inset(0 0 0 100%);
+
+  transition:
+    clip-path 0.78s var(--request-text-delay, 0ms)
+      steps(7, end),
+    transform 0.56s var(--request-text-delay, 0ms)
+      cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.request-page[dir="rtl"]
+.request-small-text-effect.is-arabic-effect.is-visible
+.request-small-text-effect-piece {
+  clip-path: inset(0);
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .request-small-text-effect-piece {
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+    clip-path: none !important;
+    transition: none !important;
   }
 }

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   useNavigate,
   useSearchParams,
@@ -6,6 +6,88 @@ import {
 import { useLanguage } from "../context/LanguageContext.jsx";
 import Footer from "../components/Footer.jsx";
 import "./Technicians.css";
+
+
+function TechSmallLabelEffect({
+  text,
+  className = "",
+}) {
+  const textRef = useRef(null);
+  const [isVisible, setIsVisible] = useState(false);
+
+  const isArabicText = /[\u0600-\u06FF]/.test(text);
+  const pieces = isArabicText ? text.split(/(\s+)/) : Array.from(text);
+
+  useEffect(() => {
+    const element = textRef.current;
+    if (!element) return undefined;
+
+    const prefersReducedMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)"
+    ).matches;
+
+    if (prefersReducedMotion) {
+      setIsVisible(true);
+      return undefined;
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) return;
+
+        setIsVisible(true);
+        observer.unobserve(element);
+      },
+      {
+        threshold: 0.5,
+        rootMargin: "0px 0px -6% 0px",
+      }
+    );
+
+    observer.observe(element);
+
+    return () => observer.disconnect();
+  }, [text]);
+
+  return (
+    <span
+      ref={textRef}
+      className={`tech-small-text-effect ${
+        isVisible ? "is-visible" : ""
+      } ${isArabicText ? "is-arabic-effect" : ""} ${className}`}
+      aria-label={text}
+    >
+      {pieces.map((piece, index) => {
+        if (piece.trim() === "") {
+          return (
+            <span
+              key={`space-${index}`}
+              className="tech-small-text-effect-space"
+              aria-hidden="true"
+            >
+              {" "}
+            </span>
+          );
+        }
+
+        return (
+          <span
+            key={`${piece}-${index}`}
+            className="tech-small-text-effect-piece"
+            aria-hidden="true"
+            style={{
+              "--tech-text-delay": `${
+                index * (isArabicText ? 70 : 34)
+              }ms`,
+            }}
+          >
+            {piece}
+          </span>
+        );
+      })}
+    </span>
+  );
+}
 
 function Technicians() {
   const navigate = useNavigate();
@@ -230,9 +312,16 @@ function Technicians() {
           window.innerHeight - 10 &&
         rect.bottom > 0
       ) {
-        element.classList.add(
-          "tech-show"
-        );
+        /*
+          Guarantee a visible entrance for elements that are already
+          inside the viewport when technician data finishes loading.
+          Two animation frames let the hidden state paint first.
+        */
+        window.requestAnimationFrame(() => {
+          window.requestAnimationFrame(() => {
+            element.classList.add("tech-show");
+          });
+        });
       } else {
         observer.observe(element);
       }
@@ -588,7 +677,9 @@ function Technicians() {
         <div className="tech-container tech-find-hero-v2__inner">
           <div className="tech-find-hero-v2__copy">
             <p className="tech-find-hero-v2__kicker">
-              {tr("FIND A FIXER", "ابحث عن فني")}
+              <TechSmallLabelEffect
+                text={tr("FIND A FIXER", "ابحث عن فني")}
+              />
             </p>
 
             <h1>
@@ -815,10 +906,12 @@ function Technicians() {
           >
             <div>
               <p className="tech-eyebrow">
-                {tr(
-                  "AVAILABLE PROFESSIONALS",
-                  "الفنيون المتاحون"
-                )}
+                <TechSmallLabelEffect
+                  text={tr(
+                    "AVAILABLE PROFESSIONALS",
+                    "الفنيون المتاحون"
+                  )}
+                />
               </p>
 
               <h2>
