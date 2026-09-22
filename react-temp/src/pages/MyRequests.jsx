@@ -1240,17 +1240,6 @@ function RequestGroupCard({
               isArabic={
                 isArabic
               }
-              canCancel={
-                Boolean(
-                  request.can_cancel &&
-                  category === "current" &&
-                  index ===
-                    items.length - 1
-                )
-              }
-              onCancel={
-                onCancel
-              }
               onReview={() =>
                 onReview(
                   item
@@ -1302,6 +1291,58 @@ function RequestGroupCard({
           </div>
         )}
 
+      {category === "current" && (
+        <div
+          className="mr-card-actions mr-card-item"
+          style={{
+            "--item-delay": "320ms",
+            marginTop: "18px",
+            justifyContent: request.can_cancel
+              ? "space-between"
+              : "flex-end",
+            alignItems: "center",
+            flexWrap: "wrap",
+            gap: "12px",
+          }}
+        >
+          {request.can_cancel && (
+            <button
+              type="button"
+              className="mr-secondary-action"
+              onClick={onCancel}
+              style={styles.cancelButton}
+            >
+              <i className="fa-regular fa-circle-xmark"></i>
+
+              {tr(
+                "Cancel Request",
+                "إلغاء الطلب"
+              )}
+            </button>
+          )}
+
+          <Link
+            to={`/track?request=${encodeURIComponent(
+              request.id
+            )}`}
+            className="mr-primary-action"
+          >
+            {tr(
+              "Track Request",
+              "تتبع الطلب"
+            )}
+
+            <i
+              className={`fa-solid ${
+                isArabic
+                  ? "fa-arrow-left"
+                  : "fa-arrow-right"
+              }`}
+            ></i>
+          </Link>
+        </div>
+      )}
+
     </article>
   );
 }
@@ -1317,8 +1358,6 @@ function ServiceItem({
   totalItems,
   language,
   isArabic,
-  canCancel,
-  onCancel,
   onReview,
 }) {
   const tr = (en, ar) =>
@@ -1621,64 +1660,18 @@ function ServiceItem({
         />
       )}
 
-      <div
-        className="mr-card-actions"
-        style={{
-          marginTop:
-            18,
-
-          justifyContent:
-            "space-between",
-
-          alignItems:
-            "center",
-
-          flexWrap:
-            "wrap",
-
-          gap:
-            "12px",
-        }}
-      >
-        {canCancel && (
-          <button
-            type="button"
-            className="mr-secondary-action"
-            onClick={
-              onCancel
-            }
-            style={
-              styles.cancelButton
-            }
-          >
-            <i className="fa-regular fa-circle-xmark"></i>
-
-            {tr(
-              "Cancel Request",
-              "إلغاء الطلب"
-            )}
-          </button>
-        )}
-
+      {(item.technician_id ||
+        (completed &&
+          !hasReview &&
+          item.can_review)) && (
         <div
+          className="mr-card-actions"
           style={{
-            display:
-              "flex",
-
-            alignItems:
-              "center",
-
-            justifyContent:
-              "flex-end",
-
-            flexWrap:
-              "wrap",
-
-            gap:
-              "10px",
-
-            marginInlineStart:
-              "auto",
+            marginTop: 18,
+            justifyContent: "flex-end",
+            alignItems: "center",
+            flexWrap: "wrap",
+            gap: "10px",
           }}
         >
           {item.technician_id && (
@@ -1693,38 +1686,13 @@ function ServiceItem({
             </Link>
           )}
 
-          {!completed &&
-            !cancelled && (
-              <Link
-                to={`/track?request=${encodeURIComponent(
-                  item.id
-                )}`}
-                className="mr-primary-action"
-              >
-                {tr(
-                  "Track Service",
-                  "تتبع الخدمة"
-                )}
-
-                <i
-                  className={`fa-solid ${
-                    isArabic
-                      ? "fa-arrow-left"
-                      : "fa-arrow-right"
-                  }`}
-                ></i>
-              </Link>
-            )}
-
           {completed &&
             !hasReview &&
             item.can_review && (
               <button
                 type="button"
                 className="mr-primary-action"
-                onClick={
-                  onReview
-                }
+                onClick={onReview}
               >
                 <i className="fa-regular fa-star"></i>
 
@@ -1735,7 +1703,7 @@ function ServiceItem({
               </button>
             )}
         </div>
-      </div>
+      )}
     </section>
   );
 }

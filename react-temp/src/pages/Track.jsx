@@ -25,7 +25,8 @@ function Track() {
 
   const requestId = searchParams.get("request");
 
-  const [request, setRequest] = useState(null);
+  const [requestGroup, setRequestGroup] = useState(null);
+  const [activeItemId, setActiveItemId] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [error, setError] = useState("");
@@ -54,14 +55,6 @@ function Track() {
           setIsRefreshing(true);
         }
 
-        /*
-          Track now uses the same grouped My Requests
-          source as the new request flow.
-
-          requestId is the service_request_items.id,
-          so Service 01 and Service 02 can be tracked
-          independently.
-        */
         const response = await fetch(
           "/api/my-requests",
           {
@@ -104,160 +97,222 @@ function Track() {
             ? data.requests
             : [];
 
-        let matchedGroup = null;
+        /*
+          Track now represents ONE request group.
+          The URL may contain the group id (new flow)
+          or a service item id (older links/navbar).
+          Both resolve to the same request group.
+        */
+        let matchedGroup =
+          groups.find(
+            (group) =>
+              String(group.id) ===
+              String(requestId)
+          ) || null;
+
         let matchedItem = null;
 
-        for (const group of groups) {
-          const items =
-            Array.isArray(group.items)
-              ? group.items
-              : [];
+        if (!matchedGroup) {
+          for (const group of groups) {
+            const items =
+              Array.isArray(group.items)
+                ? group.items
+                : [];
 
-          const foundItem =
-            items.find(
-              (item) =>
-                String(item.id) ===
-                String(requestId)
-            );
+            const foundItem =
+              items.find(
+                (item) =>
+                  String(item.id) ===
+                  String(requestId)
+              );
 
-          if (foundItem) {
-            matchedGroup = group;
-            matchedItem = foundItem;
-            break;
+            if (foundItem) {
+              matchedGroup = group;
+              matchedItem = foundItem;
+              break;
+            }
           }
         }
 
-        if (!matchedItem) {
+        if (!matchedGroup) {
           throw new Error(
             tr(
-              "This service request could not be found.",
-              "تعذر العثور على طلب الخدمة."
+              "This request could not be found.",
+              "تعذر العثور على هذا الطلب."
             )
           );
         }
 
-        /*
-          Shape the grouped item into the same object
-          the Track UI already expects, so the existing
-          design and Track.css stay untouched.
-        */
-        let nextRequest = {
-          ...matchedItem,
+        const rawItems =
+          Array.isArray(matchedGroup.items)
+            ? [...matchedGroup.items].sort(
+                (a, b) =>
+                  Number(a.slot_number || 99) -
+                  Number(b.slot_number || 99)
+              )
+            : [];
 
-          id:
-            matchedItem.id,
+        if (rawItems.length === 0) {
+          throw new Error(
+            tr(
+              "This request has no services to track.",
+              "لا توجد خدمات لتتبعها في هذا الطلب."
+            )
+          );
+        }
 
-          request_group_id:
-            matchedGroup?.id || null,
+        async function enrichItem(item) {
+          let nextItem = {
+            ...item,
 
-          reference_code:
-            matchedGroup?.reference_code || null,
+            request_group_id:
+              matchedGroup.id,
 
-          created_at:
-            matchedItem.created_at ||
-            matchedGroup?.created_at ||
-            null,
+            reference_code:
+              matchedGroup.reference_code || null,
 
-          starting_price:
-            matchedItem.technician_price ??
-            null,
+            created_at:
+              item.created_at ||
+              matchedGroup.created_at ||
+              null,
 
-          technician_location:
-            matchedItem.technician_location ??
-            null,
+            starting_price:
+              item.technician_price ??
+              null,
 
-          technician_latitude:
-            matchedItem.technician_latitude ??
-            null,
+            technician_location:
+              item.technician_location ??
+              null,
 
-          technician_longitude:
-            matchedItem.technician_longitude ??
-            null,
-        };
+            technician_latitude:
+              item.technician_latitude ??
+              null,
 
-        /*
-          My Requests intentionally returns only the data
-          needed for cards. For Track, enrich the selected
-          Fixer with profile fields such as coordinates.
-        */
-        if (matchedItem.technician_id) {
+            technician_longitude:
+              item.technician_longitude ??
+              null,
+          };
+
+          if (!item.technician_id) {
+            return nextItem;
+          }
+
           try {
             const fixerResponse =
               await fetch(
-                `/api/technicians/${matchedItem.technician_id}`,
+                `/api/technicians/${item.technician_id}`,
                 {
                   method: "GET",
                   credentials: "same-origin",
                 }
               );
 
-            if (fixerResponse.ok) {
-              const fixer =
-                await fixerResponse.json();
-
-              nextRequest = {
-                ...nextRequest,
-
-                technician_name:
-                  fixer.name ??
-                  nextRequest.technician_name,
-
-                technician_rating:
-                  fixer.rating ??
-                  nextRequest.technician_rating,
-
-                technician_location:
-                  fixer.location ??
-                  nextRequest.technician_location,
-
-                starting_price:
-                  fixer.starting_price ??
-                  fixer.price ??
-                  nextRequest.starting_price,
-
-                technician_latitude:
-                  fixer.latitude ??
-                  nextRequest.technician_latitude,
-
-                technician_longitude:
-                  fixer.longitude ??
-                  nextRequest.technician_longitude,
-
-                latitude:
-                  fixer.latitude ??
-                  nextRequest.latitude,
-
-                longitude:
-                  fixer.longitude ??
-                  nextRequest.longitude,
-              };
+            if (!fixerResponse.ok) {
+              return nextItem;
             }
+
+            const fixer =
+              await fixerResponse.json();
+
+            nextItem = {
+              ...nextItem,
+
+              technician_name:
+                fixer.name ??
+                nextItem.technician_name,
+
+              technician_rating:
+                fixer.rating ??
+                nextItem.technician_rating,
+
+              technician_location:
+                fixer.location ??
+                nextItem.technician_location,
+
+              starting_price:
+                fixer.starting_price ??
+                fixer.price ??
+                nextItem.starting_price,
+
+              technician_latitude:
+                fixer.latitude ??
+                nextItem.technician_latitude,
+
+              technician_longitude:
+                fixer.longitude ??
+                nextItem.technician_longitude,
+
+              latitude:
+                fixer.latitude ??
+                nextItem.latitude,
+
+              longitude:
+                fixer.longitude ??
+                nextItem.longitude,
+            };
           } catch (fixerError) {
-            /*
-              Tracking can still work without the optional
-              profile enrichment. The map/details simply use
-              whatever data is already available.
-            */
             console.warn(
               "Could not enrich Track with Fixer profile:",
               fixerError
             );
           }
+
+          return nextItem;
         }
 
-        setRequest(nextRequest);
+        const enrichedItems =
+          await Promise.all(
+            rawItems.map(enrichItem)
+          );
+
+        const nextGroup = {
+          ...matchedGroup,
+          items: enrichedItems,
+        };
+
+        setRequestGroup(nextGroup);
+
+        setActiveItemId(
+          (currentId) => {
+            if (
+              currentId &&
+              enrichedItems.some(
+                (item) =>
+                  String(item.id) ===
+                  String(currentId)
+              )
+            ) {
+              return currentId;
+            }
+
+            const preferredItem =
+              matchedItem
+                ? enrichedItems.find(
+                    (item) =>
+                      String(item.id) ===
+                      String(matchedItem.id)
+                  )
+                : null;
+
+            return (
+              preferredItem?.id ||
+              enrichedItems[0].id
+            );
+          }
+        );
+
         setError("");
       } catch (error) {
         console.error(
-          "Track Service error:",
+          "Track Request error:",
           error
         );
 
         setError(
           error.message ||
             tr(
-              "Unable to load your service request.",
-              "تعذر تحميل طلب الخدمة الخاص بك."
+              "Unable to load your request.",
+              "تعذر تحميل طلبك."
             )
         );
       } finally {
@@ -271,6 +326,25 @@ function Track() {
   useEffect(() => {
     loadRequest();
   }, [loadRequest]);
+
+  const request = useMemo(() => {
+    const items =
+      Array.isArray(requestGroup?.items)
+        ? requestGroup.items
+        : [];
+
+    if (items.length === 0) {
+      return null;
+    }
+
+    return (
+      items.find(
+        (item) =>
+          String(item.id) ===
+          String(activeItemId)
+      ) || items[0]
+    );
+  }, [requestGroup, activeItemId]);
 
   useEffect(() => {
     if (!request || !mapRef.current) {
@@ -384,7 +458,7 @@ function Track() {
     );
 
     return () => observer.disconnect();
-  }, [request, language]);
+  }, [requestGroup, activeItemId, language]);
 
   const status = useMemo(
     () =>
@@ -419,8 +493,8 @@ function Track() {
 
           <strong>
             {tr(
-              "Loading your service...",
-              "جارٍ تحميل الخدمة..."
+              "Loading your request...",
+              "جارٍ تحميل الطلب..."
             )}
           </strong>
 
@@ -511,8 +585,8 @@ function Track() {
               <div>
                 <p className="track-eyebrow">
                   {tr(
-                    "SERVICE TRACKING",
-                    "تتبع الخدمة"
+                    "REQUEST TRACKING",
+                    "تتبع الطلب"
                   )}
                 </p>
 
@@ -616,6 +690,174 @@ function Track() {
       {/* CONTENT */}
       <section className="track-content">
         <div className="track-container track-content-inner">
+          {requestGroup?.items?.length > 1 && (
+            <section
+              className="track-card track-reveal"
+              data-track-reveal
+              style={{
+                padding: "22px",
+              }}
+            >
+              <span className="track-small-label accent">
+                {tr(
+                  "SERVICES IN THIS REQUEST",
+                  "الخدمات ضمن هذا الطلب"
+                )}
+              </span>
+
+              <h2 style={{ marginTop: "8px" }}>
+                {tr(
+                  "Choose a service to view its live progress.",
+                  "اختر خدمة لعرض تقدمها الحالي."
+                )}
+              </h2>
+
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns:
+                    "repeat(auto-fit, minmax(230px, 1fr))",
+                  gap: "12px",
+                  marginTop: "18px",
+                }}
+              >
+                {requestGroup.items.map(
+                  (item, index) => {
+                    const active =
+                      String(item.id) ===
+                      String(request.id);
+
+                    const itemStatus =
+                      normalizeStatus(
+                        item.status
+                      );
+
+                    const itemState =
+                      getTrackState(
+                        itemStatus,
+                        item,
+                        language
+                      );
+
+                    return (
+                      <button
+                        key={item.id}
+                        type="button"
+                        onClick={() => {
+                          setActiveItemId(
+                            item.id
+                          );
+                          setSelectedStage(null);
+                          setDetailsOpen(true);
+                        }}
+                        aria-pressed={active}
+                        style={{
+                          width: "100%",
+                          border: active
+                            ? "1.5px solid #4faf8f"
+                            : "1px solid #dde7e3",
+                          borderRadius: "16px",
+                          background: active
+                            ? "#edf7f3"
+                            : "#ffffff",
+                          padding: "16px",
+                          textAlign:
+                            isArabic
+                              ? "right"
+                              : "left",
+                          cursor: "pointer",
+                          boxShadow: active
+                            ? "0 12px 30px rgba(79,175,143,0.12)"
+                            : "none",
+                          transition:
+                            "all 0.25s ease",
+                        }}
+                      >
+                        <div
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent:
+                              "space-between",
+                            gap: "12px",
+                          }}
+                        >
+                          <span
+                            style={{
+                              fontSize: "11px",
+                              fontWeight: 800,
+                              letterSpacing:
+                                "0.8px",
+                              color: active
+                                ? "#3d9276"
+                                : "#809097",
+                              textTransform:
+                                "uppercase",
+                            }}
+                          >
+                            {tr(
+                              `Service ${String(
+                                index + 1
+                              ).padStart(2, "0")}`,
+                              `الخدمة ${String(
+                                index + 1
+                              ).padStart(2, "0")}`
+                            )}
+                          </span>
+
+                          <span
+                            style={{
+                              fontSize: "11px",
+                              fontWeight: 800,
+                              color: active
+                                ? "#173b57"
+                                : "#66757f",
+                            }}
+                          >
+                            {itemState.statusLabel}
+                          </span>
+                        </div>
+
+                        <strong
+                          style={{
+                            display: "block",
+                            marginTop: "10px",
+                            color: "#173b57",
+                            fontSize: "16px",
+                          }}
+                        >
+                          {translateServiceName(
+                            item.service_name ||
+                              tr(
+                                "Service Request",
+                                "طلب خدمة"
+                              ),
+                            language
+                          )}
+                        </strong>
+
+                        <span
+                          style={{
+                            display: "block",
+                            marginTop: "7px",
+                            color: "#66757f",
+                            fontSize: "12px",
+                          }}
+                        >
+                          {item.technician_name ||
+                            tr(
+                              "Fixer pending",
+                              "بانتظار تعيين الفني"
+                            )}
+                        </span>
+                      </button>
+                    );
+                  }
+                )}
+              </div>
+            </section>
+          )}
+
           <section
             className="track-next-card track-reveal"
             data-track-reveal
