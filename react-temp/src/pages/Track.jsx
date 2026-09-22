@@ -54,8 +54,16 @@ function Track() {
           setIsRefreshing(true);
         }
 
+        /*
+          Track now uses the same grouped My Requests
+          source as the new request flow.
+
+          requestId is the service_request_items.id,
+          so Service 01 and Service 02 can be tracked
+          independently.
+        */
         const response = await fetch(
-          `/api/requests/${requestId}`,
+          "/api/my-requests",
           {
             method: "GET",
             credentials: "same-origin",
@@ -79,8 +87,7 @@ function Track() {
 
         if (
           !response.ok ||
-          !data.success ||
-          !data.request
+          !data.success
         ) {
           throw new Error(
             data.message ||
@@ -92,7 +99,153 @@ function Track() {
           );
         }
 
-        setRequest(data.request);
+        const groups =
+          Array.isArray(data.requests)
+            ? data.requests
+            : [];
+
+        let matchedGroup = null;
+        let matchedItem = null;
+
+        for (const group of groups) {
+          const items =
+            Array.isArray(group.items)
+              ? group.items
+              : [];
+
+          const foundItem =
+            items.find(
+              (item) =>
+                String(item.id) ===
+                String(requestId)
+            );
+
+          if (foundItem) {
+            matchedGroup = group;
+            matchedItem = foundItem;
+            break;
+          }
+        }
+
+        if (!matchedItem) {
+          throw new Error(
+            tr(
+              "This service request could not be found.",
+              "تعذر العثور على طلب الخدمة."
+            )
+          );
+        }
+
+        /*
+          Shape the grouped item into the same object
+          the Track UI already expects, so the existing
+          design and Track.css stay untouched.
+        */
+        let nextRequest = {
+          ...matchedItem,
+
+          id:
+            matchedItem.id,
+
+          request_group_id:
+            matchedGroup?.id || null,
+
+          reference_code:
+            matchedGroup?.reference_code || null,
+
+          created_at:
+            matchedItem.created_at ||
+            matchedGroup?.created_at ||
+            null,
+
+          starting_price:
+            matchedItem.technician_price ??
+            null,
+
+          technician_location:
+            matchedItem.technician_location ??
+            null,
+
+          technician_latitude:
+            matchedItem.technician_latitude ??
+            null,
+
+          technician_longitude:
+            matchedItem.technician_longitude ??
+            null,
+        };
+
+        /*
+          My Requests intentionally returns only the data
+          needed for cards. For Track, enrich the selected
+          Fixer with profile fields such as coordinates.
+        */
+        if (matchedItem.technician_id) {
+          try {
+            const fixerResponse =
+              await fetch(
+                `/api/technicians/${matchedItem.technician_id}`,
+                {
+                  method: "GET",
+                  credentials: "same-origin",
+                }
+              );
+
+            if (fixerResponse.ok) {
+              const fixer =
+                await fixerResponse.json();
+
+              nextRequest = {
+                ...nextRequest,
+
+                technician_name:
+                  fixer.name ??
+                  nextRequest.technician_name,
+
+                technician_rating:
+                  fixer.rating ??
+                  nextRequest.technician_rating,
+
+                technician_location:
+                  fixer.location ??
+                  nextRequest.technician_location,
+
+                starting_price:
+                  fixer.starting_price ??
+                  fixer.price ??
+                  nextRequest.starting_price,
+
+                technician_latitude:
+                  fixer.latitude ??
+                  nextRequest.technician_latitude,
+
+                technician_longitude:
+                  fixer.longitude ??
+                  nextRequest.technician_longitude,
+
+                latitude:
+                  fixer.latitude ??
+                  nextRequest.latitude,
+
+                longitude:
+                  fixer.longitude ??
+                  nextRequest.longitude,
+              };
+            }
+          } catch (fixerError) {
+            /*
+              Tracking can still work without the optional
+              profile enrichment. The map/details simply use
+              whatever data is already available.
+            */
+            console.warn(
+              "Could not enrich Track with Fixer profile:",
+              fixerError
+            );
+          }
+        }
+
+        setRequest(nextRequest);
         setError("");
       } catch (error) {
         console.error(
@@ -796,12 +949,12 @@ function Track() {
 
               {request.technician_id && (
                 <Link
-                  to={`/technicians/${request.technician_id}#reviews`}
+                  to="/my-requests"
                   className="track-primary-link"
                 >
                   {tr(
-                    "Leave a Review",
-                    "أضف تقييمًا"
+                    "Rate in My Requests",
+                    "قيّم من طلباتي"
                   )}
                 </Link>
               )}
