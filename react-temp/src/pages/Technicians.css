@@ -2278,3 +2278,80 @@ body:has(.technicians-page) {
 .technicians-page .tech-card-reveal.tech-show:hover {
   transform: translateY(-6px) scale(1) !important;
 }
+
+
+/* =========================================================
+   FIND A FIXER — REQUEST SELECTION MODE
+   ========================================================= */
+
+.tech-request-selection-note {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 22px;
+  margin-bottom: 16px;
+  padding: 15px 17px;
+  border: 1px solid #d9e8e2;
+  border-radius: 15px;
+  background: #f2f8f5;
+}
+
+.tech-request-selection-note > div {
+  min-width: 0;
+  display: grid;
+  gap: 5px;
+}
+
+.tech-request-selection-note span {
+  color: var(--tech-green-dark);
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+
+.tech-request-selection-note strong {
+  color: var(--tech-navy-dark);
+  font-size: 12px;
+  font-weight: 650;
+  line-height: 1.55;
+}
+
+.tech-request-selection-note button {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 38px;
+  border: 1px solid #cfddd8;
+  border-radius: 10px;
+  background: #fff;
+  padding: 0 12px;
+  color: var(--tech-navy);
+  font: inherit;
+  font-size: 10px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.tech-filter-group select:disabled {
+  opacity: .72;
+  cursor: not-allowed;
+}
+
+.technicians-page[dir="rtl"]
+.tech-request-selection-note span {
+  letter-spacing: 0;
+}
+
+@media (max-width: 620px) {
+  .tech-request-selection-note {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .tech-request-selection-note button {
+    width: 100%;
+    justify-content: center;
+  }
+}

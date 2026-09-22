@@ -99,6 +99,15 @@ function Technicians() {
   const tr = (en, ar) =>
     language === "ar" ? ar : en;
 
+  const chooseFor =
+    searchParams.get("chooseFor");
+
+  const requestSlot =
+    searchParams.get("slot") || "1";
+
+  const isRequestSelection =
+    chooseFor === "request";
+
   const [services, setServices] = useState([]);
   const [technicians, setTechnicians] =
     useState([]);
@@ -627,7 +636,6 @@ function Technicians() {
   ========================= */
 
   function clearFilters() {
-    setServiceFilter("");
     setAvailabilityFilter("");
     setSortFilter(
       "recommended"
@@ -638,6 +646,32 @@ function Technicians() {
     setLocationStatus("");
     setLocationStatusType("");
 
+    if (isRequestSelection) {
+      const nextParams =
+        new URLSearchParams();
+
+      if (serviceFilter) {
+        nextParams.set(
+          "service",
+          serviceFilter
+        );
+      }
+
+      nextParams.set(
+        "chooseFor",
+        "request"
+      );
+
+      nextParams.set(
+        "slot",
+        requestSlot
+      );
+
+      setSearchParams(nextParams);
+      return;
+    }
+
+    setServiceFilter("");
     setSearchParams({});
   }
 
@@ -648,20 +682,48 @@ function Technicians() {
   function openProfile(
     technicianId
   ) {
-    let url =
-      `/technicians/${technicianId}`;
+    const query =
+      new URLSearchParams();
 
     if (customerLocation) {
-      url +=
-        `?lat=${encodeURIComponent(
-          customerLocation.latitude
-        )}` +
-        `&lng=${encodeURIComponent(
-          customerLocation.longitude
-        )}`;
+      query.set(
+        "lat",
+        customerLocation.latitude
+      );
+
+      query.set(
+        "lng",
+        customerLocation.longitude
+      );
     }
 
-    navigate(url);
+    if (serviceFilter) {
+      query.set(
+        "service",
+        serviceFilter
+      );
+    }
+
+    if (isRequestSelection) {
+      query.set(
+        "chooseFor",
+        "request"
+      );
+
+      query.set(
+        "slot",
+        requestSlot
+      );
+    }
+
+    const suffix =
+      query.toString()
+        ? `?${query.toString()}`
+        : "";
+
+    navigate(
+      `/technicians/${technicianId}${suffix}`
+    );
   }
 
   return (
@@ -709,6 +771,48 @@ function Technicians() {
       <section className="tech-main-section tech-page-enter tech-page-enter-delay">
         <div className="tech-container">
 
+          {isRequestSelection && (
+            <div
+              className="tech-request-selection-note tech-reveal"
+              data-technician-reveal
+            >
+              <div>
+                <span>
+                  {tr(
+                    `CHOOSING FOR SERVICE 0${requestSlot}`,
+                    `اختيار فني للخدمة 0${requestSlot}`
+                  )}
+                </span>
+
+                <strong>
+                  {tr(
+                    "Compare the fixers below, open any profile, then choose the one you want.",
+                    "قارن الفنيين أدناه، افتح الملف الذي تريده، ثم اختر الفني المناسب."
+                  )}
+                </strong>
+              </div>
+
+              <button
+                type="button"
+                onClick={() =>
+                  navigate("/request")
+                }
+              >
+                <i
+                  className={`fa-solid ${
+                    isArabic
+                      ? "fa-arrow-right"
+                      : "fa-arrow-left"
+                  }`}
+                ></i>
+                {tr(
+                  "Back to Request",
+                  "العودة للطلب"
+                )}
+              </button>
+            </div>
+          )}
+
           {/* FILTERS */}
           <div
             className="tech-filter-panel tech-reveal"
@@ -724,6 +828,9 @@ function Technicians() {
                 value={serviceFilter}
                 onChange={
                   handleServiceChange
+                }
+                disabled={
+                  isRequestSelection
                 }
               >
                 <option value="">

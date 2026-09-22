@@ -23,6 +23,18 @@ function Profile() {
   const latitude = searchParams.get("lat");
   const longitude = searchParams.get("lng");
 
+  const chooseFor =
+    searchParams.get("chooseFor");
+
+  const requestSlot =
+    searchParams.get("slot") || "1";
+
+  const selectedServiceFromRequest =
+    searchParams.get("service");
+
+  const isRequestSelection =
+    chooseFor === "request";
+
   useEffect(() => {
     async function loadTechnician() {
       try {
@@ -109,6 +121,25 @@ function Profile() {
       query.set("lng", longitude);
     }
 
+    if (selectedServiceFromRequest) {
+      query.set(
+        "service",
+        selectedServiceFromRequest
+      );
+    }
+
+    if (isRequestSelection) {
+      query.set(
+        "chooseFor",
+        "request"
+      );
+
+      query.set(
+        "slot",
+        requestSlot
+      );
+    }
+
     navigate(
       query.toString()
         ? `/technicians?${query.toString()}`
@@ -119,16 +150,72 @@ function Profile() {
   function requestService() {
     if (!technician) return;
 
+    if (isRequestSelection) {
+      let draft = {};
+
+      try {
+        draft = JSON.parse(
+          sessionStorage.getItem(
+            "requestDraft"
+          ) || "{}"
+        );
+      } catch (error) {
+        console.error(
+          "Could not read request draft:",
+          error
+        );
+      }
+
+      if (requestSlot === "2") {
+        draft = {
+          ...draft,
+          secondServiceEnabled: true,
+          secondServiceId:
+            String(
+              technician.service_id
+            ),
+          secondTechnicianId:
+            String(technician.id),
+        };
+      } else {
+        draft = {
+          ...draft,
+          serviceId:
+            String(
+              technician.service_id
+            ),
+          technicianId:
+            String(technician.id),
+        };
+      }
+
+      sessionStorage.setItem(
+        "requestDraft",
+        JSON.stringify(draft)
+      );
+
+      navigate("/request");
+      return;
+    }
+
     const query = new URLSearchParams();
-    query.set("technician", technician.id);
-    query.set("service", technician.service_id);
+    query.set(
+      "technician",
+      technician.id
+    );
+    query.set(
+      "service",
+      technician.service_id
+    );
 
     if (latitude && longitude) {
       query.set("lat", latitude);
       query.set("lng", longitude);
     }
 
-    navigate(`/request?${query.toString()}`);
+    navigate(
+      `/request?${query.toString()}`
+    );
   }
 
   const isAvailable = Number(technician?.available) === 1;
@@ -248,10 +335,15 @@ function Profile() {
                     onClick={requestService}
                     className="profile-request-button"
                   >
-                    {tr(
-                      "Request This Fixer",
-                      "اطلب هذا الفني"
-                    )}
+                    {isRequestSelection
+                      ? tr(
+                          `Choose for Service 0${requestSlot}`,
+                          `اختيار للخدمة 0${requestSlot}`
+                        )
+                      : tr(
+                          "Request This Fixer",
+                          "اطلب هذا الفني"
+                        )}
                   </button>
                 </aside>
 
@@ -401,17 +493,27 @@ function Profile() {
               >
                 <div>
                   <p className="profile-cta-kicker">
-                    {tr(
-                      "NEED THIS SERVICE?",
-                      "تحتاج هذه الخدمة؟"
-                    )}
+                    {isRequestSelection
+                      ? tr(
+                          `SELECTING FOR SERVICE 0${requestSlot}`,
+                          `اختيار فني للخدمة 0${requestSlot}`
+                        )
+                      : tr(
+                          "NEED THIS SERVICE?",
+                          "تحتاج هذه الخدمة؟"
+                        )}
                   </p>
 
                   <h2>
-                    {tr(
-                      `Request ${technician.name}`,
-                      `اطلب خدمة ${technician.name}`
-                    )}
+                    {isRequestSelection
+                      ? tr(
+                          `Choose ${technician.name}`,
+                          `اختر ${technician.name}`
+                        )
+                      : tr(
+                          `Request ${technician.name}`,
+                          `اطلب خدمة ${technician.name}`
+                        )}
                   </h2>
                 </div>
 
@@ -420,10 +522,15 @@ function Profile() {
                   onClick={requestService}
                   className="profile-cta-button"
                 >
-                  {tr(
-                    "Continue to Request",
-                    "متابعة الطلب"
-                  )}
+                  {isRequestSelection
+                    ? tr(
+                        `Choose for Service 0${requestSlot}`,
+                        `اختيار للخدمة 0${requestSlot}`
+                      )
+                    : tr(
+                        "Continue to Request",
+                        "متابعة الطلب"
+                      )}
                 </button>
               </section>
             </>
