@@ -258,19 +258,86 @@ function Navbar() {
         );
       }
 
-      if (
-        !data.requests ||
-        data.requests.length === 0
-      ) {
+      const requestGroups =
+        Array.isArray(data.requests)
+          ? data.requests
+          : [];
+
+      if (requestGroups.length === 0) {
         navigate("/my-requests");
         return;
       }
 
-      const latestRequest =
-        data.requests[0];
+      /*
+        Track Service should open the user's
+        first service inside the newest CURRENT
+        request group.
+
+        The new API returns grouped requests:
+        request group -> items (Service 01/02).
+
+        Track.jsx expects the service item ID,
+        not the request group ID.
+      */
+      const currentRequest =
+        requestGroups.find((request) => {
+          const items =
+            Array.isArray(request.items)
+              ? request.items
+              : [];
+
+          if (items.length === 0) {
+            return false;
+          }
+
+          if (request.category === "current") {
+            return true;
+          }
+
+          /*
+            Compatibility fallback in case an
+            older API response does not include
+            the computed category.
+          */
+          return items.some((item) => {
+            const status = String(
+              item.status || "requested"
+            )
+              .trim()
+              .toLowerCase()
+              .replaceAll(" ", "_");
+
+            return (
+              status !== "completed" &&
+              status !== "cancelled"
+            );
+          });
+        });
+
+      if (!currentRequest) {
+        navigate("/my-requests");
+        return;
+      }
+
+      const orderedItems =
+        [...currentRequest.items].sort(
+          (a, b) =>
+            Number(a.slot_number || 99) -
+            Number(b.slot_number || 99)
+        );
+
+      const firstService =
+        orderedItems[0];
+
+      if (!firstService?.id) {
+        navigate("/my-requests");
+        return;
+      }
 
       navigate(
-        `/track?request=${latestRequest.id}`
+        `/track?request=${encodeURIComponent(
+          firstService.id
+        )}`
       );
     } catch (error) {
       console.error(
