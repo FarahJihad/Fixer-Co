@@ -1240,6 +1240,17 @@ function RequestGroupCard({
               isArabic={
                 isArabic
               }
+              canCancel={
+                Boolean(
+                  request.can_cancel &&
+                  category === "current" &&
+                  index ===
+                    items.length - 1
+                )
+              }
+              onCancel={
+                onCancel
+              }
               onReview={() =>
                 onReview(
                   item
@@ -1291,35 +1302,6 @@ function RequestGroupCard({
           </div>
         )}
 
-      {request.can_cancel &&
-        category ===
-          "current" && (
-          <div
-            className="mr-card-actions mr-card-item"
-            style={{
-              "--item-delay":
-                "320ms",
-            }}
-          >
-            <button
-              type="button"
-              className="mr-secondary-action"
-              onClick={
-                onCancel
-              }
-              style={
-                styles.cancelButton
-              }
-            >
-              <i className="fa-regular fa-circle-xmark"></i>
-
-              {tr(
-                "Cancel Request",
-                "إلغاء الطلب"
-              )}
-            </button>
-          </div>
-        )}
     </article>
   );
 }
@@ -1335,6 +1317,8 @@ function ServiceItem({
   totalItems,
   language,
   isArabic,
+  canCancel,
+  onCancel,
   onReview,
 }) {
   const tr = (en, ar) =>
@@ -1642,61 +1626,115 @@ function ServiceItem({
         style={{
           marginTop:
             18,
+
+          justifyContent:
+            "space-between",
+
+          alignItems:
+            "center",
+
+          flexWrap:
+            "wrap",
+
+          gap:
+            "12px",
         }}
       >
-        {item.technician_id && (
-          <Link
-            to={`/technicians/${item.technician_id}`}
+        {canCancel && (
+          <button
+            type="button"
             className="mr-secondary-action"
+            onClick={
+              onCancel
+            }
+            style={
+              styles.cancelButton
+            }
           >
+            <i className="fa-regular fa-circle-xmark"></i>
+
             {tr(
-              "View Fixer",
-              "عرض الفني"
+              "Cancel Request",
+              "إلغاء الطلب"
             )}
-          </Link>
+          </button>
         )}
 
-        {!completed &&
-          !cancelled && (
+        <div
+          style={{
+            display:
+              "flex",
+
+            alignItems:
+              "center",
+
+            justifyContent:
+              "flex-end",
+
+            flexWrap:
+              "wrap",
+
+            gap:
+              "10px",
+
+            marginInlineStart:
+              "auto",
+          }}
+        >
+          {item.technician_id && (
             <Link
-              to={`/track?request=${encodeURIComponent(
-                item.id
-              )}`}
-              className="mr-primary-action"
+              to={`/technicians/${item.technician_id}`}
+              className="mr-secondary-action"
             >
               {tr(
-                "Track Service",
-                "تتبع الخدمة"
+                "View Fixer",
+                "عرض الفني"
               )}
-
-              <i
-                className={`fa-solid ${
-                  isArabic
-                    ? "fa-arrow-left"
-                    : "fa-arrow-right"
-                }`}
-              ></i>
             </Link>
           )}
 
-        {completed &&
-          !hasReview &&
-          item.can_review && (
-            <button
-              type="button"
-              className="mr-primary-action"
-              onClick={
-                onReview
-              }
-            >
-              <i className="fa-regular fa-star"></i>
+          {!completed &&
+            !cancelled && (
+              <Link
+                to={`/track?request=${encodeURIComponent(
+                  item.id
+                )}`}
+                className="mr-primary-action"
+              >
+                {tr(
+                  "Track Service",
+                  "تتبع الخدمة"
+                )}
 
-              {tr(
-                "Rate your Fixer",
-                "قيّم الفني"
-              )}
-            </button>
-          )}
+                <i
+                  className={`fa-solid ${
+                    isArabic
+                      ? "fa-arrow-left"
+                      : "fa-arrow-right"
+                  }`}
+                ></i>
+              </Link>
+            )}
+
+          {completed &&
+            !hasReview &&
+            item.can_review && (
+              <button
+                type="button"
+                className="mr-primary-action"
+                onClick={
+                  onReview
+                }
+              >
+                <i className="fa-regular fa-star"></i>
+
+                {tr(
+                  "Rate your Fixer",
+                  "قيّم الفني"
+                )}
+              </button>
+            )}
+        </div>
       </div>
     </section>
   );
