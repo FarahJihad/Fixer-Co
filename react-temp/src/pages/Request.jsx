@@ -434,6 +434,12 @@ function Request() {
 
               credentials:
                 "same-origin",
+
+              // Always ask for the latest account data.
+              // This prevents an older /api/me response from
+              // leaving the name or phone blank until refresh.
+              cache:
+                "no-store",
             }
           );
 
@@ -1789,6 +1795,24 @@ function Request() {
       );
 
 
+      // Keep the phone that was just submitted immediately
+      // in local account state too. The backend may save it
+      // to the user account on this first request, but the
+      // currentUser object would otherwise stay stale until
+      // the next /api/me request.
+      setCurrentUser(
+        (previousUser) =>
+          previousUser
+            ? {
+                ...previousUser,
+                phone:
+                  previousUser.phone ||
+                  phoneValue,
+              }
+            : previousUser
+      );
+
+
       setPhone(
         String(
           currentUser?.phone ||
@@ -1849,6 +1873,59 @@ function Request() {
         false
       );
     }
+  }
+
+
+
+  // Do not show an empty form while /api/me is still loading.
+  // Once the check finishes, logged-in users see their saved
+  // name/phone immediately and guests still get the normal form.
+  if (!authChecked) {
+    return (
+      <main
+        dir={
+          isArabic
+            ? "rtl"
+            : "ltr"
+        }
+        className="request-page"
+      >
+        <section className="request-main-section">
+          <div
+            className="request-container"
+            style={{
+              minHeight: "60vh",
+              display: "grid",
+              placeItems: "center",
+            }}
+          >
+            <div
+              role="status"
+              aria-live="polite"
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "10px",
+                color: "#52646d",
+                fontSize: "14px",
+                fontWeight: 600,
+              }}
+            >
+              <i className="fa-solid fa-spinner fa-spin"></i>
+
+              <span>
+                {tr(
+                  "Loading your account details...",
+                  "جارٍ تحميل بيانات حسابك..."
+                )}
+              </span>
+            </div>
+          </div>
+        </section>
+
+        <Footer />
+      </main>
+    );
   }
 
 
