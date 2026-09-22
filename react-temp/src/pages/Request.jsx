@@ -13,266 +13,554 @@ function RequestSmallLabelEffect({ text }) {
   const [isVisible, setIsVisible] = useState(false);
 
   const isArabicText = /[\u0600-\u06FF]/.test(text);
+
   const pieces = isArabicText
     ? text.split(/(\s+)/)
     : Array.from(text);
 
   useEffect(() => {
     const element = textRef.current;
+
     if (!element) return undefined;
 
-    const prefersReducedMotion = window.matchMedia(
-      "(prefers-reduced-motion: reduce)"
-    ).matches;
+    const prefersReducedMotion =
+      window.matchMedia(
+        "(prefers-reduced-motion: reduce)"
+      ).matches;
 
     if (prefersReducedMotion) {
       setIsVisible(true);
       return undefined;
     }
 
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (!entry.isIntersecting) return;
+    const observer =
+      new IntersectionObserver(
+        ([entry]) => {
+          if (!entry.isIntersecting) {
+            return;
+          }
 
-        setIsVisible(true);
-        observer.unobserve(element);
-      },
-      {
-        threshold: 0.5,
-        rootMargin: "0px 0px -6% 0px",
-      }
-    );
+          setIsVisible(true);
+          observer.unobserve(element);
+        },
+        {
+          threshold: 0.5,
+          rootMargin:
+            "0px 0px -6% 0px",
+        }
+      );
 
     observer.observe(element);
 
-    return () => observer.disconnect();
+    return () =>
+      observer.disconnect();
   }, [text]);
 
   return (
     <span
       ref={textRef}
       className={`request-small-text-effect ${
-        isVisible ? "is-visible" : ""
-      } ${isArabicText ? "is-arabic-effect" : ""}`}
+        isVisible
+          ? "is-visible"
+          : ""
+      } ${
+        isArabicText
+          ? "is-arabic-effect"
+          : ""
+      }`}
       aria-label={text}
     >
-      {pieces.map((piece, index) => {
-        if (piece.trim() === "") {
+      {pieces.map(
+        (piece, index) => {
+          if (
+            piece.trim() === ""
+          ) {
+            return (
+              <span
+                key={`space-${index}`}
+                className="request-small-text-effect-space"
+                aria-hidden="true"
+              >
+                {" "}
+              </span>
+            );
+          }
+
           return (
             <span
-              key={`space-${index}`}
-              className="request-small-text-effect-space"
+              key={`${piece}-${index}`}
+              className="request-small-text-effect-piece"
               aria-hidden="true"
+              style={{
+                "--request-text-delay":
+                  `${
+                    index *
+                    (
+                      isArabicText
+                        ? 70
+                        : 34
+                    )
+                  }ms`,
+              }}
             >
-              {" "}
+              {piece}
             </span>
           );
         }
-
-        return (
-          <span
-            key={`${piece}-${index}`}
-            className="request-small-text-effect-piece"
-            aria-hidden="true"
-            style={{
-              "--request-text-delay": `${
-                index * (isArabicText ? 70 : 34)
-              }ms`,
-            }}
-          >
-            {piece}
-          </span>
-        );
-      })}
+      )}
     </span>
   );
 }
 
+
 function Request() {
   const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
 
-  const { language, isArabic } = useLanguage();
-  const tr = (en, ar) => (language === "ar" ? ar : en);
+  const [searchParams] =
+    useSearchParams();
 
-  const [services, setServices] = useState([]);
-  const [technicians, setTechnicians] = useState([]);
+  const {
+    language,
+    isArabic,
+  } = useLanguage();
 
-  const [customerName, setCustomerName] = useState("");
-  const [phone, setPhone] = useState("");
+  const tr = (
+    en,
+    ar
+  ) =>
+    language === "ar"
+      ? ar
+      : en;
 
-  const [serviceId, setServiceId] = useState(
-    searchParams.get("service") || ""
+
+  const [
+    services,
+    setServices,
+  ] = useState([]);
+
+  const [
+    technicians,
+    setTechnicians,
+  ] = useState([]);
+
+
+  const [
+    customerName,
+    setCustomerName,
+  ] = useState("");
+
+  const [
+    phone,
+    setPhone,
+  ] = useState("");
+
+
+  const [
+    serviceId,
+    setServiceId,
+  ] = useState(
+    searchParams.get("service") ||
+      ""
   );
 
-  const [technicianId, setTechnicianId] = useState(
-    searchParams.get("technician") || ""
+
+  const [
+    technicianId,
+    setTechnicianId,
+  ] = useState(
+    searchParams.get(
+      "technician"
+    ) || ""
   );
 
-  const [problem, setProblem] = useState(
-    searchParams.get("problem") || ""
+
+  const [
+    problem,
+    setProblem,
+  ] = useState(
+    searchParams.get(
+      "problem"
+    ) || ""
   );
 
-  const [firstImages, setFirstImages] = useState([]);
 
-  const [secondServiceEnabled, setSecondServiceEnabled] =
-    useState(false);
+  const [
+    firstImages,
+    setFirstImages,
+  ] = useState([]);
 
-  const [secondServiceId, setSecondServiceId] =
-    useState("");
 
-  const [secondTechnicianId, setSecondTechnicianId] =
-    useState("");
+  const [
+    secondServiceEnabled,
+    setSecondServiceEnabled,
+  ] = useState(false);
 
-  const [secondProblem, setSecondProblem] =
-    useState("");
 
-  const [secondImages, setSecondImages] =
-    useState([]);
+  const [
+    secondServiceId,
+    setSecondServiceId,
+  ] = useState("");
+
+
+  const [
+    secondTechnicianId,
+    setSecondTechnicianId,
+  ] = useState("");
+
+
+  const [
+    secondProblem,
+    setSecondProblem,
+  ] = useState("");
+
+
+  const [
+    secondImages,
+    setSecondImages,
+  ] = useState([]);
+
+
+  const [
+    isLoading,
+    setIsLoading,
+  ] = useState(true);
+
+
+  const [
+    isSubmitting,
+    setIsSubmitting,
+  ] = useState(false);
+
+
+  const [
+    message,
+    setMessage,
+  ] = useState("");
+
+
+  const [
+    messageType,
+    setMessageType,
+  ] = useState("");
+
+
+  const [
+    showLoginRequired,
+    setShowLoginRequired,
+  ] = useState(false);
+
+
+  const [
+    showSuccess,
+    setShowSuccess,
+  ] = useState(false);
+
+
+  const [
+    currentUser,
+    setCurrentUser,
+  ] = useState(null);
+
+
+  const [
+    authChecked,
+    setAuthChecked,
+  ] = useState(false);
+
+
+
+  /* ========================================
+     RESTORE PHOTOS
+  ======================================== */
 
   useEffect(() => {
     const savedImages =
-      window.__fixerRequestImageDraft;
+      window
+        .__fixerRequestImageDraft;
 
-    if (!savedImages) return;
+    if (!savedImages) {
+      return;
+    }
 
     setFirstImages(
-      Array.isArray(savedImages.firstImages)
+      Array.isArray(
+        savedImages.firstImages
+      )
         ? savedImages.firstImages
         : []
     );
 
     setSecondImages(
-      Array.isArray(savedImages.secondImages)
+      Array.isArray(
+        savedImages.secondImages
+      )
         ? savedImages.secondImages
         : []
     );
   }, []);
 
-  const [isLoading, setIsLoading] = useState(true);
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const [message, setMessage] = useState("");
-  const [messageType, setMessageType] = useState("");
 
-  const [showLoginRequired, setShowLoginRequired] = useState(false);
-  const [currentUser, setCurrentUser] = useState(null);
-  const [authChecked, setAuthChecked] = useState(false);
-
+  /* ========================================
+     RESTORE REQUEST DRAFT
+  ======================================== */
 
   useEffect(() => {
-    const savedDraft = sessionStorage.getItem("requestDraft");
+    const savedDraft =
+      sessionStorage.getItem(
+        "requestDraft"
+      );
 
-    if (!savedDraft) return;
+    if (!savedDraft) {
+      return;
+    }
 
     try {
-      const draft = JSON.parse(savedDraft);
+      const draft =
+        JSON.parse(savedDraft);
 
-      if (draft.customerName) setCustomerName(draft.customerName);
-      if (draft.phone) setPhone(draft.phone);
-      if (draft.serviceId) setServiceId(String(draft.serviceId));
-      if (draft.technicianId) setTechnicianId(String(draft.technicianId));
-      if (draft.problem) setProblem(draft.problem);
 
-      if (draft.secondServiceEnabled) {
-        setSecondServiceEnabled(true);
+      if (draft.customerName) {
+        setCustomerName(
+          draft.customerName
+        );
       }
 
-      if (draft.secondServiceId) {
+
+      if (draft.phone) {
+        setPhone(
+          draft.phone
+        );
+      }
+
+
+      if (draft.serviceId) {
+        setServiceId(
+          String(
+            draft.serviceId
+          )
+        );
+      }
+
+
+      if (draft.technicianId) {
+        setTechnicianId(
+          String(
+            draft.technicianId
+          )
+        );
+      }
+
+
+      if (draft.problem) {
+        setProblem(
+          draft.problem
+        );
+      }
+
+
+      if (
+        draft.secondServiceEnabled
+      ) {
+        setSecondServiceEnabled(
+          true
+        );
+      }
+
+
+      if (
+        draft.secondServiceId
+      ) {
         setSecondServiceId(
-          String(draft.secondServiceId)
+          String(
+            draft.secondServiceId
+          )
         );
       }
 
-      if (draft.secondTechnicianId) {
+
+      if (
+        draft.secondTechnicianId
+      ) {
         setSecondTechnicianId(
-          String(draft.secondTechnicianId)
+          String(
+            draft.secondTechnicianId
+          )
         );
       }
 
-      if (draft.secondProblem) {
-        setSecondProblem(draft.secondProblem);
+
+      if (
+        draft.secondProblem
+      ) {
+        setSecondProblem(
+          draft.secondProblem
+        );
       }
 
-      sessionStorage.removeItem("requestDraft");
-    } catch (error) {
-      console.error("Could not restore request draft:", error);
-      sessionStorage.removeItem("requestDraft");
+
+      sessionStorage.removeItem(
+        "requestDraft"
+      );
+    }
+
+    catch (error) {
+      console.error(
+        "Could not restore request draft:",
+        error
+      );
+
+      sessionStorage.removeItem(
+        "requestDraft"
+      );
     }
   }, []);
+
+
+
+  /* ========================================
+     CURRENT USER
+  ======================================== */
 
   useEffect(() => {
     async function loadCurrentUser() {
       try {
-        const response = await fetch("/api/me", {
-          method: "GET",
-          credentials: "same-origin",
-        });
+        const response =
+          await fetch(
+            "/api/me",
+            {
+              method:
+                "GET",
 
-        const data = await response.json();
+              credentials:
+                "same-origin",
+            }
+          );
+
+
+        const data =
+          await response.json();
+
 
         if (
           response.ok &&
           data.authenticated &&
           data.user
         ) {
-          setCurrentUser(data.user);
-          localStorage.setItem("isLoggedIn", "true");
-          localStorage.removeItem("guestMode");
+          setCurrentUser(
+            data.user
+          );
 
-          const accountName = String(
-            data.user.name ||
+
+          localStorage.setItem(
+            "isLoggedIn",
+            "true"
+          );
+
+
+          localStorage.removeItem(
+            "guestMode"
+          );
+
+
+          const accountName =
+            String(
+              data.user.name ||
               data.user.username ||
               ""
-          ).trim();
+            ).trim();
 
-          const accountPhone = String(
-            data.user.phone || ""
-          ).trim();
 
-          setCustomerName((previousName) =>
-            previousName.trim()
-              ? previousName
-              : accountName
+          const accountPhone =
+            String(
+              data.user.phone ||
+              ""
+            ).trim();
+
+
+          setCustomerName(
+            (previousName) =>
+              previousName.trim()
+                ? previousName
+                : accountName
           );
 
-          setPhone((previousPhone) =>
-            previousPhone.trim()
-              ? previousPhone
-              : accountPhone
+
+          setPhone(
+            (previousPhone) =>
+              previousPhone.trim()
+                ? previousPhone
+                : accountPhone
           );
-        } else {
-          setCurrentUser(null);
-          localStorage.removeItem("isLoggedIn");
         }
-      } catch (error) {
+
+        else {
+          setCurrentUser(
+            null
+          );
+
+          localStorage.removeItem(
+            "isLoggedIn"
+          );
+        }
+      }
+
+      catch (error) {
         console.error(
           "Could not load current user:",
           error
         );
 
-        setCurrentUser(null);
-        localStorage.removeItem("isLoggedIn");
-      } finally {
-        setAuthChecked(true);
+
+        setCurrentUser(
+          null
+        );
+
+
+        localStorage.removeItem(
+          "isLoggedIn"
+        );
+      }
+
+      finally {
+        setAuthChecked(
+          true
+        );
       }
     }
+
 
     loadCurrentUser();
   }, []);
 
+
+
+  /* ========================================
+     LOAD SERVICES + FIXERS
+  ======================================== */
+
   useEffect(() => {
     async function loadData() {
       try {
-        setIsLoading(true);
+        setIsLoading(
+          true
+        );
+
 
         const [
           servicesResponse,
           techniciansResponse,
-        ] = await Promise.all([
-          fetch("/api/services"),
-          fetch("/api/technicians"),
-        ]);
+        ] =
+          await Promise.all([
+            fetch(
+              "/api/services"
+            ),
+
+            fetch(
+              "/api/technicians"
+            ),
+          ]);
+
 
         if (
           !servicesResponse.ok ||
@@ -286,28 +574,44 @@ function Request() {
           );
         }
 
+
         const servicesData =
-          await servicesResponse.json();
+          await servicesResponse
+            .json();
+
 
         const techniciansData =
-          await techniciansResponse.json();
+          await techniciansResponse
+            .json();
+
 
         setServices(
-          Array.isArray(servicesData)
+          Array.isArray(
+            servicesData
+          )
             ? servicesData
-            : servicesData.services || []
+            : servicesData.services ||
+                []
         );
 
+
         setTechnicians(
-          Array.isArray(techniciansData)
+          Array.isArray(
+            techniciansData
+          )
             ? techniciansData
-            : techniciansData.technicians || []
+            : techniciansData
+                .technicians ||
+                []
         );
-      } catch (error) {
+      }
+
+      catch (error) {
         console.error(
           "Request page loading error:",
           error
         );
+
 
         setMessage(
           tr(
@@ -316,128 +620,257 @@ function Request() {
           )
         );
 
-        setMessageType("error");
-      } finally {
-        setIsLoading(false);
+
+        setMessageType(
+          "error"
+        );
+      }
+
+      finally {
+        setIsLoading(
+          false
+        );
       }
     }
 
+
     loadData();
   }, [language]);
+
+
+
+  /* ========================================
+     SELECTED FIXERS
+  ======================================== */
 
   const selectedTechnician =
     useMemo(
       () =>
         technicians.find(
           (technician) =>
-            String(technician.id) ===
-            String(technicianId)
+            String(
+              technician.id
+            ) ===
+            String(
+              technicianId
+            )
         ) || null,
-      [technicians, technicianId]
+
+      [
+        technicians,
+        technicianId,
+      ]
     );
+
 
   const secondSelectedTechnician =
     useMemo(
       () =>
         technicians.find(
           (technician) =>
-            String(technician.id) ===
-            String(secondTechnicianId)
+            String(
+              technician.id
+            ) ===
+            String(
+              secondTechnicianId
+            )
         ) || null,
-      [technicians, secondTechnicianId]
+
+      [
+        technicians,
+        secondTechnicianId,
+      ]
     );
+
+
+
+  /* ========================================
+     REVEAL ANIMATIONS
+  ======================================== */
 
   useEffect(() => {
-    const items = Array.from(
-      document.querySelectorAll(
-        "[data-request-reveal]"
-      )
-    );
-
-    if (!("IntersectionObserver" in window)) {
-      items.forEach((item) =>
-        item.classList.add("request-show")
+    const items =
+      Array.from(
+        document.querySelectorAll(
+          "[data-request-reveal]"
+        )
       );
+
+
+    if (
+      !(
+        "IntersectionObserver"
+        in window
+      )
+    ) {
+      items.forEach(
+        (item) =>
+          item.classList.add(
+            "request-show"
+          )
+      );
+
       return;
     }
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (!entry.isIntersecting) return;
 
-          entry.target.classList.add(
-            "request-show"
+    const observer =
+      new IntersectionObserver(
+        (entries) => {
+          entries.forEach(
+            (entry) => {
+              if (
+                !entry.isIntersecting
+              ) {
+                return;
+              }
+
+
+              entry.target
+                .classList.add(
+                  "request-show"
+                );
+
+
+              observer.unobserve(
+                entry.target
+              );
+            }
           );
-          observer.unobserve(entry.target);
-        });
-      },
-      {
-        threshold: 0.08,
-        rootMargin: "0px 0px -45px 0px",
-      }
-    );
+        },
+        {
+          threshold:
+            0.08,
 
-    items.forEach((item) =>
-      observer.observe(item)
-    );
-
-    return () => observer.disconnect();
-  }, [language, isLoading]);
-
-  function handleServiceChange(event) {
-    const newServiceId = event.target.value;
-
-    setServiceId(newServiceId);
-
-    const selectedTechnician =
-      technicians.find(
-        (technician) =>
-          String(technician.id) ===
-          String(technicianId)
+          rootMargin:
+            "0px 0px -45px 0px",
+        }
       );
 
+
+    items.forEach(
+      (item) =>
+        observer.observe(
+          item
+        )
+    );
+
+
+    return () =>
+      observer.disconnect();
+  }, [
+    language,
+    isLoading,
+  ]);
+
+
+
+  /* ========================================
+     SERVICE CHANGE
+  ======================================== */
+
+  function handleServiceChange(
+    event
+  ) {
+    const newServiceId =
+      event.target.value;
+
+
+    setServiceId(
+      newServiceId
+    );
+
+
+    const fixer =
+      technicians.find(
+        (technician) =>
+          String(
+            technician.id
+          ) ===
+          String(
+            technicianId
+          )
+      );
+
+
     if (
-      selectedTechnician &&
-      String(selectedTechnician.service_id) !==
-        String(newServiceId)
+      fixer &&
+      String(
+        fixer.service_id
+      ) !==
+        String(
+          newServiceId
+        )
     ) {
       setTechnicianId("");
     }
   }
 
 
-  function handleSecondServiceChange(event) {
-    const newServiceId = event.target.value;
 
-    setSecondServiceId(newServiceId);
+  function handleSecondServiceChange(
+    event
+  ) {
+    const newServiceId =
+      event.target.value;
 
-    const selectedTechnician =
+
+    setSecondServiceId(
+      newServiceId
+    );
+
+
+    const fixer =
       technicians.find(
         (technician) =>
-          String(technician.id) ===
-          String(secondTechnicianId)
+          String(
+            technician.id
+          ) ===
+          String(
+            secondTechnicianId
+          )
       );
 
+
     if (
-      selectedTechnician &&
-      String(selectedTechnician.service_id) !==
-        String(newServiceId)
+      fixer &&
+      String(
+        fixer.service_id
+      ) !==
+        String(
+          newServiceId
+        )
     ) {
-      setSecondTechnicianId("");
+      setSecondTechnicianId(
+        ""
+      );
     }
   }
+
+
+
+  /* ========================================
+     IMAGES
+  ======================================== */
 
   function validateAndAddImages(
     event,
     currentImages,
     setImages
   ) {
-    const selectedFiles = Array.from(
-      event.target.files || []
-    );
+    const selectedFiles =
+      Array.from(
+        event.target.files ||
+          []
+      );
 
-    if (!selectedFiles.length) return;
+
+    if (
+      !selectedFiles.length
+    ) {
+      return;
+    }
+
 
     const allowedTypes = [
       "image/jpeg",
@@ -445,57 +878,112 @@ function Request() {
       "image/webp",
     ];
 
+
     const maxFileSize =
       1_500_000;
 
-    for (const file of selectedFiles) {
-      if (!allowedTypes.includes(file.type)) {
+
+    for (
+      const file of
+      selectedFiles
+    ) {
+      if (
+        !allowedTypes.includes(
+          file.type
+        )
+      ) {
         setMessage(
           tr(
             "Only JPG, PNG, and WebP images are allowed.",
             "يسمح فقط بصور JPG وPNG وWebP."
           )
         );
-        setMessageType("error");
-        event.target.value = "";
+
+
+        setMessageType(
+          "error"
+        );
+
+
+        event.target.value =
+          "";
+
+
         return;
       }
 
-      if (file.size > maxFileSize) {
+
+      if (
+        file.size >
+        maxFileSize
+      ) {
         setMessage(
           tr(
             "Each image must be 1.5 MB or smaller.",
             "يجب ألا يتجاوز حجم كل صورة 1.5 ميجابايت."
           )
         );
-        setMessageType("error");
-        event.target.value = "";
+
+
+        setMessageType(
+          "error"
+        );
+
+
+        event.target.value =
+          "";
+
+
         return;
       }
     }
+
 
     const nextImages = [
       ...currentImages,
       ...selectedFiles,
     ];
 
-    if (nextImages.length > 3) {
+
+    if (
+      nextImages.length >
+      3
+    ) {
       setMessage(
         tr(
           "You can add up to 3 images for each service.",
           "يمكنك إضافة حتى 3 صور لكل خدمة."
         )
       );
-      setMessageType("error");
-      event.target.value = "";
+
+
+      setMessageType(
+        "error"
+      );
+
+
+      event.target.value =
+        "";
+
+
       return;
     }
 
+
     setMessage("");
     setMessageType("");
-    setImages(nextImages);
-    event.target.value = "";
+
+
+    setImages(
+      nextImages
+    );
+
+
+    event.target.value =
+      "";
   }
+
+
 
   function removeImage(
     index,
@@ -504,91 +992,71 @@ function Request() {
   ) {
     setImages(
       currentImages.filter(
-        (_, imageIndex) =>
-          imageIndex !== index
+        (
+          _,
+          imageIndex
+        ) =>
+          imageIndex !==
+          index
       )
     );
   }
 
+
+
   function removeSecondService() {
-    setSecondServiceEnabled(false);
-    setSecondServiceId("");
-    setSecondTechnicianId("");
-    setSecondProblem("");
-    setSecondImages([]);
+    setSecondServiceEnabled(
+      false
+    );
+
+    setSecondServiceId(
+      ""
+    );
+
+    setSecondTechnicianId(
+      ""
+    );
+
+    setSecondProblem(
+      ""
+    );
+
+    setSecondImages(
+      []
+    );
   }
 
+
+
+  /* ========================================
+     SAVE DRAFT
+  ======================================== */
 
   function saveRequestImagesInMemory() {
-    window.__fixerRequestImageDraft = {
-      firstImages,
-      secondImages,
-    };
+    window
+      .__fixerRequestImageDraft =
+      {
+        firstImages,
+        secondImages,
+      };
   }
 
-  function openFixerPicker(slot) {
-    const selectedServiceId =
-      slot === 2
-        ? secondServiceId
-        : serviceId;
 
-    if (!selectedServiceId) {
-      setMessage(
-        tr(
-          "Choose the service first, then select a fixer.",
-          "اختر الخدمة أولًا، ثم اختر الفني."
-        )
-      );
-      setMessageType("error");
-      return;
-    }
-
-    saveRequestDraft();
-    saveRequestImagesInMemory();
-
-    const query = new URLSearchParams();
-    query.set("service", selectedServiceId);
-    query.set("chooseFor", "request");
-    query.set("slot", String(slot));
-
-    navigate(
-      `/technicians?${query.toString()}`
-    );
-  }
-
-  function openSelectedFixerProfile(
-    technician,
-    slot
-  ) {
-    if (!technician) return;
-
-    saveRequestDraft();
-    saveRequestImagesInMemory();
-
-    const query = new URLSearchParams();
-    query.set("chooseFor", "request");
-    query.set("slot", String(slot));
-    query.set(
-      "service",
-      String(technician.service_id)
-    );
-
-    navigate(
-      `/technicians/${technician.id}?${query.toString()}`
-    );
-  }
 
   function saveRequestDraft() {
     saveRequestImagesInMemory();
 
+
     sessionStorage.setItem(
       "requestDraft",
+
       JSON.stringify({
         customerName,
         phone,
         serviceId,
         technicianId,
         problem,
+
         secondServiceEnabled,
         secondServiceId,
         secondTechnicianId,
@@ -597,49 +1065,214 @@ function Request() {
     );
   }
 
-  function openLoginRequired() {
-    setShowLoginRequired(true);
+
+
+  /* ========================================
+     FIXER PICKER
+  ======================================== */
+
+  function openFixerPicker(
+    slot
+  ) {
+    const selectedServiceId =
+      slot === 2
+        ? secondServiceId
+        : serviceId;
+
+
+    if (
+      !selectedServiceId
+    ) {
+      setMessage(
+        tr(
+          "Choose the service first, then select a fixer.",
+          "اختر الخدمة أولًا، ثم اختر الفني."
+        )
+      );
+
+
+      setMessageType(
+        "error"
+      );
+
+
+      return;
+    }
+
+
+    saveRequestDraft();
+    saveRequestImagesInMemory();
+
+
+    const query =
+      new URLSearchParams();
+
+
+    query.set(
+      "service",
+      selectedServiceId
+    );
+
+
+    query.set(
+      "chooseFor",
+      "request"
+    );
+
+
+    query.set(
+      "slot",
+      String(slot)
+    );
+
+
+    navigate(
+      `/technicians?${query.toString()}`
+    );
   }
+
+
+
+  function openSelectedFixerProfile(
+    technician,
+    slot
+  ) {
+    if (
+      !technician
+    ) {
+      return;
+    }
+
+
+    saveRequestDraft();
+    saveRequestImagesInMemory();
+
+
+    const query =
+      new URLSearchParams();
+
+
+    query.set(
+      "chooseFor",
+      "request"
+    );
+
+
+    query.set(
+      "slot",
+      String(slot)
+    );
+
+
+    query.set(
+      "service",
+      String(
+        technician.service_id
+      )
+    );
+
+
+    navigate(
+      `/technicians/${technician.id}?${query.toString()}`
+    );
+  }
+
+
+
+  /* ========================================
+     LOGIN REQUIRED
+  ======================================== */
+
+  function openLoginRequired() {
+    setShowLoginRequired(
+      true
+    );
+  }
+
+
 
   function handleLoginFromModal() {
     saveRequestDraft();
 
+
     localStorage.setItem(
       "redirectAfterLogin",
+
       window.location.pathname +
         window.location.search
     );
 
-    setShowLoginRequired(false);
-    navigate("/login");
+
+    setShowLoginRequired(
+      false
+    );
+
+
+    navigate(
+      "/login"
+    );
   }
 
 
-  async function handleSubmit(event) {
+
+  /* ========================================
+     SUBMIT
+  ======================================== */
+
+  async function handleSubmit(
+    event
+  ) {
     event.preventDefault();
+
 
     setMessage("");
     setMessageType("");
 
-    if (!authChecked) {
+
+    if (
+      !authChecked
+    ) {
       setMessage(
         tr(
           "Please wait while we verify your account.",
           "يرجى الانتظار حتى نتحقق من حسابك."
         )
       );
-      setMessageType("error");
+
+
+      setMessageType(
+        "error"
+      );
+
+
       return;
     }
 
-    if (!currentUser) {
+
+    if (
+      !currentUser
+    ) {
       openLoginRequired();
       return;
     }
 
-    const nameValue = customerName.trim();
-    const phoneValue = phone.trim();
-    const problemValue = problem.trim();
+
+    const nameValue =
+      customerName.trim();
+
+
+    const phoneValue =
+      phone.trim();
+
+
+    const problemValue =
+      problem.trim();
+
+
+
+    /* ========================================
+       FIRST SERVICE
+    ======================================== */
 
     if (
       !nameValue ||
@@ -654,13 +1287,21 @@ function Request() {
         )
       );
 
-      setMessageType("error");
+
+      setMessageType(
+        "error"
+      );
+
+
       return;
     }
 
+
     if (
-      nameValue.length < 2 ||
-      nameValue.length > 60
+      nameValue.length <
+        2 ||
+      nameValue.length >
+        60
     ) {
       setMessage(
         tr(
@@ -668,11 +1309,22 @@ function Request() {
           "يجب أن يكون الاسم بين حرفين و60 حرفًا."
         )
       );
-      setMessageType("error");
+
+
+      setMessageType(
+        "error"
+      );
+
+
       return;
     }
 
-    if (!/^05\d{8}$/.test(phoneValue)) {
+
+    if (
+      !/^05\d{8}$/.test(
+        phoneValue
+      )
+    ) {
       setMessage(
         tr(
           "Please enter a valid Saudi phone number starting with 05.",
@@ -680,13 +1332,21 @@ function Request() {
         )
       );
 
-      setMessageType("error");
+
+      setMessageType(
+        "error"
+      );
+
+
       return;
     }
 
+
     if (
-      problemValue.length < 10 ||
-      problemValue.length > 1000
+      problemValue.length <
+        10 ||
+      problemValue.length >
+        1000
     ) {
       setMessage(
         tr(
@@ -694,39 +1354,73 @@ function Request() {
           "يجب أن يكون وصف المشكلة بين 10 و1000 حرف."
         )
       );
-      setMessageType("error");
+
+
+      setMessageType(
+        "error"
+      );
+
+
       return;
     }
 
-    const selectedService = services.find(
-      (service) =>
-        String(service.id) ===
-        String(serviceId)
-    );
 
-    if (!selectedService) {
+    const selectedService =
+      services.find(
+        (service) =>
+          String(
+            service.id
+          ) ===
+          String(
+            serviceId
+          )
+      );
+
+
+    if (
+      !selectedService
+    ) {
       setMessage(
         tr(
           "Please select a valid service.",
           "يرجى اختيار خدمة صحيحة."
         )
       );
-      setMessageType("error");
+
+
+      setMessageType(
+        "error"
+      );
+
+
       return;
     }
 
-    if (technicianId) {
-      const selectedTechnician =
+
+
+    if (
+      technicianId
+    ) {
+      const fixer =
         technicians.find(
           (technician) =>
-            String(technician.id) ===
-            String(technicianId)
+            String(
+              technician.id
+            ) ===
+            String(
+              technicianId
+            )
         );
 
+
       if (
-        !selectedTechnician ||
-        String(selectedTechnician.service_id) !==
-          String(serviceId)
+        !fixer ||
+        String(
+          fixer.service_id
+        ) !==
+          String(
+            serviceId
+          )
       ) {
         setMessage(
           tr(
@@ -734,14 +1428,29 @@ function Request() {
             "يرجى اختيار فني يتوافق مع الخدمة المحددة."
           )
         );
-        setMessageType("error");
+
+
+        setMessageType(
+          "error"
+        );
+
+
         return;
       }
     }
 
-    if (secondServiceEnabled) {
+
+
+    /* ========================================
+       SECOND SERVICE
+    ======================================== */
+
+    if (
+      secondServiceEnabled
+    ) {
       const secondProblemValue =
         secondProblem.trim();
+
 
       if (
         !secondServiceId ||
@@ -753,13 +1462,24 @@ function Request() {
             "يرجى إكمال تفاصيل الخدمة الثانية."
           )
         );
-        setMessageType("error");
+
+
+        setMessageType(
+          "error"
+        );
+
+
         return;
       }
 
+
       if (
-        secondProblemValue.length < 10 ||
-        secondProblemValue.length > 1000
+        secondProblemValue
+          .length <
+          10 ||
+        secondProblemValue
+          .length >
+          1000
       ) {
         setMessage(
           tr(
@@ -767,13 +1487,24 @@ function Request() {
             "يجب أن يكون وصف المشكلة الثانية بين 10 و1000 حرف."
           )
         );
-        setMessageType("error");
+
+
+        setMessageType(
+          "error"
+        );
+
+
         return;
       }
 
+
       if (
-        String(secondServiceId) ===
-        String(serviceId)
+        String(
+          secondServiceId
+        ) ===
+        String(
+          serviceId
+        )
       ) {
         setMessage(
           tr(
@@ -781,42 +1512,72 @@ function Request() {
             "يرجى اختيار خدمة مختلفة للخدمة الثانية."
           )
         );
-        setMessageType("error");
+
+
+        setMessageType(
+          "error"
+        );
+
+
         return;
       }
+
 
       const secondSelectedService =
         services.find(
           (service) =>
-            String(service.id) ===
-            String(secondServiceId)
+            String(
+              service.id
+            ) ===
+            String(
+              secondServiceId
+            )
         );
 
-      if (!secondSelectedService) {
+
+      if (
+        !secondSelectedService
+      ) {
         setMessage(
           tr(
             "Please select a valid second service.",
             "يرجى اختيار خدمة ثانية صحيحة."
           )
         );
-        setMessageType("error");
+
+
+        setMessageType(
+          "error"
+        );
+
+
         return;
       }
 
-      if (secondTechnicianId) {
-        const secondSelectedTechnician =
+
+      if (
+        secondTechnicianId
+      ) {
+        const fixer =
           technicians.find(
             (technician) =>
-              String(technician.id) ===
-              String(secondTechnicianId)
+              String(
+                technician.id
+              ) ===
+              String(
+                secondTechnicianId
+              )
           );
 
+
         if (
-          !secondSelectedTechnician ||
+          !fixer ||
           String(
-            secondSelectedTechnician.service_id
+            fixer.service_id
           ) !==
-            String(secondServiceId)
+            String(
+              secondServiceId
+            )
         ) {
           setMessage(
             tr(
@@ -824,86 +1585,171 @@ function Request() {
               "يرجى اختيار فني يتوافق مع الخدمة الثانية."
             )
           );
-          setMessageType("error");
+
+
+          setMessageType(
+            "error"
+          );
+
+
           return;
         }
       }
     }
 
+
+
+    /* ========================================
+       SEND REQUEST
+    ======================================== */
+
     try {
-      setIsSubmitting(true);
+      setIsSubmitting(
+        true
+      );
+
 
       const serviceItems = [
         {
           slot: 1,
-          service_id: Number(serviceId),
-          technician_id: technicianId
-            ? Number(technicianId)
-            : null,
-          problem: problemValue,
+
+          service_id:
+            Number(
+              serviceId
+            ),
+
+          technician_id:
+            technicianId
+              ? Number(
+                  technicianId
+                )
+              : null,
+
+          problem:
+            problemValue,
         },
       ];
 
-      if (secondServiceEnabled) {
+
+      if (
+        secondServiceEnabled
+      ) {
         serviceItems.push({
           slot: 2,
-          service_id: Number(secondServiceId),
-          technician_id: secondTechnicianId
-            ? Number(secondTechnicianId)
-            : null,
-          problem: secondProblem.trim(),
+
+          service_id:
+            Number(
+              secondServiceId
+            ),
+
+          technician_id:
+            secondTechnicianId
+              ? Number(
+                  secondTechnicianId
+                )
+              : null,
+
+          problem:
+            secondProblem.trim(),
         });
       }
 
-      const formData = new FormData();
+
+
+      const formData =
+        new FormData();
+
 
       formData.append(
         "services",
-        JSON.stringify(serviceItems)
+
+        JSON.stringify(
+          serviceItems
+        )
       );
+
 
       formData.append(
         "phone",
         phoneValue
       );
 
-      firstImages.forEach((image) => {
-        formData.append(
-          "service_1_images",
-          image,
-          image.name
-        );
-      });
 
-      if (secondServiceEnabled) {
-        secondImages.forEach((image) => {
+
+      firstImages.forEach(
+        (image) => {
           formData.append(
-            "service_2_images",
+            "service_1_images",
             image,
             image.name
           );
-        });
-      }
-
-      const response = await fetch(
-        "/api/requests",
-        {
-          method: "POST",
-          credentials: "same-origin",
-          body: formData,
         }
       );
 
-      const result = await response.json();
 
-      if (response.status === 401) {
-        localStorage.removeItem("isLoggedIn");
-        setCurrentUser(null);
+
+      if (
+        secondServiceEnabled
+      ) {
+        secondImages.forEach(
+          (image) => {
+            formData.append(
+              "service_2_images",
+              image,
+              image.name
+            );
+          }
+        );
+      }
+
+
+
+      const response =
+        await fetch(
+          "/api/requests",
+          {
+            method:
+              "POST",
+
+            credentials:
+              "same-origin",
+
+            body:
+              formData,
+          }
+        );
+
+
+      const result =
+        await response.json();
+
+
+
+      if (
+        response.status ===
+        401
+      ) {
+        localStorage.removeItem(
+          "isLoggedIn"
+        );
+
+
+        setCurrentUser(
+          null
+        );
+
+
         openLoginRequired();
+
+
         return;
       }
 
-      if (!response.ok) {
+
+
+      if (
+        !response.ok
+      ) {
         throw new Error(
           result.error ||
             result.message ||
@@ -914,24 +1760,25 @@ function Request() {
         );
       }
 
-      const requestReference =
-        result.reference_code ||
-        result.request_id ||
-        "";
 
-      setMessage(
-        requestReference
-          ? tr(
-              `Service request sent successfully! ${requestReference}`,
-              `تم إرسال طلب الخدمة بنجاح! ${requestReference}`
-            )
-          : tr(
-              "Service request sent successfully!",
-              "تم إرسال طلب الخدمة بنجاح!"
-            )
+
+      /* ========================================
+         SUCCESS
+      ======================================== */
+
+      setMessage("");
+      setMessageType("");
+
+
+      setShowSuccess(
+        true
       );
 
-      setMessageType("success");
+
+
+      /* ========================================
+         RESET
+      ======================================== */
 
       setCustomerName(
         String(
@@ -941,30 +1788,47 @@ function Request() {
         ).trim()
       );
 
+
       setPhone(
         String(
-          currentUser?.phone || ""
+          currentUser?.phone ||
+            phoneValue ||
+            ""
         ).trim()
       );
+
 
       setServiceId("");
       setTechnicianId("");
       setProblem("");
       setFirstImages([]);
 
-      setSecondServiceEnabled(false);
+
+      setSecondServiceEnabled(
+        false
+      );
+
       setSecondServiceId("");
       setSecondTechnicianId("");
       setSecondProblem("");
       setSecondImages([]);
 
-      sessionStorage.removeItem("requestDraft");
-      delete window.__fixerRequestImageDraft;
-    } catch (error) {
+
+      sessionStorage.removeItem(
+        "requestDraft"
+      );
+
+
+      delete window
+        .__fixerRequestImageDraft;
+    }
+
+    catch (error) {
       console.error(
         "Request error:",
         error
       );
+
 
       setMessage(
         error.message ||
@@ -974,20 +1838,38 @@ function Request() {
           )
       );
 
-      setMessageType("error");
-    } finally {
-      setIsSubmitting(false);
+
+      setMessageType(
+        "error"
+      );
+    }
+
+    finally {
+      setIsSubmitting(
+        false
+      );
     }
   }
 
+
+
   return (
     <main
-      dir={isArabic ? "rtl" : "ltr"}
+      dir={
+        isArabic
+          ? "rtl"
+          : "ltr"
+      }
       className="request-page"
     >
       <section className="request-main-section">
         <div className="request-container request-grid">
-          {/* LEFT */}
+
+
+          {/* ========================================
+              LEFT
+          ======================================== */}
+
           <div className="request-copy">
             <p
               className="request-label request-reveal"
@@ -1001,9 +1883,8 @@ function Request() {
               />
             </p>
 
-            <h1
-              className="request-static-title"
-            >
+
+            <h1 className="request-static-title">
               {tr(
                 "Tell us what needs ",
                 "أخبرنا بما يحتاج "
@@ -1011,16 +1892,21 @@ function Request() {
 
               <span className="request-dia-text">
                 <span className="request-dia-text-base">
-                  {tr("fixing", "إصلاحه")}
+                  {tr(
+                    "fixing",
+                    "إصلاحه"
+                  )}
                 </span>
               </span>
             </h1>
+
 
             <p
               className="request-intro request-reveal"
               data-request-reveal
               style={{
-                "--request-delay": "150ms",
+                "--request-delay":
+                  "150ms",
               }}
             >
               {tr(
@@ -1028,6 +1914,7 @@ function Request() {
                 "شاركنا بعض التفاصيل عن المشكلة وسنساعدك في توصيل الطلب بالفني المناسب."
               )}
             </p>
+
 
             <div className="request-benefits">
               <Benefit
@@ -1043,6 +1930,7 @@ function Request() {
                 delay="0ms"
               />
 
+
               <Benefit
                 icon="fa-solid fa-user-check"
                 title={tr(
@@ -1055,6 +1943,7 @@ function Request() {
                 )}
                 delay="80ms"
               />
+
 
               <Benefit
                 icon="fa-solid fa-circle-check"
@@ -1071,12 +1960,18 @@ function Request() {
             </div>
           </div>
 
-          {/* FORM */}
+
+
+          {/* ========================================
+              FORM
+          ======================================== */}
+
           <div
             className="request-form-card request-reveal"
             data-request-reveal
             style={{
-              "--request-delay": "100ms",
+              "--request-delay":
+                "100ms",
             }}
           >
             <div className="request-form-heading">
@@ -1089,12 +1984,14 @@ function Request() {
                 />
               </p>
 
+
               <h2>
                 {tr(
                   "Request a Fixer",
                   "اطلب فنيًا"
                 )}
               </h2>
+
 
               <p>
                 {tr(
@@ -1104,7 +2001,13 @@ function Request() {
               </p>
             </div>
 
-            <form onSubmit={handleSubmit}>
+
+
+            <form
+              onSubmit={
+                handleSubmit
+              }
+            >
               <div className="request-form-grid-two">
                 <FormGroup
                   label={tr(
@@ -1114,14 +2017,19 @@ function Request() {
                 >
                   <input
                     type="text"
-                    value={customerName}
+                    value={
+                      customerName
+                    }
                     required
                     minLength={2}
                     maxLength={60}
                     autoComplete="name"
-                    onChange={(event) =>
+                    onChange={(
+                      event
+                    ) =>
                       setCustomerName(
-                        event.target.value
+                        event.target
+                          .value
                       )
                     }
                     placeholder={tr(
@@ -1131,6 +2039,8 @@ function Request() {
                   />
                 </FormGroup>
 
+
+
                 <FormGroup
                   label={tr(
                     "Phone Number",
@@ -1139,14 +2049,19 @@ function Request() {
                 >
                   <input
                     type="tel"
-                    value={phone}
+                    value={
+                      phone
+                    }
                     required
                     inputMode="numeric"
                     pattern="05[0-9]{8}"
                     autoComplete="tel"
-                    onChange={(event) =>
+                    onChange={(
+                      event
+                    ) =>
                       setPhone(
-                        event.target.value
+                        event.target
+                          .value
                       )
                     }
                     placeholder="05XXXXXXXX"
@@ -1154,6 +2069,10 @@ function Request() {
                   />
                 </FormGroup>
               </div>
+
+
+
+              {/* SERVICE 01 */}
 
               <div
                 className={`request-service-block ${
@@ -1166,8 +2085,12 @@ function Request() {
                   <div className="request-service-block-head">
                     <div>
                       <span className="request-service-number">
-                        {tr("SERVICE 01", "الخدمة 01")}
+                        {tr(
+                          "SERVICE 01",
+                          "الخدمة 01"
+                        )}
                       </span>
+
 
                       <h3>
                         {tr(
@@ -1179,6 +2102,8 @@ function Request() {
                   </div>
                 )}
 
+
+
                 <FormGroup
                   label={tr(
                     "Service",
@@ -1186,12 +2111,16 @@ function Request() {
                   )}
                 >
                   <select
-                    value={serviceId}
+                    value={
+                      serviceId
+                    }
                     required
                     onChange={
                       handleServiceChange
                     }
-                    disabled={isLoading}
+                    disabled={
+                      isLoading
+                    }
                   >
                     <option value="">
                       {isLoading
@@ -1205,11 +2134,16 @@ function Request() {
                           )}
                     </option>
 
+
                     {services.map(
                       (service) => (
                         <option
-                          key={service.id}
-                          value={service.id}
+                          key={
+                            service.id
+                          }
+                          value={
+                            service.id
+                          }
                         >
                           {translateServiceName(
                             service.name,
@@ -1221,18 +2155,26 @@ function Request() {
                   </select>
                 </FormGroup>
 
+
+
                 <FixerPickerField
                   technician={
                     selectedTechnician
                   }
                   hasTechnicianId={
-                    Boolean(technicianId)
+                    Boolean(
+                      technicianId
+                    )
                   }
                   onFind={() =>
-                    openFixerPicker(1)
+                    openFixerPicker(
+                      1
+                    )
                   }
                   onChange={() =>
-                    openFixerPicker(1)
+                    openFixerPicker(
+                      1
+                    )
                   }
                   onView={() =>
                     openSelectedFixerProfile(
@@ -1241,8 +2183,12 @@ function Request() {
                     )
                   }
                   tr={tr}
-                  language={language}
+                  language={
+                    language
+                  }
                 />
+
+
 
                 <FormGroup
                   label={tr(
@@ -1252,13 +2198,22 @@ function Request() {
                 >
                   <textarea
                     rows="5"
-                    value={problem}
+                    value={
+                      problem
+                    }
                     required
-                    minLength={10}
-                    maxLength={1000}
-                    onChange={(event) =>
+                    minLength={
+                      10
+                    }
+                    maxLength={
+                      1000
+                    }
+                    onChange={(
+                      event
+                    ) =>
                       setProblem(
-                        event.target.value
+                        event.target
+                          .value
                       )
                     }
                     placeholder={tr(
@@ -1267,6 +2222,8 @@ function Request() {
                     )}
                   />
                 </FormGroup>
+
+
 
                 <ImageUploadField
                   label={tr(
@@ -1277,15 +2234,21 @@ function Request() {
                     "Optional · Up to 3 images · JPG, PNG or WebP · Max 1.5 MB each",
                     "اختياري · حتى 3 صور · JPG أو PNG أو WebP · الحد 1.5 ميجابايت لكل صورة"
                   )}
-                  images={firstImages}
-                  onChange={(event) =>
+                  images={
+                    firstImages
+                  }
+                  onChange={(
+                    event
+                  ) =>
                     validateAndAddImages(
                       event,
                       firstImages,
                       setFirstImages
                     )
                   }
-                  onRemove={(index) =>
+                  onRemove={(
+                    index
+                  ) =>
                     removeImage(
                       index,
                       firstImages,
@@ -1296,13 +2259,21 @@ function Request() {
                 />
               </div>
 
+
+
+              {/* SERVICE 02 */}
+
               {secondServiceEnabled ? (
                 <div className="request-service-block request-service-block-second">
                   <div className="request-service-block-head">
                     <div>
                       <span className="request-service-number">
-                        {tr("SERVICE 02", "الخدمة 02")}
+                        {tr(
+                          "SERVICE 02",
+                          "الخدمة 02"
+                        )}
                       </span>
+
 
                       <h3>
                         {tr(
@@ -1312,6 +2283,7 @@ function Request() {
                       </h3>
                     </div>
 
+
                     <button
                       type="button"
                       className="request-remove-service"
@@ -1320,12 +2292,15 @@ function Request() {
                       }
                     >
                       <i className="fa-solid fa-xmark"></i>
+
                       {tr(
                         "Remove",
                         "إزالة"
                       )}
                     </button>
                   </div>
+
+
 
                   <FormGroup
                     label={tr(
@@ -1334,12 +2309,16 @@ function Request() {
                     )}
                   >
                     <select
-                      value={secondServiceId}
+                      value={
+                        secondServiceId
+                      }
                       required
                       onChange={
                         handleSecondServiceChange
                       }
-                      disabled={isLoading}
+                      disabled={
+                        isLoading
+                      }
                     >
                       <option value="">
                         {tr(
@@ -1348,17 +2327,30 @@ function Request() {
                         )}
                       </option>
 
+
                       {services
                         .filter(
-                          (service) =>
-                            String(service.id) !==
-                            String(serviceId)
+                          (
+                            service
+                          ) =>
+                            String(
+                              service.id
+                            ) !==
+                            String(
+                              serviceId
+                            )
                         )
                         .map(
-                          (service) => (
+                          (
+                            service
+                          ) => (
                             <option
-                              key={service.id}
-                              value={service.id}
+                              key={
+                                service.id
+                              }
+                              value={
+                                service.id
+                              }
                             >
                               {translateServiceName(
                                 service.name,
@@ -1370,6 +2362,8 @@ function Request() {
                     </select>
                   </FormGroup>
 
+
+
                   <FixerPickerField
                     technician={
                       secondSelectedTechnician
@@ -1380,10 +2374,14 @@ function Request() {
                       )
                     }
                     onFind={() =>
-                      openFixerPicker(2)
+                      openFixerPicker(
+                        2
+                      )
                     }
                     onChange={() =>
-                      openFixerPicker(2)
+                      openFixerPicker(
+                        2
+                      )
                     }
                     onView={() =>
                       openSelectedFixerProfile(
@@ -1392,8 +2390,12 @@ function Request() {
                       )
                     }
                     tr={tr}
-                    language={language}
+                    language={
+                      language
+                    }
                   />
+
+
 
                   <FormGroup
                     label={tr(
@@ -1403,13 +2405,22 @@ function Request() {
                   >
                     <textarea
                       rows="5"
-                      value={secondProblem}
+                      value={
+                        secondProblem
+                      }
                       required
-                      minLength={10}
-                      maxLength={1000}
-                      onChange={(event) =>
+                      minLength={
+                        10
+                      }
+                      maxLength={
+                        1000
+                      }
+                      onChange={(
+                        event
+                      ) =>
                         setSecondProblem(
-                          event.target.value
+                          event.target
+                            .value
                         )
                       }
                       placeholder={tr(
@@ -1418,6 +2429,8 @@ function Request() {
                       )}
                     />
                   </FormGroup>
+
+
 
                   <ImageUploadField
                     label={tr(
@@ -1428,15 +2441,21 @@ function Request() {
                       "Optional · Up to 3 images · JPG, PNG or WebP · Max 1.5 MB each",
                       "اختياري · حتى 3 صور · JPG أو PNG أو WebP · الحد 1.5 ميجابايت لكل صورة"
                     )}
-                    images={secondImages}
-                    onChange={(event) =>
+                    images={
+                      secondImages
+                    }
+                    onChange={(
+                      event
+                    ) =>
                       validateAndAddImages(
                         event,
                         secondImages,
                         setSecondImages
                       )
                     }
-                    onRemove={(index) =>
+                    onRemove={(
+                      index
+                    ) =>
                       removeImage(
                         index,
                         secondImages,
@@ -1460,6 +2479,7 @@ function Request() {
                     <i className="fa-solid fa-plus"></i>
                   </span>
 
+
                   <span>
                     <strong>
                       {tr(
@@ -1467,6 +2487,7 @@ function Request() {
                         "إضافة خدمة أخرى"
                       )}
                     </strong>
+
 
                     <small>
                       {tr(
@@ -1477,6 +2498,10 @@ function Request() {
                   </span>
                 </button>
               )}
+
+
+
+              {/* SUBMIT */}
 
               <button
                 type="submit"
@@ -1490,6 +2515,7 @@ function Request() {
                 {isSubmitting ? (
                   <>
                     <i className="fa-solid fa-spinner fa-spin"></i>
+
                     {tr(
                       "Sending Request...",
                       "جارٍ إرسال الطلب..."
@@ -1503,19 +2529,19 @@ function Request() {
                 )}
               </button>
 
+
+
+              {/* ERROR MESSAGE */}
+
               {message && (
                 <div
                   className={`request-message ${messageType}`}
                 >
-                  <i
-                    className={
-                      messageType === "success"
-                        ? "fa-solid fa-circle-check"
-                        : "fa-solid fa-circle-exclamation"
-                    }
-                  ></i>
+                  <i className="fa-solid fa-circle-exclamation"></i>
 
-                  <span>{message}</span>
+                  <span>
+                    {message}
+                  </span>
                 </div>
               )}
             </form>
@@ -1524,11 +2550,18 @@ function Request() {
       </section>
 
 
+
+      {/* ========================================
+          LOGIN REQUIRED POPUP
+      ======================================== */}
+
       {showLoginRequired && (
         <div
           className="login-required-overlay"
           onClick={() =>
-            setShowLoginRequired(false)
+            setShowLoginRequired(
+              false
+            )
           }
         >
           <div
@@ -1536,7 +2569,9 @@ function Request() {
             role="dialog"
             aria-modal="true"
             aria-labelledby="login-required-title"
-            onClick={(event) =>
+            onClick={(
+              event
+            ) =>
               event.stopPropagation()
             }
           >
@@ -1544,19 +2579,27 @@ function Request() {
               type="button"
               className="login-required-close"
               onClick={() =>
-                setShowLoginRequired(false)
+                setShowLoginRequired(
+                  false
+                )
               }
-              aria-label={tr("Close", "إغلاق")}
+              aria-label={tr(
+                "Close",
+                "إغلاق"
+              )}
             >
               <i className="fa-solid fa-xmark"></i>
             </button>
+
 
             <div className="login-required-icon-wrap">
               <div className="login-required-icon">
                 <i className="fa-solid fa-lock"></i>
               </div>
+
               <span className="login-required-pulse"></span>
             </div>
+
 
             <p className="login-required-kicker">
               {tr(
@@ -1565,12 +2608,14 @@ function Request() {
               )}
             </p>
 
+
             <h3 id="login-required-title">
               {tr(
                 "Log in to send your request",
                 "سجّل الدخول لإرسال طلبك"
               )}
             </h3>
+
 
             <p className="login-required-copy">
               {tr(
@@ -1587,8 +2632,10 @@ function Request() {
               )}
             </p>
 
+
             <div className="login-required-note">
               <i className="fa-regular fa-circle-check"></i>
+
               <span>
                 {tr(
                   "Your form details will be saved while you log in.",
@@ -1597,21 +2644,30 @@ function Request() {
               </span>
             </div>
 
+
             <div className="login-required-actions">
               <button
                 type="button"
                 className="login-required-cancel"
                 onClick={() =>
-                  setShowLoginRequired(false)
+                  setShowLoginRequired(
+                    false
+                  )
                 }
               >
-                {tr("Keep Browsing", "متابعة التصفح")}
+                {tr(
+                  "Keep Browsing",
+                  "متابعة التصفح"
+                )}
               </button>
+
 
               <button
                 type="button"
                 className="login-required-login"
-                onClick={handleLoginFromModal}
+                onClick={
+                  handleLoginFromModal
+                }
               >
                 <span>
                   {tr(
@@ -1621,6 +2677,7 @@ function Request() {
                 </span>
               </button>
             </div>
+
 
             <p className="login-required-footer">
               {tr(
@@ -1633,10 +2690,122 @@ function Request() {
       )}
 
 
+
+      {/* ========================================
+          SUCCESS POPUP
+      ======================================== */}
+
+      {showSuccess && (
+        <div
+          className="request-success-overlay"
+          onClick={() =>
+            setShowSuccess(
+              false
+            )
+          }
+        >
+          <div
+            className="request-success-card"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="request-success-title"
+            onClick={(
+              event
+            ) =>
+              event.stopPropagation()
+            }
+          >
+            <div className="request-success-icon">
+              <i className="fa-solid fa-check"></i>
+            </div>
+
+
+            <p className="request-success-kicker">
+              {tr(
+                "REQUEST SENT",
+                "تم إرسال الطلب"
+              )}
+            </p>
+
+
+            <h3 id="request-success-title">
+              {tr(
+                "Request Submitted!",
+                "تم إرسال طلبك!"
+              )}
+            </h3>
+
+
+            <p className="request-success-copy">
+              {tr(
+                "Your service request was created successfully. Would you like to view your requests?",
+                "تم إنشاء طلب الخدمة بنجاح. هل ترغب في عرض طلباتك؟"
+              )}
+            </p>
+
+
+            <div className="request-success-actions">
+              <button
+                type="button"
+                className="request-success-stay"
+                onClick={() =>
+                  setShowSuccess(
+                    false
+                  )
+                }
+              >
+                {tr(
+                  "Stay Here",
+                  "البقاء هنا"
+                )}
+              </button>
+
+
+              <button
+                type="button"
+                className="request-success-view"
+                onClick={() => {
+                  setShowSuccess(
+                    false
+                  );
+
+                  navigate(
+                    "/my-requests"
+                  );
+                }}
+              >
+                <span>
+                  {tr(
+                    "View My Requests",
+                    "عرض طلباتي"
+                  )}
+                </span>
+
+
+                <i
+                  className={`fa-solid ${
+                    isArabic
+                      ? "fa-arrow-left"
+                      : "fa-arrow-right"
+                  }`}
+                ></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+
       <Footer />
     </main>
   );
 }
+
+
+
+/* ========================================
+   FIXER PICKER
+======================================== */
 
 function FixerPickerField({
   technician,
@@ -1652,8 +2821,12 @@ function FixerPickerField({
       <div className="request-fixer-field">
         <div className="request-fixer-field-label">
           <label>
-            {tr("Fixer", "الفني")}
+            {tr(
+              "Fixer",
+              "الفني"
+            )}
           </label>
+
 
           <span>
             {tr(
@@ -1663,14 +2836,18 @@ function FixerPickerField({
           </span>
         </div>
 
+
         <button
           type="button"
           className="request-find-fixer-button"
-          onClick={onFind}
+          onClick={
+            onFind
+          }
         >
           <span className="request-find-fixer-icon">
             <i className="fa-solid fa-user-magnifying-glass"></i>
           </span>
+
 
           <span>
             <strong>
@@ -1685,6 +2862,7 @@ function FixerPickerField({
                   )}
             </strong>
 
+
             <small>
               {tr(
                 "See ratings, price and availability",
@@ -1692,6 +2870,7 @@ function FixerPickerField({
               )}
             </small>
           </span>
+
 
           <i
             className={`fa-solid ${
@@ -1705,6 +2884,7 @@ function FixerPickerField({
     );
   }
 
+
   return (
     <div className="request-fixer-field">
       <div className="request-fixer-field-label">
@@ -1715,6 +2895,7 @@ function FixerPickerField({
           )}
         </label>
 
+
         <span>
           {tr(
             "You can view the profile or change your selection.",
@@ -1723,6 +2904,7 @@ function FixerPickerField({
         </span>
       </div>
 
+
       <div className="request-selected-fixer">
         <div className="request-selected-fixer-avatar">
           {getInitials(
@@ -1730,19 +2912,24 @@ function FixerPickerField({
           )}
         </div>
 
+
         <div className="request-selected-fixer-copy">
           <div className="request-selected-fixer-name">
             <strong>
               {technician.name}
             </strong>
 
+
             <span className="request-selected-fixer-rating">
               <i className="fa-solid fa-star"></i>
+
               {Number(
-                technician.rating || 0
+                technician.rating ||
+                  0
               ).toFixed(1)}
             </span>
           </div>
+
 
           <span>
             {translateServiceName(
@@ -1751,6 +2938,7 @@ function FixerPickerField({
             )}
           </span>
 
+
           <div className="request-selected-fixer-meta">
             <span>
               {Number(
@@ -1758,12 +2946,18 @@ function FixerPickerField({
                   technician.starting_price ??
                   0
               ).toFixed(0)}{" "}
-              {tr("SAR", "ر.س")}
+
+              {tr(
+                "SAR",
+                "ر.س"
+              )}
             </span>
+
 
             <span className="request-selected-fixer-dot">
               •
             </span>
+
 
             <span
               className={
@@ -1789,10 +2983,13 @@ function FixerPickerField({
           </div>
         </div>
 
+
         <div className="request-selected-fixer-actions">
           <button
             type="button"
-            onClick={onView}
+            onClick={
+              onView
+            }
           >
             {tr(
               "View Profile",
@@ -1800,9 +2997,12 @@ function FixerPickerField({
             )}
           </button>
 
+
           <button
             type="button"
-            onClick={onChange}
+            onClick={
+              onChange
+            }
           >
             {tr(
               "Change",
@@ -1815,17 +3015,11 @@ function FixerPickerField({
   );
 }
 
-function getInitials(name) {
-  if (!name) return "FX";
 
-  return name
-    .split(" ")
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((word) => word[0])
-    .join("")
-    .toUpperCase();
-}
+
+/* ========================================
+   IMAGE UPLOAD
+======================================== */
 
 function ImageUploadField({
   label,
@@ -1838,21 +3032,31 @@ function ImageUploadField({
   return (
     <div className="request-image-field">
       <div className="request-image-field-label">
-        <label>{label}</label>
-        <span>{helper}</span>
+        <label>
+          {label}
+        </label>
+
+        <span>
+          {helper}
+        </span>
       </div>
+
 
       <label className="request-image-dropzone">
         <input
           type="file"
           accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp"
           multiple
-          onChange={onChange}
+          onChange={
+            onChange
+          }
         />
+
 
         <span className="request-image-dropzone-icon">
           <i className="fa-regular fa-image"></i>
         </span>
+
 
         <span>
           <strong>
@@ -1861,6 +3065,7 @@ function ImageUploadField({
               "إضافة صور"
             )}
           </strong>
+
 
           <small>
             {tr(
@@ -1871,10 +3076,14 @@ function ImageUploadField({
         </span>
       </label>
 
+
       {images.length > 0 && (
         <div className="request-image-list">
           {images.map(
-            (image, index) => (
+            (
+              image,
+              index
+            ) => (
               <div
                 className="request-image-chip"
                 key={`${image.name}-${image.size}-${index}`}
@@ -1883,10 +3092,16 @@ function ImageUploadField({
                   <i className="fa-regular fa-file-image"></i>
                 </span>
 
+
                 <span className="request-image-chip-copy">
-                  <strong title={image.name}>
+                  <strong
+                    title={
+                      image.name
+                    }
+                  >
                     {image.name}
                   </strong>
+
 
                   <small>
                     {formatFileSize(
@@ -1895,6 +3110,7 @@ function ImageUploadField({
                   </small>
                 </span>
 
+
                 <button
                   type="button"
                   aria-label={tr(
@@ -1902,7 +3118,9 @@ function ImageUploadField({
                     "حذف الصورة"
                   )}
                   onClick={() =>
-                    onRemove(index)
+                    onRemove(
+                      index
+                    )
                   }
                 >
                   <i className="fa-solid fa-xmark"></i>
@@ -1916,23 +3134,11 @@ function ImageUploadField({
   );
 }
 
-function formatFileSize(bytes) {
-  if (!Number.isFinite(bytes)) {
-    return "";
-  }
 
-  if (bytes < 1024 * 1024) {
-    return `${Math.max(
-      1,
-      Math.round(bytes / 1024)
-    )} KB`;
-  }
 
-  return `${(
-    bytes /
-    (1024 * 1024)
-  ).toFixed(1)} MB`;
-}
+/* ========================================
+   FORM GROUP
+======================================== */
 
 function FormGroup({
   label,
@@ -1940,11 +3146,20 @@ function FormGroup({
 }) {
   return (
     <div className="request-form-group">
-      <label>{label}</label>
+      <label>
+        {label}
+      </label>
+
       {children}
     </div>
   );
 }
+
+
+
+/* ========================================
+   BENEFIT
+======================================== */
 
 function Benefit({
   icon,
@@ -1957,42 +3172,134 @@ function Benefit({
       className="request-benefit request-reveal"
       data-request-reveal
       style={{
-        "--request-delay": delay,
+        "--request-delay":
+          delay,
       }}
     >
       <div className="request-benefit-icon">
         <i className={icon}></i>
       </div>
 
+
       <div>
-        <h3>{title}</h3>
-        <p>{text}</p>
+        <h3>
+          {title}
+        </h3>
+
+        <p>
+          {text}
+        </p>
       </div>
     </div>
   );
 }
 
+
+
+/* ========================================
+   HELPERS
+======================================== */
+
+function getInitials(
+  name
+) {
+  if (!name) {
+    return "FX";
+  }
+
+  return name
+    .split(" ")
+    .filter(Boolean)
+    .slice(0, 2)
+    .map(
+      (word) =>
+        word[0]
+    )
+    .join("")
+    .toUpperCase();
+}
+
+
+
+function formatFileSize(
+  bytes
+) {
+  if (
+    !Number.isFinite(
+      bytes
+    )
+  ) {
+    return "";
+  }
+
+
+  if (
+    bytes <
+    1024 * 1024
+  ) {
+    return `${Math.max(
+      1,
+      Math.round(
+        bytes / 1024
+      )
+    )} KB`;
+  }
+
+
+  return `${(
+    bytes /
+    (
+      1024 *
+      1024
+    )
+  ).toFixed(1)} MB`;
+}
+
+
+
 function translateServiceName(
   name,
   language
 ) {
-  if (language !== "ar") return name;
+  if (
+    language !== "ar"
+  ) {
+    return name;
+  }
+
 
   const names = {
     "AC & Cooling":
       "التكييف والتبريد",
-    Plumbing: "السباكة",
-    Electrical: "الكهرباء",
-    Appliances: "الأجهزة المنزلية",
-    Furniture: "الأثاث",
+
+    Plumbing:
+      "السباكة",
+
+    Electrical:
+      "الكهرباء",
+
+    Appliances:
+      "الأجهزة المنزلية",
+
+    Furniture:
+      "الأثاث",
+
     "Carpentry & Furniture":
       "النجارة والأثاث",
-    General: "الصيانة العامة",
+
+    General:
+      "الصيانة العامة",
+
     "General Maintenance":
       "الصيانة العامة",
   };
 
-  return names[name] || name;
+
+  return (
+    names[name] ||
+    name
+  );
 }
+
 
 export default Request;

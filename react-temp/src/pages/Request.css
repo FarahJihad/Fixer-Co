@@ -2344,3 +2344,293 @@
     min-height: 38px;
   }
 }
+
+/* =========================================================
+   REQUEST SUCCESS POPUP
+   ========================================================= */
+
+.request-success-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 24px;
+
+  background: rgba(12, 31, 46, 0.48);
+
+  backdrop-filter: blur(7px);
+  -webkit-backdrop-filter: blur(7px);
+
+  animation:
+    requestSuccessOverlayIn
+    0.24s ease both;
+}
+
+
+.request-success-card {
+  width: 100%;
+  max-width: 455px;
+
+  padding: 40px 34px 32px;
+
+  border: 1px solid
+    rgba(213, 225, 221, 0.95);
+
+  border-radius: 24px;
+
+  background: #ffffff;
+
+  text-align: center;
+
+  box-shadow:
+    0 28px 80px
+    rgba(16, 45, 67, 0.22);
+
+  animation:
+    requestSuccessCardIn
+    0.38s
+    cubic-bezier(
+      0.22,
+      1,
+      0.36,
+      1
+    )
+    both;
+}
+
+
+.request-success-icon {
+  width: 70px;
+  height: 70px;
+
+  margin: 0 auto 18px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background:
+    rgba(79, 175, 143, 0.12);
+
+  color: #3d9276;
+
+  font-size: 27px;
+}
+
+
+.request-success-kicker {
+  margin: 0 0 9px;
+
+  color: #3d9276;
+
+  font-size: 10px;
+  font-weight: 800;
+
+  letter-spacing: 0.16em;
+}
+
+
+.request-success-card h3 {
+  margin: 0 0 12px;
+
+  color: #173b57;
+
+  font-size: 27px;
+  font-weight: 800;
+
+  letter-spacing: -0.03em;
+}
+
+
+.request-success-copy {
+  max-width: 350px;
+
+  margin: 0 auto 28px;
+
+  color: #6a7881;
+
+  font-size: 14px;
+  line-height: 1.75;
+}
+
+
+.request-success-actions {
+  display: grid;
+
+  grid-template-columns:
+    repeat(
+      2,
+      minmax(0, 1fr)
+    );
+
+  gap: 11px;
+}
+
+
+.request-success-actions button {
+  min-height: 49px;
+
+  border-radius: 12px;
+
+  font: inherit;
+
+  font-size: 13px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.22s ease,
+    border-color 0.22s ease,
+    background 0.22s ease,
+    box-shadow 0.22s ease;
+}
+
+
+.request-success-stay {
+  border: 1px solid #d9e3e1;
+
+  background: #ffffff;
+
+  color: #52636d;
+}
+
+
+.request-success-stay:hover {
+  transform: translateY(-2px);
+
+  border-color: #c5d4d0;
+
+  background: #f8faf9;
+}
+
+
+.request-success-view {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 9px;
+
+  border: none;
+
+  background: #173b57;
+
+  color: #ffffff;
+
+  box-shadow:
+    0 9px 22px
+    rgba(23, 59, 87, 0.16);
+}
+
+
+.request-success-view:hover {
+  transform: translateY(-2px);
+
+  background: #102f47;
+
+  box-shadow:
+    0 13px 28px
+    rgba(23, 59, 87, 0.22);
+}
+
+
+.request-success-view i {
+  font-size: 11px;
+
+  transition:
+    transform 0.22s ease;
+}
+
+
+.request-success-view:hover i {
+  transform: translateX(3px);
+}
+
+
+.request-page[dir="rtl"]
+.request-success-kicker {
+  letter-spacing: 0;
+}
+
+
+.request-page[dir="rtl"]
+.request-success-card h3 {
+  letter-spacing: 0;
+}
+
+
+.request-page[dir="rtl"]
+.request-success-view:hover i {
+  transform: translateX(-3px);
+}
+
+
+@keyframes requestSuccessOverlayIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+
+@keyframes requestSuccessCardIn {
+  from {
+    opacity: 0;
+
+    transform:
+      translateY(16px)
+      scale(0.97);
+  }
+
+  to {
+    opacity: 1;
+
+    transform:
+      translateY(0)
+      scale(1);
+  }
+}
+
+
+@media (max-width: 520px) {
+  .request-success-overlay {
+    padding: 18px;
+  }
+
+  .request-success-card {
+    padding: 34px 21px 23px;
+
+    border-radius: 20px;
+  }
+
+  .request-success-card h3 {
+    font-size: 24px;
+  }
+
+  .request-success-actions {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+@media (prefers-reduced-motion: reduce) {
+  .request-success-overlay,
+  .request-success-card {
+    animation: none;
+  }
+
+  .request-success-actions button,
+  .request-success-view i {
+    transition: none;
+  }
+}
